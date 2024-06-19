@@ -136,14 +136,14 @@ namespace SDL2Sharp
             void* pixels;
             int pitchInBytes;
             Error.ThrowOnFailure(
-                SDL.LockTexture(this, &rect, &pixels, &pitchInBytes)
+                SDL.LockTexture(_handle, &rect, &pixels, &pitchInBytes)
             );
 
             var bytesPerPixel = Marshal.SizeOf<TPackedColor>();
             var pitch = pitchInBytes / bytesPerPixel;
             var image = new PackedImage<TPackedColor>(pixels, height, width, pitch);
             callback(image);
-            SDL.UnlockTexture(this);
+            SDL.UnlockTexture(_handle);
         }
 
         public void WithLock(WithLockSurfaceCallback<TPackedColor> callback)
@@ -163,11 +163,11 @@ namespace SDL2Sharp
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
             SDL_Surface* surfaceHandle;
             Error.ThrowOnFailure(
-                SDL.LockTextureToSurface(this, &rect, &surfaceHandle)
+                SDL.LockTextureToSurface(_handle, &rect, &surfaceHandle)
             );
             var surface = new Surface<TPackedColor>(surfaceHandle, false);
             callback.Invoke(surface);
-            SDL.UnlockTexture(this);
+            SDL.UnlockTexture(_handle);
         }
 
         public void Update(PackedMemoryImage<TPackedColor> image)
@@ -210,7 +210,7 @@ namespace SDL2Sharp
         private void Update(SDL_Rect* rect, void* pixels, int pitch)
         {
             Error.ThrowOnFailure(
-                SDL.UpdateTexture(this, rect, pixels, pitch)
+                SDL.UpdateTexture(_handle, rect, pixels, pitch)
             );
         }
 

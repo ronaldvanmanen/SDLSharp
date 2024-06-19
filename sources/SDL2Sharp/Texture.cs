@@ -144,7 +144,7 @@ namespace SDL2Sharp
             var pitch = pitchInBytes / bytesPerPixel;
             var image = new PackedImage<TPackedColor>(pixels, height, width, pitch);
             callback.Invoke(image);
-            SDL.UnlockTexture(this);
+            SDL.UnlockTexture(_handle);
         }
 
         public void WithLock<TPackedColor>(WithLockSurfaceCallback<TPackedColor> callback)
@@ -171,7 +171,7 @@ namespace SDL2Sharp
             );
             var surface = new Surface<TPackedColor>(surfaceHandle, false);
             callback.Invoke(surface);
-            SDL.UnlockTexture(this);
+            SDL.UnlockTexture(_handle);
         }
 
         private void ThrowWhenDisposed()
