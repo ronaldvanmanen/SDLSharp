@@ -21,25 +21,25 @@
 using System;
 using System.Reflection;
 
-namespace SDL2Sharp.Internals
+namespace SDL2Sharp
 {
     [AttributeUsage(AttributeTargets.Struct)]
     internal sealed class PackedColorAttribute : Attribute
     {
-        public PixelFormatEnum PixelFormat { get; }
+        public PackedPixelFormat PixelFormat { get; }
 
-        public PackedColorAttribute(PixelFormatEnum pixelFormat)
+        public PackedColorAttribute(PackedPixelFormat pixelFormat)
         {
             PixelFormat = pixelFormat;
         }
 
-        public static PixelFormatEnum GetPixelFormatOf<TPackedColor>()
+        public static PackedPixelFormat GetPixelFormatOf<TPackedColor>()
         {
             var pixelFormatType = typeof(TPackedColor);
             var pixelFormatAttribute = pixelFormatType.GetCustomAttribute<PackedColorAttribute>();
             if (pixelFormatAttribute == null)
             {
-                return PixelFormatEnum.Unknown;
+                throw new NotSupportedException($"The type {pixelFormatType} does not have a {nameof(PackedColorAttribute)}.");
             }
             return pixelFormatAttribute.PixelFormat;
         }

@@ -19,12 +19,11 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Runtime.InteropServices;
-using SDL2Sharp.Internals;
 
 namespace SDL2Sharp.Colors
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 1)]
-    [PackedColor(PixelFormatEnum.ABGR1555)]
+    [PackedColor(PackedPixelFormat.ABGR1555)]
     public readonly record struct Abgr1555
     {
         private readonly ushort _value;
