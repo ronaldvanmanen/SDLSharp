@@ -24,7 +24,7 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public unsafe class Texture : IDisposable
+    public sealed unsafe class Texture : IDisposable
     {
         private SDL_Texture* _handle;
 
@@ -174,7 +174,7 @@ namespace SDL2Sharp
             SDL.UnlockTexture(this);
         }
 
-        protected void ThrowWhenDisposed()
+        private void ThrowWhenDisposed()
         {
             if (_handle is null)
             {

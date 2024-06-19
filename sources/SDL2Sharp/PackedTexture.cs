@@ -18,6 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Microsoft.Toolkit.HighPerformance;
@@ -25,11 +26,97 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class PackedTexture<TPackedColor> : Texture where TPackedColor : struct
+    public sealed unsafe class PackedTexture<TPackedColor> : IDisposable where TPackedColor : struct
     {
+        private SDL_Texture* _handle;
+
+        public PackedPixelFormat Format
+        {
+            get
+            {
+                uint format;
+                Error.ThrowOnFailure(SDL.QueryTexture(_handle, &format, null, null, null));
+                return (PackedPixelFormat)format;
+            }
+        }
+
+        public TextureAccess Access
+        {
+            get
+            {
+                int access;
+                Error.ThrowOnFailure(SDL.QueryTexture(_handle, null, &access, null, null));
+                return (TextureAccess)access;
+            }
+        }
+
+        public int Width
+        {
+            get
+            {
+                int width;
+                Error.ThrowOnFailure(SDL.QueryTexture(_handle, null, null, &width, null));
+                return width;
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                int height;
+                Error.ThrowOnFailure(SDL.QueryTexture(_handle, null, null, null, &height));
+                return height;
+            }
+        }
+
+        public BlendMode BlendMode
+        {
+            get
+            {
+                SDL_BlendMode blendMode;
+                Error.ThrowOnFailure(
+                    SDL.GetTextureBlendMode(_handle, &blendMode)
+                );
+                return (BlendMode)blendMode;
+            }
+            set
+            {
+                Error.ThrowOnFailure(
+                    SDL.SetTextureBlendMode(_handle, (SDL_BlendMode)value)
+                );
+            }
+        }
+
+        public bool IsValid => 0 == SDL.QueryTexture(_handle, null, null, null, null);
+
         internal PackedTexture(SDL_Texture* texture)
-        : base(texture)
-        { }
+        {
+            if (texture is null)
+            {
+                throw new ArgumentNullException(nameof(texture));
+            }
+
+            _handle = texture;
+        }
+
+        ~PackedTexture()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool _)
+        {
+            if (_handle is null) return;
+            SDL.DestroyTexture(_handle);
+            _handle = null;
+        }
 
         public void WithLock(WithLockPackedImageCallback<TPackedColor> callback)
         {
@@ -125,6 +212,24 @@ namespace SDL2Sharp
             Error.ThrowOnFailure(
                 SDL.UpdateTexture(this, rect, pixels, pitch)
             );
+        }
+
+        private void ThrowWhenDisposed()
+        {
+            if (_handle is null)
+            {
+                throw new ObjectDisposedException(GetType().FullName);
+            }
+        }
+
+        public static implicit operator SDL_Texture*(PackedTexture<TPackedColor> texture)
+        {
+            if (texture is null)
+            {
+                throw new ArgumentNullException(nameof(texture));
+            }
+
+            return texture._handle;
         }
     }
 }

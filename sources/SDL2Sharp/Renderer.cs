@@ -329,6 +329,57 @@ namespace SDL2Sharp
             );
         }
 
+        public void Copy<TPackedColor>(PackedTexture<TPackedColor> texture) where TPackedColor : struct
+        {
+            ThrowWhenDisposed();
+
+            Error.ThrowOnFailure(
+                SDL.RenderCopy(_handle, texture, null, null)
+            );
+        }
+
+        public void Copy<TPackedColor>(PackedTexture<TPackedColor> texture, Rectangle destination) where TPackedColor : struct
+        {
+            ThrowWhenDisposed();
+
+            var dest = new SDL_Rect
+            {
+                x = destination.X,
+                y = destination.Y,
+                w = destination.Width,
+                h = destination.Height
+            };
+
+            Error.ThrowOnFailure(
+                SDL.RenderCopy(_handle, texture, null, &dest)
+            );
+        }
+
+        public void Copy<TPackedColor>(PackedTexture<TPackedColor> texture, Rectangle source, Rectangle destination) where TPackedColor : struct
+        {
+            ThrowWhenDisposed();
+
+            var src = new SDL_Rect
+            {
+                x = source.X,
+                y = source.Y,
+                w = source.Width,
+                h = source.Height
+            };
+
+            var dest = new SDL_Rect
+            {
+                x = destination.X,
+                y = destination.Y,
+                w = destination.Width,
+                h = destination.Height
+            };
+
+            Error.ThrowOnFailure(
+                SDL.RenderCopy(_handle, texture, &src, &dest)
+            );
+        }
+
         public void DrawLine(int x1, int y1, int x2, int y2)
         {
             ThrowWhenDisposed();
