@@ -19,69 +19,38 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using Microsoft.Toolkit.HighPerformance;
 using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class Surface<TPackedColor> : IDisposable where TPackedColor : struct
+    public sealed class Surface<TPackedColor> : IDisposable where TPackedColor : struct
     {
-        private SDL_Surface* _handle;
+        private Surface _surface;
 
-        private readonly bool _freeHandle;
+        public PixelFormat Format => _surface.Format;
 
-        public PixelFormat Format => new(_handle->format, false);
+        public int Width => _surface.Width;
 
-        public int Width => _handle->w;
+        public int Height => _surface.Height;
 
-        public int Height => _handle->h;
+        public int Pitch => _surface.Pitch;
 
-        public int Pitch => _handle->pitch;
+        public PackedImage<TPackedColor> Pixels => _surface.Pixels<TPackedColor>();
 
-        public Span2D<TPackedColor> Pixels
+        public bool MustLock => _surface.MustLock;
+
+        internal unsafe Surface(SDL_Surface* surface)
+        : this(new Surface(surface))
+        { }
+
+        internal unsafe Surface(SDL_Surface* surface, bool freeHandle)
+        : this(new Surface(surface, freeHandle))
+        { }
+
+        internal Surface(Surface surface)
         {
-            get
-            {
-                // In SDL pitch is synonymous to stride, and is defined as the
-                // length of a row of pixels in bytes. Span2D, however, defines
-                // pitch as the difference between stride and width in pixels.
-                return new Span2D<TPackedColor>(_handle->pixels, _handle->h, _handle->w,
-                    _handle->pitch - _handle->w * _handle->format->BytesPerPixel);
-            }
+            _surface = surface ?? throw new ArgumentNullException(nameof(surface));
         }
-
-        public bool MustLock => ((_handle->flags & SDL.SDL_RLEACCEL) != 0);
-
-        internal Surface(SDL_Surface* handle)
-        : this(handle, true)
-        { }
-
-        internal Surface(SDL_Surface* handle, bool freeHandle)
-        {
-            if (handle is null)
-            {
-                throw new ArgumentNullException(nameof(handle));
-            }
-
-            _handle = handle;
-            _freeHandle = freeHandle;
-        }
-
-        internal Surface(int width, int height, int depth, PixelFormatEnum format)
-        : this(SDL.CreateRGBSurfaceWithFormat(0, width, height, depth, (uint)format))
-        { }
-
-        internal Surface(int width, int height, int depth, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
-        : this(SDL.CreateRGBSurface(0, width, height, depth, redMask, greenMask, blueMask, alphaMask))
-        { }
-
-        internal Surface(void* pixels, int width, int height, int depth, int pitch, PixelFormatEnum format)
-        : this(SDL.CreateRGBSurfaceWithFormatFrom(pixels, width, height, depth, pitch, (uint)format))
-        { }
-
-        internal Surface(void* pixels, int width, int height, int depth, int pitch, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
-        : this(SDL.CreateRGBSurfaceFrom(pixels, width, height, depth, pitch, redMask, greenMask, blueMask, alphaMask))
-        { }
 
         ~Surface()
         {
@@ -96,17 +65,9 @@ namespace SDL2Sharp
 
         private void Dispose(bool _)
         {
-            if (_handle is null)
-            {
-                return;
-            }
-
-            if (_freeHandle)
-            {
-                SDL.FreeSurface(_handle);
-            }
-
-            _handle = null;
+            if (_surface is null) return;
+            _surface.Dispose();
+            _surface = null!;
         }
 
         public void Blit(Surface<TPackedColor> surface)
@@ -118,59 +79,55 @@ namespace SDL2Sharp
                 throw new ArgumentNullException(nameof(surface));
             }
 
-            Error.ThrowOnFailure(
-                SDL.Blit(_handle, null, surface._handle, null)
-            );
+            _surface.Blit(surface._surface);
         }
 
-        public Surface Convert(PixelFormatEnum format)
+        public Surface<TTargetColor> Convert<TTargetColor>() where TTargetColor : struct
         {
             ThrowWhenDisposed();
 
-            return new Surface(SDL.ConvertSurfaceFormat(_handle, (uint)format, 0));
+            var targetPixelFormat = PackedColorAttribute.GetPixelFormatOf<TTargetColor>();
+            var targetSurface = _surface.ConvertTo((PixelFormatEnum)targetPixelFormat);
+            return new Surface<TTargetColor>(targetSurface);
         }
 
         public void FillRect(uint color)
         {
             ThrowWhenDisposed();
 
-            Error.ThrowOnFailure(
-                SDL.FillRect(_handle, null, color)
-            );
+            _surface.FillRect(color);
         }
 
         public void Lock()
         {
             ThrowWhenDisposed();
 
-            Error.ThrowOnFailure(
-                SDL.LockSurface(_handle)
-            );
+            _surface.Lock();
         }
 
         public void Unlock()
         {
             ThrowWhenDisposed();
 
-            SDL.UnlockSurface(_handle);
+            _surface.Unlock();
         }
 
         private void ThrowWhenDisposed()
         {
-            if (_handle is null)
+            if (_surface is null)
             {
                 throw new ObjectDisposedException(GetType().FullName);
             }
         }
 
-        public static implicit operator SDL_Surface*(Surface<TPackedColor> surface)
+        public static implicit operator Surface(Surface<TPackedColor> surface)
         {
             if (surface is null)
             {
                 throw new ArgumentNullException(nameof(surface));
             }
 
-            return surface._handle;
+            return surface._surface;
         }
     }
 }

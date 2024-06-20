@@ -24,6 +24,43 @@ namespace SDL2Sharp
 {
     public static class RendererExtensions
     {
+        public static PackedTexture<TPackedColor> CreateTexture<TPackedColor>(this Renderer renderer, TextureAccess access, Size size)
+            where TPackedColor : struct
+        {
+            if (renderer is null)
+            {
+                throw new ArgumentNullException(nameof(renderer));
+            }
+
+            return renderer.CreateTexture<TPackedColor>(access, size.Width, size.Height);
+        }
+
+        public static PackedTexture<TPackedColor> CreateTexture<TPackedColor>(this Renderer renderer, TextureAccess access, int width, int height)
+            where TPackedColor : struct
+        {
+            if (renderer is null)
+            {
+                throw new ArgumentNullException(nameof(renderer));
+            }
+
+            var pixelFormat = PackedColorAttribute.GetPixelFormatOf<TPackedColor>();
+            var texture = renderer.CreateTexture((PixelFormatEnum)pixelFormat, access, width, height);
+            return new PackedTexture<TPackedColor>(texture);
+        }
+
+        public static PackedTexture<TPackedColor> CreateTextureFromSurface<TPackedColor>(this Renderer renderer, Surface<TPackedColor> surface)
+            where TPackedColor : struct
+        {
+            if (renderer is null)
+            {
+                throw new ArgumentNullException(nameof(renderer));
+            }
+
+            var texture = renderer.CreateTextureFromSurface(surface);
+            var packedTexture = new PackedTexture<TPackedColor>(texture);
+            return packedTexture;
+        }
+
         public static Texture CreateTextureFromBitmap(this Renderer renderer, string filename)
         {
             if (renderer is null)

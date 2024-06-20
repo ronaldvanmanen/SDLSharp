@@ -59,14 +59,16 @@ namespace SDL2Sharp
         {
             ThrowWhenDisposed();
             using var marshaledText = new MarshaledString(text);
-            return new Surface(TTF.RenderText_Solid(_handle, marshaledText, color));
+            var surfaceHandle = TTF.RenderText_Solid(_handle, marshaledText, color);
+            return new Surface(surfaceHandle);
         }
 
         public Surface<Argb8888> RenderBlended(string text, Color color)
         {
             ThrowWhenDisposed();
             using var marshaledText = new MarshaledString(text);
-            return new Surface<Argb8888>(TTF.RenderText_Blended(_handle, marshaledText, color));
+            var surfaceHandle = TTF.RenderText_Blended(_handle, marshaledText, color);
+            return new Surface<Argb8888>(surfaceHandle);
         }
 
         public static implicit operator _TTF_Font*(Font font)

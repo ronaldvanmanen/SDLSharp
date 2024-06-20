@@ -234,22 +234,6 @@ namespace SDL2Sharp
             return new Texture(texture);
         }
 
-
-        public PackedTexture<TPackedColor> CreateTexture<TPackedColor>(TextureAccess access, Size size) where TPackedColor : struct
-        {
-            return CreateTexture<TPackedColor>(access, size.Width, size.Height);
-        }
-
-        public PackedTexture<TPackedColor> CreateTexture<TPackedColor>(TextureAccess access, int width, int height) where TPackedColor : struct
-        {
-            ThrowWhenDisposed();
-
-            var pixelFormat = PackedColorAttribute.GetPixelFormatOf<TPackedColor>();
-            var texture = SDL.CreateTexture(_handle, (uint)pixelFormat, (int)access, width, height);
-            Error.ThrowOnFailure(texture);
-            return new PackedTexture<TPackedColor>(texture);
-        }
-
         public Texture CreateTextureFromSurface(Surface surface)
         {
             ThrowWhenDisposed();
@@ -257,16 +241,6 @@ namespace SDL2Sharp
             var texture = SDL.CreateTextureFromSurface(_handle, surface);
             Error.ThrowOnFailure(texture);
             return new Texture(texture);
-        }
-
-
-        public PackedTexture<TPackedColor> CreateTextureFromSurface<TPackedColor>(Surface<TPackedColor> surface) where TPackedColor : struct
-        {
-            ThrowWhenDisposed();
-
-            var texture = SDL.CreateTextureFromSurface(_handle, surface);
-            Error.ThrowOnFailure(texture);
-            return new PackedTexture<TPackedColor>(texture);
         }
 
         public void Clear()
@@ -305,57 +279,6 @@ namespace SDL2Sharp
         }
 
         public void Copy(Texture texture, Rectangle source, Rectangle destination)
-        {
-            ThrowWhenDisposed();
-
-            var src = new SDL_Rect
-            {
-                x = source.X,
-                y = source.Y,
-                w = source.Width,
-                h = source.Height
-            };
-
-            var dest = new SDL_Rect
-            {
-                x = destination.X,
-                y = destination.Y,
-                w = destination.Width,
-                h = destination.Height
-            };
-
-            Error.ThrowOnFailure(
-                SDL.RenderCopy(_handle, texture, &src, &dest)
-            );
-        }
-
-        public void Copy<TPackedColor>(PackedTexture<TPackedColor> texture) where TPackedColor : struct
-        {
-            ThrowWhenDisposed();
-
-            Error.ThrowOnFailure(
-                SDL.RenderCopy(_handle, texture, null, null)
-            );
-        }
-
-        public void Copy<TPackedColor>(PackedTexture<TPackedColor> texture, Rectangle destination) where TPackedColor : struct
-        {
-            ThrowWhenDisposed();
-
-            var dest = new SDL_Rect
-            {
-                x = destination.X,
-                y = destination.Y,
-                w = destination.Width,
-                h = destination.Height
-            };
-
-            Error.ThrowOnFailure(
-                SDL.RenderCopy(_handle, texture, null, &dest)
-            );
-        }
-
-        public void Copy<TPackedColor>(PackedTexture<TPackedColor> texture, Rectangle source, Rectangle destination) where TPackedColor : struct
         {
             ThrowWhenDisposed();
 

@@ -28,76 +28,28 @@ namespace SDL2Sharp
 {
     public sealed unsafe class PackedTexture<TPackedColor> : IDisposable where TPackedColor : struct
     {
-        private SDL_Texture* _handle;
+        private Texture _texture;
 
-        public PackedPixelFormat Format
-        {
-            get
-            {
-                uint format;
-                Error.ThrowOnFailure(SDL.QueryTexture(_handle, &format, null, null, null));
-                return (PackedPixelFormat)format;
-            }
-        }
+        public PackedPixelFormat Format => (PackedPixelFormat)_texture.Format;
 
-        public TextureAccess Access
-        {
-            get
-            {
-                int access;
-                Error.ThrowOnFailure(SDL.QueryTexture(_handle, null, &access, null, null));
-                return (TextureAccess)access;
-            }
-        }
+        public TextureAccess Access => _texture.Access;
 
-        public int Width
-        {
-            get
-            {
-                int width;
-                Error.ThrowOnFailure(SDL.QueryTexture(_handle, null, null, &width, null));
-                return width;
-            }
-        }
+        public int Width => _texture.Width;
 
-        public int Height
-        {
-            get
-            {
-                int height;
-                Error.ThrowOnFailure(SDL.QueryTexture(_handle, null, null, null, &height));
-                return height;
-            }
-        }
+        public int Height => _texture.Height;
 
         public BlendMode BlendMode
         {
-            get
-            {
-                SDL_BlendMode blendMode;
-                Error.ThrowOnFailure(
-                    SDL.GetTextureBlendMode(_handle, &blendMode)
-                );
-                return (BlendMode)blendMode;
-            }
-            set
-            {
-                Error.ThrowOnFailure(
-                    SDL.SetTextureBlendMode(_handle, (SDL_BlendMode)value)
-                );
-            }
+            get => _texture.BlendMode;
+
+            set => _texture.BlendMode = value;
         }
 
-        public bool IsValid => 0 == SDL.QueryTexture(_handle, null, null, null, null);
+        public bool IsValid => _texture.IsValid;
 
-        internal PackedTexture(SDL_Texture* texture)
+        internal PackedTexture(Texture texture)
         {
-            if (texture is null)
-            {
-                throw new ArgumentNullException(nameof(texture));
-            }
-
-            _handle = texture;
+            _texture = texture ?? throw new ArgumentNullException(nameof(texture));
         }
 
         ~PackedTexture()
@@ -113,9 +65,9 @@ namespace SDL2Sharp
 
         private void Dispose(bool _)
         {
-            if (_handle is null) return;
-            SDL.DestroyTexture(_handle);
-            _handle = null;
+            if (_texture is null) return;
+            _texture.Dispose();
+            _texture = null!;
         }
 
         public void WithLock(WithLockPackedImageCallback<TPackedColor> callback)
@@ -130,20 +82,7 @@ namespace SDL2Sharp
 
         public void WithLock(int x, int y, int width, int height, WithLockPackedImageCallback<TPackedColor> callback)
         {
-            ThrowWhenDisposed();
-
-            var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
-            void* pixels;
-            int pitchInBytes;
-            Error.ThrowOnFailure(
-                SDL.LockTexture(_handle, &rect, &pixels, &pitchInBytes)
-            );
-
-            var bytesPerPixel = Marshal.SizeOf<TPackedColor>();
-            var pitch = pitchInBytes / bytesPerPixel;
-            var image = new PackedImage<TPackedColor>(pixels, height, width, pitch);
-            callback(image);
-            SDL.UnlockTexture(_handle);
+            _texture.WithLock(x, y, width, height, callback);
         }
 
         public void WithLock(WithLockSurfaceCallback<TPackedColor> callback)
@@ -160,14 +99,7 @@ namespace SDL2Sharp
         {
             ThrowWhenDisposed();
 
-            var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
-            SDL_Surface* surfaceHandle;
-            Error.ThrowOnFailure(
-                SDL.LockTextureToSurface(_handle, &rect, &surfaceHandle)
-            );
-            var surface = new Surface<TPackedColor>(surfaceHandle, false);
-            callback.Invoke(surface);
-            SDL.UnlockTexture(_handle);
+            _texture.WithLock(x, y, width, height, callback);
         }
 
         public void Update(PackedMemoryImage<TPackedColor> image)
@@ -210,26 +142,26 @@ namespace SDL2Sharp
         private void Update(SDL_Rect* rect, void* pixels, int pitch)
         {
             Error.ThrowOnFailure(
-                SDL.UpdateTexture(_handle, rect, pixels, pitch)
+                SDL.UpdateTexture(_texture, rect, pixels, pitch)
             );
         }
 
         private void ThrowWhenDisposed()
         {
-            if (_handle is null)
+            if (_texture is null)
             {
                 throw new ObjectDisposedException(GetType().FullName);
             }
         }
 
-        public static implicit operator SDL_Texture*(PackedTexture<TPackedColor> texture)
+        public static implicit operator Texture(PackedTexture<TPackedColor> texture)
         {
             if (texture is null)
             {
                 throw new ArgumentNullException(nameof(texture));
             }
 
-            return texture._handle;
+            return texture._texture;
         }
     }
 }

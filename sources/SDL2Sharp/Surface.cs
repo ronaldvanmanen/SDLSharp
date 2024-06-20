@@ -60,11 +60,11 @@ namespace SDL2Sharp
             return new Surface(bitmap);
         }
 
-        public Surface(SDL_Surface* handle)
+        internal Surface(SDL_Surface* handle)
         : this(handle, true)
         { }
 
-        public Surface(SDL_Surface* handle, bool freeHandle)
+        internal Surface(SDL_Surface* handle, bool freeHandle)
         {
             if (handle is null)
             {
@@ -131,7 +131,7 @@ namespace SDL2Sharp
             );
         }
 
-        public Surface Convert(PixelFormatEnum format)
+        public Surface ConvertTo(PixelFormatEnum format)
         {
             ThrowWhenDisposed();
 
