@@ -47,6 +47,9 @@ namespace SDL2Sharp
         XBGR8888 = PixelFormatEnum.XBGR8888,
         XRGB1555 = PixelFormatEnum.XRGB1555,
         XRGB4444 = PixelFormatEnum.XRGB4444,
-        XRGB8888 = PixelFormatEnum.XRGB8888
+        XRGB8888 = PixelFormatEnum.XRGB8888,
+        YUY2 = PixelFormatEnum.YUY2,
+        UYVY = PixelFormatEnum.UYVY,
+        YVYU = PixelFormatEnum.YVYU,
     }
 }

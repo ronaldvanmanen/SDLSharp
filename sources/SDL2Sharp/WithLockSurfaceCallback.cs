@@ -20,6 +20,6 @@
 
 namespace SDL2Sharp
 {
-    public delegate void WithLockSurfaceCallback<TPackedColor>(Surface<TPackedColor> image)
+    public delegate void WithLockSurfaceCallback<TPackedColor>(Surface<TPackedColor> pixels)
         where TPackedColor : struct;
 }

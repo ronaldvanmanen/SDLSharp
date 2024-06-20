@@ -19,6 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Runtime.InteropServices;
 using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
 
@@ -38,16 +39,7 @@ namespace SDL2Sharp
 
         public int Pitch => _handle->pitch;
 
-        public PackedImage<TPackedColor> Pixels<TPackedColor>()
-        {
-            return new PackedImage<TPackedColor>(
-                _handle->pixels,
-                _handle->h,
-                _handle->w,
-                _handle->pitch);
-        }
-
-        public bool MustLock => ((_handle->flags & SDL.SDL_RLEACCEL) != 0);
+        private bool MustLock => (_handle->flags & SDL.SDL_RLEACCEL) != 0;
 
         public static Surface LoadBitmap(string filename)
         {
@@ -75,20 +67,20 @@ namespace SDL2Sharp
             _freeHandle = freeHandle;
         }
 
-        public Surface(int width, int height, int depth, PixelFormatEnum format)
-        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurfaceWithFormat(0, width, height, depth, (uint)format)))
+        public Surface(int width, int height, PixelFormatEnum format)
+        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurfaceWithFormat(0, width, height, 0, (uint)format)))
         { }
 
-        public Surface(int width, int height, int depth, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
-        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurface(0, width, height, depth, redMask, greenMask, blueMask, alphaMask)))
+        public Surface(int width, int height, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
+        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurface(0, width, height, 0, redMask, greenMask, blueMask, alphaMask)))
         { }
 
-        public Surface(void* pixels, int width, int height, int depth, int pitch, PixelFormatEnum format)
-        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurfaceWithFormatFrom(pixels, width, height, depth, pitch, (uint)format)))
+        public Surface(void* pixels, int width, int height, int pitch, PixelFormatEnum format)
+        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurfaceWithFormatFrom(pixels, width, height, 0, pitch, (uint)format)))
         { }
 
-        public Surface(void* pixels, int width, int height, int depth, int pitch, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
-        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurfaceFrom(pixels, width, height, depth, pitch, redMask, greenMask, blueMask, alphaMask)))
+        public Surface(void* pixels, int width, int height, int pitch, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
+        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurfaceFrom(pixels, width, height, 0, pitch, redMask, greenMask, blueMask, alphaMask)))
         { }
 
         ~Surface()
@@ -147,20 +139,30 @@ namespace SDL2Sharp
             );
         }
 
-        public void Lock()
+        public void WithLock<TPackedColor>(WithLockPackedImageCallback<TPackedColor> callback)
+            where TPackedColor : struct
         {
             ThrowWhenDisposed();
 
-            Error.ThrowOnFailure(
-                SDL.LockSurface(_handle)
-            );
-        }
+            var mustLock = MustLock;
+            if (mustLock)
+            {
+                Error.ThrowOnFailure(
+                    SDL.LockSurface(_handle)
+                );
+            }
 
-        public void Unlock()
-        {
-            ThrowWhenDisposed();
+            var bytesPerPixel = Marshal.SizeOf<TPackedColor>();
+            var pitchInBytes = _handle->pitch;
+            var pitch = pitchInBytes / bytesPerPixel;
+            var pixels = new PackedImage<TPackedColor>(_handle->pixels, _handle->w, _handle->h, pitch);
 
-            SDL.UnlockSurface(_handle);
+            callback.Invoke(pixels);
+
+            if (mustLock)
+            {
+                SDL.UnlockSurface(_handle);
+            }
         }
 
         private void ThrowWhenDisposed()

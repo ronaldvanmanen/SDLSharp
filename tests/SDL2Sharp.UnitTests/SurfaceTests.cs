@@ -18,8 +18,37 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-namespace SDL2Sharp
+using SDL2Sharp.Colors;
+using Xunit;
+
+namespace SDL2Sharp.UnitTests
 {
-    public delegate void WithLockPackedImageCallback<TPackedColor>(PackedImage<TPackedColor> pixels)
-        where TPackedColor : struct;
+    public static class SurfaceTests
+    {
+        [Fact]
+        public static void CreateSurfaceOfArgb8888()
+        {
+            var color = new Argb8888(255, 255, 255, 255);
+            using var surface = new Surface<Argb8888>(512, 512);
+            surface.WithLock(pixels => pixels.Fill(color));
+        }
+
+        [Fact]
+        public static void CreateSurfaceOfYuy2()
+        {
+            Assert.Throws<Error>(() => new Surface<Yuy2>(512, 512));
+        }
+
+        [Fact]
+        public static void CreateSurfaceOfYvyu()
+        {
+            Assert.Throws<Error>(() => new Surface<Yvyu>(512, 512));
+        }
+
+        [Fact]
+        public static void CreateSurfaceOfUyvy()
+        {
+            Assert.Throws<Error>(() => new Surface<Uyvy>(512, 512));
+        }
+    }
 }

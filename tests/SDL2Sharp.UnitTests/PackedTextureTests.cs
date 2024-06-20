@@ -28,20 +28,47 @@ namespace SDL2Sharp.UnitTests
         [Fact]
         public static void CreatePackedTextureOfArgb8888()
         {
-            using var window = new Window("TextureTests", 640, 480, WindowFlags.Hidden);
+            var color = new Argb8888(255, 255, 255, 255);
+            using var window = new Window("CreatePackedTextureOfArgb8888", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
             using var texture = renderer.CreateTexture<Argb8888>(TextureAccess.Streaming, renderer.OutputSize);
-            var white = new Argb8888(255, 255, 255, 255);
-            texture.WithLock(image =>
-            {
-                for (var y = 0; y < image.Height; ++y)
-                {
-                    for (var x = 0; x < image.Width; ++x)
-                    {
-                        image[y, x] = white;
-                    }
-                }
-            });
+            texture.WithLock(pixels => pixels.Fill(color));
+            renderer.Copy(texture);
+            renderer.Present();
+        }
+
+        [Fact]
+        public static void CreatePackedTextureOfYUY2()
+        {
+            var color = new Yuy2(255, 255, 255, 255);
+            using var window = new Window("CreatePackedTextureOfYUY2", 640, 480, WindowFlags.Hidden);
+            using var renderer = window.CreateRenderer();
+            using var texture = renderer.CreateTexture<Yuy2>(TextureAccess.Streaming, renderer.OutputSize);
+            texture.WithLock(pixels => pixels.Fill(color));
+            renderer.Copy(texture);
+            renderer.Present();
+        }
+
+        [Fact]
+        public static void CreatePackedTextureOfYVYU()
+        {
+            var color = new Yvyu(255, 255, 255, 255);
+            using var window = new Window("CreatePackedTextureOfYVYU", 640, 480, WindowFlags.Hidden);
+            using var renderer = window.CreateRenderer();
+            using var texture = renderer.CreateTexture<Yvyu>(TextureAccess.Streaming, renderer.OutputSize);
+            texture.WithLock(pixels => pixels.Fill(color));
+            renderer.Copy(texture);
+            renderer.Present();
+        }
+
+        [Fact]
+        public static void CreatePackedTextureOfUYVY()
+        {
+            var color = new Uyvy(255, 255, 255, 255);
+            using var window = new Window("CreatePackedTextureOfUYVY", 640, 480, WindowFlags.Hidden);
+            using var renderer = window.CreateRenderer();
+            using var texture = renderer.CreateTexture<Uyvy>(TextureAccess.Streaming, renderer.OutputSize);
+            texture.WithLock(pixels => pixels.Fill(color));
             renderer.Copy(texture);
             renderer.Present();
         }

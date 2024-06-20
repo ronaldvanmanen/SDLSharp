@@ -1,4 +1,4 @@
-﻿// SDL2Sharp
+// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,8 +18,30 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-namespace SDL2Sharp
+using System.Runtime.InteropServices;
+
+namespace SDL2Sharp.Colors
 {
-    public delegate void WithLockPackedImageCallback<TPackedColor>(PackedImage<TPackedColor> pixels)
-        where TPackedColor : struct;
+    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
+    [PackedColor(PackedPixelFormat.UYVY)]
+    public readonly record struct Uyvy
+    {
+        private readonly uint _value;
+
+        public byte U0 => (byte)(_value >> 24 & 0xFF);
+
+        public byte Y0 => (byte)(_value >> 16 & 0xFF);
+
+        public byte V0 => (byte)(_value >> 8 & 0xFF);
+
+        public byte Y1 => (byte)(_value & 0xFF);
+
+        public Uyvy(byte u0, byte y0, byte v0, byte y1)
+        {
+            unchecked
+            {
+                _value = (uint)(u0 << 24 | y0 << 16 | v0 << 8 | y1);
+            }
+        }
+    }
 }

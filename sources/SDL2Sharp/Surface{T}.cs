@@ -35,9 +35,9 @@ namespace SDL2Sharp
 
         public int Pitch => _surface.Pitch;
 
-        public PackedImage<TPackedColor> Pixels => _surface.Pixels<TPackedColor>();
-
-        public bool MustLock => _surface.MustLock;
+        public Surface(int width, int height)
+        : this(new Surface(width, height, (PixelFormatEnum)PackedColorAttribute.GetPixelFormatOf<TPackedColor>()))
+        { }
 
         internal unsafe Surface(SDL_Surface* surface)
         : this(new Surface(surface))
@@ -98,18 +98,9 @@ namespace SDL2Sharp
             _surface.FillRect(color);
         }
 
-        public void Lock()
+        public void WithLock(WithLockPackedImageCallback<TPackedColor> callback)
         {
-            ThrowWhenDisposed();
-
-            _surface.Lock();
-        }
-
-        public void Unlock()
-        {
-            ThrowWhenDisposed();
-
-            _surface.Unlock();
+            _surface.WithLock(callback);
         }
 
         private void ThrowWhenDisposed()
