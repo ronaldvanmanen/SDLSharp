@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 
 namespace SDL2Sharp.Colors
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 2)]
     [PackedColor(PackedPixelFormat.RGB565)]
     public readonly record struct Rgb565
     {
