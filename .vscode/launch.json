@@ -18,9 +18,9 @@
             "name": "Launch AverageFrameRate",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/AverageFrameRate/Debug/net6.0/AverageFrameRate",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/AverageFrameRate/${input:Configuration}/${input:CoreClrFramework}/AverageFrameRate",
             "args": [],
-            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/AverageFrameRate/Debug/net6.0",
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/AverageFrameRate/${input:Configuration}/${input:CoreClrFramework}",
             "stopAtEntry": false,
             "console": "internalConsole"
         },
@@ -28,9 +28,9 @@
             "name": "Launch BitmapViewer",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/BitmapViewer/Debug/net6.0/BitmapViewer",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/BitmapViewer/${input:Configuration}/${input:CoreClrFramework}/BitmapViewer",
             "args": ["Sample.bmp"],
-            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/BitmapViewer/Debug/net6.0",
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/BitmapViewer/${input:Configuration}/${input:CoreClrFramework}",
             "stopAtEntry": false,
             "console": "internalConsole"
         },
@@ -38,9 +38,9 @@
             "name": "Launch ParticleSystem",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/ParticleSystem/Debug/net6.0/ParticleSystem",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/ParticleSystem/${input:Configuration}/${input:CoreClrFramework}/ParticleSystem",
             "args": [],
-            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/ParticleSystem/Debug/net6.0",
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/ParticleSystem/${input:Configuration}/${input:CoreClrFramework}",
             "stopAtEntry": false,
             "console": "internalConsole"
         },
@@ -48,9 +48,9 @@
             "name": "Launch PlasmaFractal",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/PlasmaFractal/Debug/net6.0/PlasmaFractal",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/PlasmaFractal/${input:Configuration}/${input:CoreClrFramework}/PlasmaFractal",
             "args": [],
-            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/PlasmaFractal/Debug/net6.0",
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/PlasmaFractal/${input:Configuration}/${input:CoreClrFramework}",
             "stopAtEntry": false,
             "console": "internalConsole"
         },
@@ -58,9 +58,9 @@
             "name": "Launch RayTracer",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/RayTracer/Debug/net6.0/RayTracer",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/RayTracer/${input:Configuration}/${input:CoreClrFramework}/RayTracer",
             "args": [],
-            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/RayTracer/Debug/net6.0",
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/RayTracer/${input:Configuration}/${input:CoreClrFramework}",
             "stopAtEntry": false,
             "console": "internalConsole"
         },
@@ -68,9 +68,9 @@
             "name": "Launch SwirlStars",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/SwirlStars/Debug/net6.0/SwirlStars",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/SwirlStars/${input:Configuration}/${input:CoreClrFramework}/SwirlStars",
             "args": [],
-            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/SwirlStars/Debug/net6.0",
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/SwirlStars/${input:Configuration}/${input:CoreClrFramework}",
             "stopAtEntry": false,
             "console": "internalConsole"
         },
@@ -78,9 +78,9 @@
             "name": "Launch TunnelEffect",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/TunnelEffect/Debug/net6.0/TunnelEffect",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/TunnelEffect/${input:Configuration}/${input:CoreClrFramework}/TunnelEffect",
             "args": [],
-            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/TunnelEffect/Debug/net6.0",
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/TunnelEffect/${input:Configuration}/${input:CoreClrFramework}",
             "stopAtEntry": false,
             "console": "internalConsole"
         },
@@ -88,14 +88,59 @@
             "name": "Launch WavePlayer",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/WavePlayer/Debug/net6.0/WavePlayer",
+            "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/WavePlayer/${input:Configuration}/${input:CoreClrFramework}/WavePlayer",
             "args": ["Roland-GR-1-Trumpet-C5.wav"],
-            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/WavePlayer/Debug/net6.0",
+            "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/WavePlayer/${input:Configuration}/${input:CoreClrFramework}",
             "stopAtEntry": false,
             "console": "internalConsole"
         }
     ],
     "inputs": [
+        {
+            "id": "Configuration",
+            "description": "Choose which configuration should be used.",
+            "default": "Debug",
+            "type": "pickString",
+            "options": [
+                "Debug",
+                "Release"
+            ]
+        },
+        {
+            "id": "Architecture",
+            "description": "Choose which architecture should be used.",
+            "default": "x64",
+            "type": "pickString",
+            "options": [
+                "x86",
+                "x64"
+            ]
+        },
+        {
+            "id": "ClrFramework",
+            "description": "Choose which .NET target framework should be used.",
+            "default": "net481",
+            "type": "pickString",
+            "options": [
+                "net481",
+                "net48",
+                "net472",
+                "net471",
+                "net47",
+                "net462"
+            ]
+        },
+        {
+            "id": "CoreClrFramework",
+            "description": "Choose which .NET target framework should be used.",
+            "default": "net8.0",
+            "type": "pickString",
+            "options": [
+                "net8.0",
+                "net7.0",
+                "net6.0",
+            ]
+        },
         {
             "id": "NukeBuildTargets",
             "description": "Choose which target to build",
