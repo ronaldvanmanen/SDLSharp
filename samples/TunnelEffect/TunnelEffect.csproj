@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net8.0;net7.0;net6.0;net462;net47;net471;net472;net48;net481</TargetFrameworks>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <SelfContained>false</SelfContained>
   </PropertyGroup>
