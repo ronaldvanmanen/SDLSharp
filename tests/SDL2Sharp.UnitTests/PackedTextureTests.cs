@@ -23,7 +23,7 @@ using Xunit;
 
 namespace SDL2Sharp.UnitTests
 {
-    public static class PackedTextureTests
+    public sealed class PackedTextureTests : IAssemblyFixture<AssemblyFixture>
     {
         [Fact]
         public static void CreatePackedTextureOfArgb8888()
