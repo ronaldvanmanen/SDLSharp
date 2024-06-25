@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp", "sources\SDL2Sharp\SDL2Sharp.csproj", "{648556E3-AFD4-4432-8424-89EED2126F82}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.UnitTests", "tests\SDL2Sharp.UnitTests\SDL2Sharp.UnitTests.csproj", "{0EA1CB52-0E1E-4EEC-80B5-5EA37F436EAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Tests", "tests\SDL2Sharp.Tests\SDL2Sharp.Tests.csproj", "{0EA1CB52-0E1E-4EEC-80B5-5EA37F436EAF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sources", "sources", "{1CCF39F1-02DD-4E9C-B1C2-614715E9EDB0}"
 	ProjectSection(SolutionItems) = preProject
@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{3B30
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Interop", "sources\SDL2Sharp.Interop\SDL2Sharp.Interop.csproj", "{A03FB552-F079-4852-8E1A-6ADD6C1BD3A8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Interop.UnitTests", "tests\SDL2Sharp.Interop.UnitTests\SDL2Sharp.Interop.UnitTests.csproj", "{C4E13408-B833-4B51-BC7B-BABBC759FB1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDL2Sharp.Interop.Tests", "tests\SDL2Sharp.Interop.Tests\SDL2Sharp.Interop.Tests.csproj", "{C4E13408-B833-4B51-BC7B-BABBC759FB1B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{5E4EF724-335F-42C6-A2ED-4DFECD530B7F}"
 	ProjectSection(SolutionItems) = preProject

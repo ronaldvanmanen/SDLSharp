@@ -31,7 +31,7 @@ interface ITest : IBuild
         .Produces(ArtifactsDirectory / "tst" / "*.*", ArtifactsDirectory / "log" / "*.*")
         .Executes(() =>
         {
-            foreach (var targetFramework in GetTargetFrameworks(project => project.Name.EndsWith(".UnitTests")))
+            foreach (var targetFramework in GetTargetFrameworks(project => project.Name.EndsWith(".Tests")))
             {
                 DotNetTest(settings => settings
                     .SetProjectFile(Solution)

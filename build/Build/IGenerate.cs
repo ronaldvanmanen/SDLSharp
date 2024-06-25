@@ -45,7 +45,7 @@ interface IGenerate : IBuild
     {
         var headerFile = RootDirectory / "sources" / "Build" / "Header.txt";
         var outputDirectory = RootDirectory / "sources" / "SDL2Sharp.Interop";
-        var testOutputDirectory = RootDirectory / "tests" / "SDL2Sharp.Interop.UnitTests";
+        var testOutputDirectory = RootDirectory / "tests" / "SDL2Sharp.Interop.Tests";
 
         const string packageId = "SDL2";
         var packageFolder = packageId.ToLower();
@@ -336,7 +336,7 @@ interface IGenerate : IBuild
     {
         var headerFile = RootDirectory / "sources" / "Build" / "Header.txt";
         var outputDirectory = RootDirectory / "sources" / "SDL2Sharp.Interop";
-        var testOutputDirectory = RootDirectory / "tests" / "SDL2Sharp.Interop.UnitTests";
+        var testOutputDirectory = RootDirectory / "tests" / "SDL2Sharp.Interop.Tests";
 
         const string basePackageId = "SDL2";
         var basePackageFolder = basePackageId.ToLower();
@@ -391,7 +391,7 @@ interface IGenerate : IBuild
     {
         var headerFile = RootDirectory / "sources" / "Build" / "Header.txt";
         var outputDirectory = RootDirectory / "sources" / "SDL2Sharp.Interop";
-        var testOutputDirectory = RootDirectory / "tests" / "SDL2Sharp.Interop.UnitTests";
+        var testOutputDirectory = RootDirectory / "tests" / "SDL2Sharp.Interop.Tests";
 
         const string basePackageId = "SDL2";
         var basePackageFolder = basePackageId.ToLower();
