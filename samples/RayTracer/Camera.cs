@@ -101,7 +101,7 @@ namespace RayTracer
             _viewMatrix *= Matrix4x4.CreateFromYawPitchRoll(yaw, pitch, roll);
         }
 
-        public void Shoot(World world, PackedMemoryImage<Argb8888> image)
+        public void Shoot(World world, MemoryImage<Argb8888> image)
         {
             if (world is null)
             {

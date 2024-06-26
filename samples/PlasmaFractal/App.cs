@@ -43,7 +43,7 @@ namespace PlasmaFractal
 
         private PackedTexture<Argb8888> _screenImage = null!;
 
-        private PackedMemoryImage<byte> _sourceImage = null!;
+        private MemoryImage<byte> _sourceImage = null!;
 
         private Palette<Argb8888> _palette = null!;
 
@@ -199,21 +199,21 @@ namespace PlasmaFractal
             return palette;
         }
 
-        private static PackedMemoryImage<byte> GenerateDiamondSquareImage(Size size)
+        private static MemoryImage<byte> GenerateDiamondSquareImage(Size size)
         {
             return GenerateDiamondSquareImage(size.Width, size.Height);
         }
 
-        private static PackedMemoryImage<byte> GenerateDiamondSquareImage(int width, int height)
+        private static MemoryImage<byte> GenerateDiamondSquareImage(int width, int height)
         {
             var size = NextPowerOfTwo(Max(width, height)) + 1;
             var image = GenerateDiamondSquareImage(size);
             return image.Crop(0, 0, height, width);
         }
 
-        private static PackedMemoryImage<byte> GenerateDiamondSquareImage(int size)
+        private static MemoryImage<byte> GenerateDiamondSquareImage(int size)
         {
-            var image = new PackedMemoryImage<byte>(size, size);
+            var image = new MemoryImage<byte>(size, size);
 
             var randomness = 256;
 
@@ -249,7 +249,7 @@ namespace PlasmaFractal
             return image;
         }
 
-        private static void Diamond(PackedMemoryImage<byte> map, int centerX, int centerY, int distance, int randomness)
+        private static void Diamond(MemoryImage<byte> map, int centerX, int centerY, int distance, int randomness)
         {
             var sum = 0;
             var count = 0;
@@ -296,7 +296,7 @@ namespace PlasmaFractal
             map[centerY, centerX] = (byte)value;
         }
 
-        private static void Square(PackedMemoryImage<byte> map, int centerX, int centerY, int distance, int randomness)
+        private static void Square(MemoryImage<byte> map, int centerX, int centerY, int distance, int randomness)
         {
             var sum = 0;
             var count = 0;

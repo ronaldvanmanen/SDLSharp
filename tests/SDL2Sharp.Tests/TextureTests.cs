@@ -18,6 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System;
 using SDL2Sharp.Colors;
 using Xunit;
 
@@ -26,7 +27,7 @@ namespace SDL2Sharp.Tests
     public sealed class TextureTests : IAssemblyFixture<AssemblyFixture>
     {
         [Fact]
-        public static void CreateTextureOfArgb8888()
+        public void CreateTextureOfArgb8888()
         {
             var color = new Argb8888(255, 255, 255, 255);
             using var window = new Window("CreateTextureOfArgb8888", 640, 480, WindowFlags.Hidden);
@@ -38,7 +39,7 @@ namespace SDL2Sharp.Tests
         }
 
         [Fact]
-        public static void CreateTextureOfYUY2()
+        public void CreateTextureOfYUY2()
         {
             var color = new Yuy2(255, 255, 255, 255);
             using var window = new Window("CreateTextureOfYUY2", 640, 480, WindowFlags.Hidden);
@@ -50,7 +51,7 @@ namespace SDL2Sharp.Tests
         }
 
         [Fact]
-        public static void CreateTextureOfYVYU()
+        public void CreateTextureOfYVYU()
         {
             var color = new Yvyu(255, 255, 255, 255);
             using var window = new Window("CreateTextureOfYVYU", 640, 480, WindowFlags.Hidden);
@@ -62,13 +63,30 @@ namespace SDL2Sharp.Tests
         }
 
         [Fact]
-        public static void CreateTextureOfUYVY()
+        public void CreateTextureOfUYVY()
         {
             var color = new Uyvy(255, 255, 255, 255);
             using var window = new Window("CreateTextureOfUYVY", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
             using var texture = renderer.CreateTexture(PixelFormatEnum.UYVY, TextureAccess.Streaming, renderer.OutputSize);
             texture.WithLock<Uyvy>(pixels => pixels.Fill(color));
+            renderer.Copy(texture);
+            renderer.Present();
+        }
+
+        [Fact]
+        public void CreateTextureOfYV12()
+        {
+            var color = new Uyvy(255, 255, 255, 255);
+            using var window = new Window("CreateTextureOfYV12", 640, 480, WindowFlags.Hidden);
+            using var renderer = window.CreateRenderer();
+            using var texture = renderer.CreateTexture(PixelFormatEnum.YV12, TextureAccess.Streaming, renderer.OutputSize);
+            texture.WithLock((Yv12Image pixels) =>
+            {
+                pixels.Y.Fill(255);
+                pixels.U.Fill(255);
+                pixels.V.Fill(255);
+            });
             renderer.Copy(texture);
             renderer.Present();
         }

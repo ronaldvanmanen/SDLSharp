@@ -23,19 +23,19 @@ using Microsoft.Toolkit.HighPerformance;
 
 namespace SDL2Sharp
 {
-    public sealed class PackedMemoryImage<TPackedColor> where TPackedColor : struct
+    public sealed class MemoryImage<TColor> where TColor : struct
     {
         private readonly int _height;
 
         private readonly int _width;
 
-        private readonly TPackedColor[] _pixels;
+        private readonly TColor[] _pixels;
 
         public int Height => _height;
 
         public int Width => _width;
 
-        public TPackedColor this[int y, int x]
+        public TColor this[int y, int x]
         {
             get
             {
@@ -47,7 +47,7 @@ namespace SDL2Sharp
             }
         }
 
-        public PackedMemoryImage(int width, int height)
+        public MemoryImage(int width, int height)
         {
             if (width <= 0)
             {
@@ -67,14 +67,14 @@ namespace SDL2Sharp
 
             _width = width;
             _height = height;
-            _pixels = new TPackedColor[_height * _width];
+            _pixels = new TColor[_height * _width];
         }
 
-        public PackedMemoryImage(Size size)
+        public MemoryImage(Size size)
         : this(size.Width, size.Height)
         { }
 
-        public PackedMemoryImage<TPackedColor> Crop(int top, int left, int bottom, int right)
+        public MemoryImage<TColor> Crop(int top, int left, int bottom, int right)
         {
             if (top < 0)
             {
@@ -124,7 +124,7 @@ namespace SDL2Sharp
                     "The right of the crop rectangle cannot be less than or equal to the left of the crop rectangle.");
             }
 
-            var croppedImage = new PackedMemoryImage<TPackedColor>(right - left, bottom - top);
+            var croppedImage = new MemoryImage<TColor>(right - left, bottom - top);
             for (var y = 0; y < croppedImage.Height; ++y)
             {
                 for (var x = 0; x < croppedImage.Width; ++x)
@@ -135,7 +135,7 @@ namespace SDL2Sharp
             return croppedImage;
         }
 
-        public ref TPackedColor DangerousGetReference()
+        public ref TColor DangerousGetReference()
         {
             return ref _pixels.DangerousGetReference();
         }

@@ -55,9 +55,9 @@ namespace TunnelEffect
 
         private PackedTexture<Argb8888> _screenTexture = null!;
 
-        private Memory2D<Argb8888> _sourceImage = null!;
+        private MemoryImage<Argb8888> _sourceImage = null!;
 
-        private Memory2D<Transform> _transformTable = null!;
+        private MemoryImage<Transform> _transformTable = null!;
 
         private Stopwatch _realTime = null!;
 
@@ -111,13 +111,10 @@ namespace TunnelEffect
                 var screenWidth = screenImage.Width;
                 var screenHeight = screenImage.Height;
 
-                var sourceImage = _sourceImage.Span;
                 var sourceWidth = _sourceImage.Width;
                 var sourceHeight = _sourceImage.Height;
                 var sourceWidthMask = sourceWidth - 1;
                 var sourceHeightMask = sourceHeight - 1;
-
-                var transformTable = _transformTable.Span;
 
                 var shiftX = (int)(screenWidth * 1.0 * realTime.TotalSeconds);
                 var shiftY = (int)(screenHeight * 0.25 * realTime.TotalSeconds);
@@ -149,14 +146,14 @@ namespace TunnelEffect
             _renderer.Present();
         }
 
-        private static Memory2D<Argb8888> GenerateXorImage(int size)
+        private static MemoryImage<Argb8888> GenerateXorImage(int size)
         {
             return GenerateXorImage(size, size);
         }
 
-        private static Memory2D<Argb8888> GenerateXorImage(int width, int height)
+        private static MemoryImage<Argb8888> GenerateXorImage(int width, int height)
         {
-            var image = new Argb8888[height, width];
+            var image = new MemoryImage<Argb8888>(width, height);
             for (var y = 0; y < height; y++)
             {
                 for (var x = 0; x < width; x++)
@@ -169,18 +166,18 @@ namespace TunnelEffect
                     );
                 }
             }
-            return new Memory2D<Argb8888>(image);
+            return image;
         }
 
-        private static Memory2D<Transform> GenerateTransformTable(int size)
+        private static MemoryImage<Transform> GenerateTransformTable(int size)
         {
             return GenerateTransformTable(size, size);
         }
 
-        private static Memory2D<Transform> GenerateTransformTable(int width, int height)
+        private static MemoryImage<Transform> GenerateTransformTable(int width, int height)
         {
             const double ratio = 32d;
-            var transformTable = new Transform[height, width];
+            var transformTable = new MemoryImage<Transform>(width, height);
             for (var y = 0; y < height; y++)
             {
                 for (var x = 0; x < width; x++)
@@ -193,7 +190,7 @@ namespace TunnelEffect
                     }
                 }
             }
-            return new Memory2D<Transform>(transformTable);
+            return transformTable;
         }
 
         private void OnWindowKeyDown(object? sender, KeyEventArgs e)

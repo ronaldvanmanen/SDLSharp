@@ -102,7 +102,7 @@ namespace SDL2Sharp
             _texture.WithLock(x, y, width, height, callback);
         }
 
-        public void Update(PackedMemoryImage<TPackedColor> image)
+        public void Update(MemoryImage<TPackedColor> image)
         {
             ThrowWhenDisposed();
 
@@ -112,15 +112,6 @@ namespace SDL2Sharp
         }
 
         public void Update(PackedImage<TPackedColor> pixels)
-        {
-            ThrowWhenDisposed();
-
-            var pointer = Unsafe.AsPointer(ref pixels.DangerousGetReference());
-            var pitch = pixels.Width * Marshal.SizeOf<TPackedColor>();
-            Update(null, pointer, pitch);
-        }
-
-        public void Update(Span2D<TPackedColor> pixels)
         {
             ThrowWhenDisposed();
 
