@@ -20,14 +20,19 @@
 
 using System;
 using System.Numerics;
+using SDL2Sharp.Video.Colors;
 
 internal sealed class Sphere : IObject
 {
     public Vector3 Position { get; set; } = new Vector3(0f, 0f, 0f);
 
-    public float Radius { get; set; } = 1f;
+    public float Radius { get; set; }
 
-    public ISurface Surface { get; set; } = new MatteSurface();
+    public float AmbientCoefficient { get; set; } = 1f;
+
+    public float DiffuseCoefficient { get; set; } = 1f;
+
+    public Rgb32f DiffuseColor { get; set; } = Rgb32f.Black;
 
     public Vector3 NormalAt(Vector3 point)
     {
@@ -36,26 +41,28 @@ internal sealed class Sphere : IObject
 
     public Intersection? Intersect(Ray ray)
     {
-        var v = ray.Origin - Position;
+        var v = Position - ray.Origin;
         var b = Vector3.Dot(v, ray.Direction);
-        var c = Vector3.Dot(v, v) - Radius * Radius;
-        if (c > 0f && b > 0f)
+        var discriminant = b * b - Vector3.Dot(v, v) + Radius * Radius;
+        if (discriminant <= 0f)
         {
             return null;
         }
 
-        var discriminant = b * b - c;
-        if (discriminant < 0f)
+        discriminant = MathF.Sqrt(discriminant);
+
+        var t2 = b + discriminant;
+        if (t2 <= Ray.Epsilon)
         {
             return null;
         }
 
-        var t = -b - MathF.Sqrt(discriminant);
-        if (t < 0f)
+        var t1 = b - discriminant;
+        if (t1 > Ray.Epsilon)
         {
-            t = 0f;
+            return new Intersection(this, ray, t1);
         }
 
-        return new Intersection(this, ray, t);
+        return new Intersection(this, ray, t2);
     }
 }

@@ -18,6 +18,8 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using static System.Math;
+
 namespace SDL2Sharp.Video.Colors
 {
     public static class Rgb32fExtensions
@@ -26,9 +28,9 @@ namespace SDL2Sharp.Video.Colors
         {
             var clampedColor = Rgb32f.Clamp(color);
             var scaledColor = clampedColor * 255f;
-            var r = (byte)scaledColor.R;
-            var g = (byte)scaledColor.G;
-            var b = (byte)scaledColor.B;
+            var r = (byte)Round(scaledColor.R);
+            var g = (byte)Round(scaledColor.G);
+            var b = (byte)Round(scaledColor.B);
             return new Color(r, g, b, 255);
         }
 
@@ -36,9 +38,9 @@ namespace SDL2Sharp.Video.Colors
         {
             var clampedColor = Rgb32f.Clamp(color);
             var scaledColor = clampedColor * 255f;
-            var r = (byte)scaledColor.R;
-            var g = (byte)scaledColor.G;
-            var b = (byte)scaledColor.B;
+            var r = (byte)Round(scaledColor.R);
+            var g = (byte)Round(scaledColor.G);
+            var b = (byte)Round(scaledColor.B);
             return new Rgba8888(r, g, b, 255);
         }
 
@@ -46,9 +48,9 @@ namespace SDL2Sharp.Video.Colors
         {
             var clampedColor = Rgb32f.Clamp(color);
             var scaledColor = clampedColor * 255f;
-            var r = (byte)scaledColor.R;
-            var g = (byte)scaledColor.G;
-            var b = (byte)scaledColor.B;
+            var r = (byte)Round(scaledColor.R);
+            var g = (byte)Round(scaledColor.G);
+            var b = (byte)Round(scaledColor.B);
             return new Argb8888(255, r, g, b);
         }
     }

@@ -22,6 +22,8 @@ using System.Numerics;
 
 internal readonly struct Ray
 {
+    public const float Epsilon = 1e-2f;
+
     public Vector3 Origin { get; }
 
     public Vector3 Direction { get; }

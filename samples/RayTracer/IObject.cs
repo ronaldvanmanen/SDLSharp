@@ -19,10 +19,15 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Numerics;
+using SDL2Sharp.Video.Colors;
 
 internal interface IObject
 {
-    ISurface Surface { get; }
+    float AmbientCoefficient { get; set; }
+
+    float DiffuseCoefficient { get; set; }
+
+    Rgb32f DiffuseColor { get; set; }
 
     Intersection? Intersect(Ray ray);
 

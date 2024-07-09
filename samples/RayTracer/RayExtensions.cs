@@ -19,6 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Collections.Generic;
+using System.Linq;
 
 internal static class RayExtensions
 {
@@ -26,17 +27,11 @@ internal static class RayExtensions
         Comparer<Intersection>.Create(
             (a, b) => a.Distance.CompareTo(b.Distance));
 
-    public static SortedSet<Intersection> Intersect(this Ray ray, IEnumerable<IObject> objects)
+    public static Intersection? Intersect(this Ray ray, IEnumerable<IObject> objects)
     {
-        var intersections = new SortedSet<Intersection>(_distanceComparer);
-        foreach (var @object in objects)
-        {
-            var intersection = @object.Intersect(ray);
-            if (intersection != null)
-            {
-                intersections.Add(intersection);
-            }
-        }
-        return intersections;
+        return objects
+            .Select(@object => @object.Intersect(ray))
+            .Where(@intersection => @intersection is not null)
+            .MinBy(@intersection => @intersection!.Distance);
     }
 }

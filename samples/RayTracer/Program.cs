@@ -46,95 +46,68 @@ internal static class Program
             Ambient = new Rgb32f(0.55f, 0.44f, 0.47f),
             Objects =
             {
-                 // Backdrop Plane
-                 new Plane
-                 {
-                     Position = new Vector3(0f, 0f, 0f),
-                     Normal = new Vector3(0f, 1f, 0f),
-                     Surface = new MatteSurface
-                     {
-                         DiffuseColor = new Rgb32f(1f, 1f, 1f),
-                     }
-                 },
+                // Backdrop Plane
+                new Plane
+                {
+                    Position = new Vector3(0f, 0f, 0f),
+                    Normal = new Vector3(0f, 1f, 0f),
+                    DiffuseColor = new Rgb32f(.5f, .5f, .5f)
+                },
                 // Large center orange Sphere
                 new Sphere
                 {
                     Position = new Vector3(0f, 5.25f, 0f),
                     Radius = 10.5f / 2f,
-                    Surface = new MatteSurface
-                    {
-                        DiffuseColor = new Rgb32f(0.89f, 0.48f, 0.42f)
-                    }
+                    DiffuseColor = new Rgb32f(0.89f, 0.48f, 0.42f)
                 },
                 // Small center yellow Sphere
                 new Sphere
                 {
                     Position = new Vector3(-3.5f, 1.6f, -6.7f),
                     Radius = 3.2f / 2f,
-                    Surface = new MatteSurface
-                    {
-                        DiffuseColor = new Rgb32f(0.95f, 0.93f, 0.31f)
-                    }
+                    DiffuseColor = new Rgb32f(0.95f, 0.93f, 0.31f)
                 },
                 // Large back right pink Sphere
                 new Sphere
                 {
                     Position = new Vector3(14f, 7f, 6.5f),
                     Radius = 14f / 2f,
-                    Surface = new MatteSurface
-                    {
-                        DiffuseColor = new Rgb32f(1f, 0.44f, 0.64f)
-                    }
+                    DiffuseColor = new Rgb32f(1f, 0.44f, 0.64f)
                 },
                 // Small front right orange Sphere
                 new Sphere
                 {
                     Position = new Vector3(8.2f, 3.5f, -6.5f),
                     Radius = 7f / 2f,
-                    Surface = new MatteSurface
-                    {
-                        DiffuseColor = new Rgb32f(0.89f, 0.48f, 0.42f)
-                    }
+                    DiffuseColor = new Rgb32f(0.89f, 0.48f, 0.42f)
                 },
                 // Large back left pink Sphere
                 new Sphere
                 {
                     Position = new Vector3(-16.6f, 6.5f, 0f),
                     Radius = 13f / 2f,
-                    Surface = new MatteSurface
-                    {
-                        DiffuseColor = new Rgb32f(1f, 0.44f, 0.64f)
-                    }
+                    DiffuseColor = new Rgb32f(1f, 0.44f, 0.64f)
                 },
                 // Medium front back left pink Sphere
                 new Sphere
                 {
                     Position = new Vector3(-9.5f, 3f, -6f),
                     Radius = 6f / 2f,
-                    Surface = new MatteSurface
-                    {
-                        DiffuseColor = new Rgb32f(1f, 0.44f, 0.64f)
-                    }
+                    DiffuseColor = new Rgb32f(1f, 0.44f, 0.64f)
                 },
                 // Back left yellow Sphere
                 new Sphere
                 {
                     Position = new Vector3(-15f, 3f, 12f),
                     Radius = 6f / 2f,
-                    Surface = new MatteSurface
-                    {
-                        DiffuseColor = new Rgb32f(0.95f, 0.93f, 0.31f)
-                    }
+                    DiffuseColor = new Rgb32f(0.95f, 0.93f, 0.31f)
                 },
                 // Far Back right blue Sphere
                 new Sphere
                 {
                     Position = new Vector3(40f, 10f, 175f),
                     Radius = 20f / 2f,
-                    Surface = new MatteSurface
-                    {
-                        DiffuseColor = new Rgb32f(0.18f, 0.31f, 0.68f)
-                    }
+                    DiffuseColor = new Rgb32f(0.18f, 0.31f, 0.68f)
                 },
             },
             Lights =
@@ -149,10 +122,9 @@ internal static class Program
 
         var camera = new Camera();
         camera.Roll(180f * MathF.PI / 180f);
-        camera.Pitch(-6f * MathF.PI / 180f);
-        camera.Yaw(180f * MathF.PI / 180f);
-        camera.MoveUp(-8.5f);
-        camera.MoveBackward(26f);
+        camera.Pitch(6f * MathF.PI / 180f);
+        camera.MoveUp(8.5f);
+        camera.MoveBackward(32f);
 
         var lastFrameTime = TimeSpan.Zero;
         var accumulatedFrameTime = TimeSpan.Zero;
@@ -221,12 +193,26 @@ internal static class Program
 
                 if (keyboardState.IsPressed(Scancode.W))
                 {
-                    camera.MoveForward(1);
+                    if (keyboardState.IsPressed(Scancode.LeftShift))
+                    {
+                        camera.MoveUp(1);
+                    }
+                    else
+                    {
+                        camera.MoveForward(1);
+                    }
                 }
 
                 if (keyboardState.IsPressed(Scancode.S))
                 {
-                    camera.MoveBackward(1);
+                    if (keyboardState.IsPressed(Scancode.LeftShift))
+                    {
+                        camera.MoveDown(1);
+                    }
+                    else
+                    {
+                        camera.MoveBackward(1);
+                    }
                 }
 
                 if (keyboardState.IsPressed(Scancode.A))
@@ -237,6 +223,11 @@ internal static class Program
                 if (keyboardState.IsPressed(Scancode.D))
                 {
                     camera.MoveRight(1);
+                }
+
+                if (keyboardState.IsPressed(Scancode.Q))
+                {
+                    camera.MoveUp(1);
                 }
 
                 screenTexture.Update(camera.TakeSnapshot(world));

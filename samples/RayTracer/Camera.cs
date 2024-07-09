@@ -62,28 +62,28 @@ internal sealed class Camera
     public void MoveForward(float distance)
     {
         var forwardVector = Vector3.Transform(Vector3.UnitZ, _orientation);
-        var translation = forwardVector * -distance;
+        var translation = forwardVector * distance;
         _position += translation;
     }
 
     public void MoveBackward(float distance)
     {
         var forwardVector = Vector3.Transform(Vector3.UnitZ, _orientation);
-        var translation = forwardVector * distance;
+        var translation = forwardVector * -distance;
         _position += translation;
     }
 
     public void MoveLeft(float distance)
     {
         var rightVector = Vector3.Transform(Vector3.UnitX, _orientation);
-        var translation = rightVector * -distance;
+        var translation = rightVector * distance;
         _position += translation;
     }
 
     public void MoveRight(float distance)
     {
         var rightVector = Vector3.Transform(Vector3.UnitX, _orientation);
-        var translation = rightVector * distance;
+        var translation = rightVector * -distance;
         _position += translation;
     }
 
@@ -105,21 +105,21 @@ internal sealed class Camera
     {
         var upVector = Vector3.Transform(Vector3.UnitY, _orientation);
         var rotation = Quaternion.CreateFromAxisAngle(upVector, radians);
-        _orientation = rotation * _orientation;
+        _orientation *= rotation;
     }
 
     public void Pitch(float radians)
     {
         var rightVector = Vector3.Transform(Vector3.UnitX, _orientation);
         var rotation = Quaternion.CreateFromAxisAngle(rightVector, radians);
-        _orientation = rotation * _orientation;
+        _orientation *= rotation;
     }
 
     public void Roll(float radians)
     {
         var forwardVector = Vector3.Transform(Vector3.UnitZ, _orientation);
         var rotation = Quaternion.CreateFromAxisAngle(forwardVector, radians);
-        _orientation = rotation * _orientation;
+        _orientation *= rotation;
     }
 
     public MemoryImage<Argb8888> TakeSnapshot(World world)
@@ -129,8 +129,8 @@ internal sealed class Camera
             throw new ArgumentNullException(nameof(world));
         }
 
-        var rotationMatrix = Matrix4x4.CreateFromQuaternion(_orientation);
-        var translationMatrix = Matrix4x4.CreateTranslation(_position);
+        var rotationMatrix = Matrix4x4.CreateFromQuaternion(Quaternion.Inverse(_orientation));
+        var translationMatrix = Matrix4x4.CreateTranslation(-_position);
         var viewMatrix = rotationMatrix * translationMatrix;
         Parallel.For(0, Snapshot.Height, y =>
         {
@@ -146,57 +146,11 @@ internal sealed class Camera
 
                 var ray = new Ray(Vector3.Zero, Vector3.Normalize(rayDirection));
                 var rayWorld = Ray.Transform(ray, viewMatrix);
-                var color = Trace(world, rayWorld, 0, 1f);
+                var color = world.Trace(rayWorld, 0, 1f);
                 Snapshot[y, x] = color.ToArgb8888();
             }
         });
 
         return Snapshot;
-    }
-
-    private static Rgb32f Trace(World world, Ray ray, int level, float weight)
-    {
-        var intersection = ray.Intersect(world.Objects).Min;
-        if (intersection is not null)
-        {
-            return Shade(world, intersection, level, weight);
-        }
-        return Rgb32f.Black;
-    }
-
-    private static Rgb32f Shade(World world, Intersection intersection, int level, float weight)
-    {
-        var shade = Rgb32f.Black;
-        var n = intersection.Normal;
-        var p = intersection.Point;
-
-        foreach (var light in world.Lights)
-        {
-            var l = Vector3.Normalize(light.Position - p);
-            var illumination = Vector3.Dot(n, l);
-            if (illumination > 0f)
-            {
-                var shadowRay = new Ray(p, -l);
-                if (Shadow(world, shadowRay, Vector3.Distance(p, light.Position)) > 0f)
-                {
-                    shade += illumination * light.Color;
-                }
-            }
-            var i = intersection.Object.Surface.Shade(world.Ambient, n, l, light.Color);
-            shade += i;
-        }
-        return shade;
-    }
-
-    private const float RoundOffErrorTolerance = 1e-7f;
-
-    private static float Shadow(World world, Ray ray, float tmax)
-    {
-        var nearestIntersection = ray.Intersect(world.Objects).Min;
-        if (nearestIntersection is null || nearestIntersection.Distance > tmax - RoundOffErrorTolerance)
-        {
-            return 1f;
-        }
-        return 0f;
     }
 }

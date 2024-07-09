@@ -19,14 +19,19 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Numerics;
+using SDL2Sharp.Video.Colors;
 
 internal sealed class Plane : IObject
 {
+    public float AmbientCoefficient { get; set; } = 1f;
+
+    public float DiffuseCoefficient { get; set; } = 1f;
+
+    public Rgb32f DiffuseColor { get; set; } = Rgb32f.Black;
+
     public Vector3 Position { get; set; } = new Vector3(0f, 0f, 0f);
 
     public Vector3 Normal { get; set; } = new Vector3(0f, 1f, 0f);
-
-    public ISurface Surface { get; set; } = new MatteSurface();
 
     public Vector3 NormalAt(Vector3 point)
     {
@@ -43,7 +48,7 @@ internal sealed class Plane : IObject
 
         var numerator = -Vector3.Dot(Normal, ray.Origin + Position);
         var t = numerator / denominator;
-        if (t < 0)
+        if (t <= Ray.Epsilon)
         {
             return null;
         }
