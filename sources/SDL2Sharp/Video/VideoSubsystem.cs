@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -19,6 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Collections.Generic;
 using SDL2Sharp.Interop;
 
 namespace SDL2Sharp.Video
@@ -26,6 +27,20 @@ namespace SDL2Sharp.Video
     public sealed class VideoSubsystem : IDisposable
     {
         private const uint InitSubsystemFlags = SDL.SDL_INIT_VIDEO;
+
+        public IReadOnlyList<Display> Displays
+        {
+            get
+            {
+                var displayCount = SDL.GetNumVideoDisplays();
+                var displays = new List<Display>(displayCount);
+                for (var displayIndex = 0; displayIndex < displayCount; displayIndex++)
+                {
+                    displays.Add(new Display(displayIndex));
+                }
+                return displays.AsReadOnly();
+            }
+        }
 
         public VideoSubsystem()
         {
