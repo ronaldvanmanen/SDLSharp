@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -54,6 +54,34 @@ namespace SDL2Sharp.Video
                     SDL.GetRendererOutputSize(_handle, &width, &height)
                 );
                 return new Size(width, height);
+            }
+        }
+
+        public int OutputWidth
+        {
+            get
+            {
+                ThrowWhenDisposed();
+
+                int width;
+                Error.ThrowOnFailure(
+                    SDL.GetRendererOutputSize(_handle, &width, null)
+                );
+                return width;
+            }
+        }
+
+        public int OutputHeight
+        {
+            get
+            {
+                ThrowWhenDisposed();
+
+                int height;
+                Error.ThrowOnFailure(
+                    SDL.GetRendererOutputSize(_handle, null, &height)
+                );
+                return height;
             }
         }
 
