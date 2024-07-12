@@ -42,6 +42,7 @@ internal static class Program
         using var screenTexture = renderer.CreateTexture<Argb8888>(TextureAccess.Streaming, renderer.OutputSize);
         using var lazyFont = fontSubsystem.OpenFont("lazy.ttf", 28);
 
+        var screenImage = new MemoryImage<Argb8888>(renderer.OutputSize);
         var sourceImage = GenerateDiamondSquareImage(renderer.OutputSize);
         var palette = GeneratePalette();
         var reversePaletteRotation = false;
@@ -84,16 +85,15 @@ internal static class Program
                 var elapsedFrameTime = currentFrameTime - lastFrameTime;
                 accumulatedFrameTime += elapsedFrameTime;
 
-                screenTexture.WithLock(screenImage =>
+                for (var y = 0; y < screenImage.Height; ++y)
                 {
-                    for (var y = 0; y < screenImage.Height; ++y)
+                    for (var x = 0; x < screenImage.Width; ++x)
                     {
-                        for (var x = 0; x < screenImage.Width; ++x)
-                        {
-                            screenImage[y, x] = palette[sourceImage[y, x]];
-                        }
+                        screenImage[y, x] = palette[sourceImage[y, x]];
                     }
-                });
+                }
+
+                screenTexture.Update(screenImage);
 
                 renderer.BlendMode = BlendMode.None;
                 renderer.DrawColor = Color.Black;

@@ -43,7 +43,8 @@ internal static class Program
         using var lazyFont = fontSubsystem.OpenFont("lazy.ttf", 28);
 
         var screenSize = renderer.OutputSize;
-        var sourceImageSize = NextPowerOfTwo(Max(screenSize.Width, screenSize.Height));
+        var screenImage = new MemoryImage<Argb8888>(renderer.OutputSize);
+        var sourceImageSize = NextPowerOfTwo(Max(renderer.OutputWidth, renderer.OutputHeight));
         var sourceImage = GenerateXorImage(sourceImageSize);
         var transformTable = GenerateTransformTable(sourceImageSize);
 
@@ -81,36 +82,34 @@ internal static class Program
                 var elapsedFrameTime = currentFrameTime - lastFrameTime;
                 accumulatedFrameTime += elapsedFrameTime;
 
-                screenTexture.WithLock(screenImage =>
+                var screenWidth = screenImage.Width;
+                var screenHeight = screenImage.Height;
+                var sourceWidth = sourceImage.Width;
+                var sourceHeight = sourceImage.Height;
+                var sourceWidthMask = sourceWidth - 1;
+                var sourceHeightMask = sourceHeight - 1;
+
+                var shiftX = (int)(screenWidth * 1.0 * currentFrameTime.TotalSeconds);
+                var shiftY = (int)(screenHeight * 0.25 * currentFrameTime.TotalSeconds);
+                var lookX = (sourceWidth - screenWidth) / 2;
+                var lookY = (sourceHeight - screenHeight) / 2;
+                var shiftLookX = shiftX + lookX;
+                var shiftLookY = shiftY + lookY;
+
+                for (var screenY = 0; screenY < screenHeight; ++screenY)
                 {
-                    var screenWidth = screenImage.Width;
-                    var screenHeight = screenImage.Height;
-
-                    var sourceWidth = sourceImage.Width;
-                    var sourceHeight = sourceImage.Height;
-                    var sourceWidthMask = sourceWidth - 1;
-                    var sourceHeightMask = sourceHeight - 1;
-
-                    var shiftX = (int)(screenWidth * 1.0 * currentFrameTime.TotalSeconds);
-                    var shiftY = (int)(screenHeight * 0.25 * currentFrameTime.TotalSeconds);
-                    var lookX = (sourceWidth - screenWidth) / 2;
-                    var lookY = (sourceHeight - screenHeight) / 2;
-                    var shiftLookX = shiftX + lookX;
-                    var shiftLookY = shiftY + lookY;
-
-                    for (var screenY = 0; screenY < screenHeight; ++screenY)
+                    var transformY = screenY + lookY;
+                    for (var screenX = 0; screenX < screenWidth; ++screenX)
                     {
-                        var transformY = screenY + lookY;
-                        for (var screenX = 0; screenX < screenWidth; ++screenX)
-                        {
-                            var transformX = screenX + lookX;
-                            var transform = transformTable[transformY, transformX];
-                            var sourceX = (transform.Distance + shiftLookX) & sourceWidthMask;
-                            var sourceY = (transform.Angle + shiftLookY) & sourceHeightMask;
-                            screenImage[screenY, screenX] = sourceImage[sourceY, sourceX];
-                        }
+                        var transformX = screenX + lookX;
+                        var transform = transformTable[transformY, transformX];
+                        var sourceX = (transform.Distance + shiftLookX) & sourceWidthMask;
+                        var sourceY = (transform.Angle + shiftLookY) & sourceHeightMask;
+                        screenImage[screenY, screenX] = sourceImage[sourceY, sourceX];
                     }
-                });
+                }
+
+                screenTexture.Update(screenImage);
 
                 renderer.BlendMode = BlendMode.None;
                 renderer.DrawColor = Color.Black;
