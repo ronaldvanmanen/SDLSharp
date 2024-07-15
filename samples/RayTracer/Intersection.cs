@@ -20,38 +20,35 @@
 
 using System.Numerics;
 
-namespace RayTracer
+internal sealed class Intersection
 {
-    internal sealed class Intersection
+    public Intersection(IObject @object, Ray ray, float distance)
     {
-        public Intersection(IObject @object, Ray ray, float distance)
+        Object = @object;
+        Ray = ray;
+        Distance = distance;
+    }
+
+    public IObject Object { get; }
+
+    public Ray Ray { get; }
+
+    public float Distance { get; }
+
+    public Vector3 Point => Ray.Origin + Ray.Direction * Distance;
+
+    public Vector3 Normal
+    {
+        get
         {
-            Object = @object;
-            Ray = ray;
-            Distance = distance;
-        }
+            var normal = Object.NormalAt(Point);
 
-        public IObject Object { get; }
-
-        public Ray Ray { get; }
-
-        public float Distance { get; }
-
-        public Vector3 Point => Ray.Origin + Ray.Direction * Distance;
-
-        public Vector3 Normal
-        {
-            get
+            if (Vector3.Dot(Ray.Direction, normal) > 0f)
             {
-                var normal = Object.NormalAt(Point);
-
-                if (Vector3.Dot(Ray.Direction, normal) > 0f)
-                {
-                    normal = Vector3.Negate(normal);
-                }
-
-                return normal;
+                normal = Vector3.Negate(normal);
             }
+
+            return normal;
         }
     }
 }

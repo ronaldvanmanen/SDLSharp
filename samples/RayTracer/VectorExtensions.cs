@@ -21,17 +21,14 @@
 using System;
 using System.Numerics;
 
-namespace RayTracer
+internal static class VectorExtensions
 {
-    internal static class VectorExtensions
+    public static Vector3 RotateX(this Vector3 vector, float radians)
     {
-        public static Vector3 RotateX(this Vector3 vector, float radians)
-        {
-            return new Vector3(
-                vector.X,
-                vector.Y * MathF.Cos(radians) - vector.Z * MathF.Sin(radians),
-                vector.Y * MathF.Sin(radians) + vector.Z * MathF.Cos(radians)
-            );
-        }
+        return new Vector3(
+            vector.X,
+            vector.Y * MathF.Cos(radians) - vector.Z * MathF.Sin(radians),
+            vector.Y * MathF.Sin(radians) + vector.Z * MathF.Cos(radians)
+        );
     }
 }

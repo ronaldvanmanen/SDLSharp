@@ -21,44 +21,41 @@
 using System;
 using System.Numerics;
 
-namespace RayTracer
+internal sealed class Sphere : IObject
 {
-    internal sealed class Sphere : IObject
+    public Vector3 Position { get; set; } = new Vector3(0f, 0f, 0f);
+
+    public float Radius { get; set; } = 1f;
+
+    public ISurface Surface { get; set; } = new MatteSurface();
+
+    public Vector3 NormalAt(Vector3 point)
     {
-        public Vector3 Position { get; set; } = new Vector3(0f, 0f, 0f);
+        return Vector3.Normalize((point - Position) / Radius);
+    }
 
-        public float Radius { get; set; } = 1f;
-
-        public ISurface Surface { get; set; } = new MatteSurface();
-
-        public Vector3 NormalAt(Vector3 point)
+    public Intersection? Intersect(Ray ray)
+    {
+        var v = ray.Origin - Position;
+        var b = Vector3.Dot(v, ray.Direction);
+        var c = Vector3.Dot(v, v) - Radius * Radius;
+        if (c > 0f && b > 0f)
         {
-            return Vector3.Normalize((point - Position) / Radius);
+            return null;
         }
 
-        public Intersection? Intersect(Ray ray)
+        var discriminant = b * b - c;
+        if (discriminant < 0f)
         {
-            var v = ray.Origin - Position;
-            var b = Vector3.Dot(v, ray.Direction);
-            var c = Vector3.Dot(v, v) - Radius * Radius;
-            if (c > 0f && b > 0f)
-            {
-                return null;
-            }
-
-            var discriminant = b * b - c;
-            if (discriminant < 0f)
-            {
-                return null;
-            }
-
-            var t = -b - MathF.Sqrt(discriminant);
-            if (t < 0f)
-            {
-                t = 0f;
-            }
-
-            return new Intersection(this, ray, t);
+            return null;
         }
+
+        var t = -b - MathF.Sqrt(discriminant);
+        if (t < 0f)
+        {
+            t = 0f;
+        }
+
+        return new Intersection(this, ray, t);
     }
 }

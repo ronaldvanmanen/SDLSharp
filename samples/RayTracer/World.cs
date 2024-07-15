@@ -19,16 +19,13 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Collections.Generic;
-using SDL2Sharp.Colors;
+using SDL2Sharp.Video.Colors;
 
-namespace RayTracer
+internal sealed class World
 {
-    internal sealed class World
-    {
-        public Rgb32f Ambient { get; set; }
+    public Rgb32f Ambient { get; set; }
 
-        public ICollection<IObject> Objects { get; } = new List<IObject>();
+    public ICollection<IObject> Objects { get; } = new List<IObject>();
 
-        public ICollection<PointLight> Lights { get; } = new List<PointLight>();
-    }
+    public ICollection<PointLight> Lights { get; } = new List<PointLight>();
 }

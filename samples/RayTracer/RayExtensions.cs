@@ -20,20 +20,23 @@
 
 using System.Collections.Generic;
 
-namespace RayTracer
+internal static class RayExtensions
 {
-    internal static class RayExtensions
+    private static readonly Comparer<Intersection> _distanceComparer =
+        Comparer<Intersection>.Create(
+            (a, b) => a.Distance.CompareTo(b.Distance));
+
+    public static SortedSet<Intersection> Intersect(this Ray ray, IEnumerable<IObject> objects)
     {
-        public static IEnumerable<Intersection> Intersect(this Ray ray, IEnumerable<IObject> objects)
+        var intersections = new SortedSet<Intersection>(_distanceComparer);
+        foreach (var @object in objects)
         {
-            foreach (var @object in objects)
+            var intersection = @object.Intersect(ray);
+            if (intersection != null)
             {
-                var intersection = @object.Intersect(ray);
-                if (intersection != null)
-                {
-                    yield return intersection;
-                }
+                intersections.Add(intersection);
             }
         }
+        return intersections;
     }
 }

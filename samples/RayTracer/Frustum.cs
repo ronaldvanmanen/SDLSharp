@@ -18,34 +18,31 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-namespace RayTracer
+internal sealed class Frustum
 {
-    internal sealed class Frustum
+    public Frustum(float left, float right, float bottom, float top, float near, float far)
     {
-        public Frustum(float left, float right, float bottom, float top, float near, float far)
-        {
-            Left = left;
-            Right = right;
-            Bottom = bottom;
-            Top = top;
-            Near = near;
-            Far = far;
-        }
-
-        public float Left { get; }
-
-        public float Right { get; }
-
-        public float Bottom { get; }
-
-        public float Top { get; }
-
-        public float Near { get; }
-
-        public float Far { get; }
-
-        public float Width => Right - Left;
-
-        public float Height => Top - Bottom;
+        Left = left;
+        Right = right;
+        Bottom = bottom;
+        Top = top;
+        Near = near;
+        Far = far;
     }
+
+    public float Left { get; }
+
+    public float Right { get; }
+
+    public float Bottom { get; }
+
+    public float Top { get; }
+
+    public float Near { get; }
+
+    public float Far { get; }
+
+    public float Width => Right - Left;
+
+    public float Height => Top - Bottom;
 }

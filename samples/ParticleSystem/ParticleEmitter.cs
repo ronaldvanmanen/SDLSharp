@@ -20,89 +20,86 @@
 
 using System;
 using System.Collections.Generic;
-using SDL2Sharp;
+using SDL2Sharp.Video;
 using static System.Math;
 
-namespace ParticleSystem
+internal sealed class ParticleEmitter
 {
-    internal sealed class ParticleEmitter
+    public ParticleEmitter(Color color, Point position, int radius)
     {
-        public ParticleEmitter(Color color, Point position, int radius)
+        Color = color;
+        Position = position;
+        Radius = radius;
+        Particles = new List<Particle>(GenerateParticles(250));
+    }
+
+    public Color Color { get; }
+
+    public Point Position { get; private set; }
+
+    public int Radius { get; }
+
+    private List<Particle> Particles { get; }
+
+    public void MoveTo(int mouseX, int mouseY)
+    {
+        Position = new Point(mouseX, mouseY);
+    }
+
+    public void Update(TimeSpan elapsedTime)
+    {
+        foreach (var particle in Particles)
         {
-            Color = color;
-            Position = position;
-            Radius = radius;
-            Particles = new List<Particle>(GenerateParticles(250));
-        }
-
-        public Color Color { get; }
-
-        public Point Position { get; private set; }
-
-        public int Radius { get; }
-
-        private List<Particle> Particles { get; }
-
-        public void MoveTo(int mouseX, int mouseY)
-        {
-            Position = new Point(mouseX, mouseY);
-        }
-
-        public void Update(DateTime realTime, TimeSpan elapsedTime)
-        {
-            foreach (var particle in Particles)
+            if (particle.IsDead)
             {
-                if (particle.IsDead)
-                {
-                    var angle = _randomizer.NextDouble() * System.Math.PI * 2;
-                    var x = Position.X + Cos(angle) * Radius * 2;
-                    var y = Position.Y + Sin(angle) * Radius * 2;
-                    var position = new Point((int)x, (int)y);
+                var angle = _randomizer.NextDouble() * PI * 2;
+                var x = Position.X + Cos(angle) * Radius * 2;
+                var y = Position.Y + Sin(angle) * Radius * 2;
+                var position = new Point((int)x, (int)y);
 
-                    var r = (byte)(_randomizer.NextDouble() * byte.MaxValue);
-                    var g = (byte)(_randomizer.NextDouble() * byte.MaxValue);
-                    var b = (byte)(_randomizer.NextDouble() * byte.MaxValue);
-                    var color = new Color(r, g, b, byte.MaxValue);
+                var r = (byte)(_randomizer.NextDouble() * byte.MaxValue);
+                var g = (byte)(_randomizer.NextDouble() * byte.MaxValue);
+                var b = (byte)(_randomizer.NextDouble() * byte.MaxValue);
+                var color = new Color(r, g, b, byte.MaxValue);
 
-                    var lifespan = TimeSpan.FromSeconds(_randomizer.NextDouble());
+                var lifespan = TimeSpan.FromSeconds(_randomizer.NextDouble());
 
-                    particle.Respawn(lifespan, color, position, 7);
-                }
-
-                particle.Update(realTime, elapsedTime);
-            }
-        }
-
-        public void Render(Renderer renderer)
-        {
-            if (renderer is null)
-            {
-                throw new ArgumentNullException(nameof(renderer));
+                particle.Respawn(lifespan, color, position, 7);
             }
 
-            foreach (var particle in Particles)
-            {
-                particle.Render(renderer);
-            }
+            particle.Update(elapsedTime);
+        }
+    }
 
-            renderer.DrawColor = Color;
-            renderer.BlendMode = BlendMode.Blend;
-            renderer.FillCircle(Position.X, Position.Y, Radius);
+    public void Render(Renderer renderer)
+    {
+        if (renderer is null)
+        {
+            throw new ArgumentNullException(nameof(renderer));
         }
 
-        private static readonly Random _randomizer = new();
-
-        private static Particle GenerateParticle()
+        foreach (var particle in Particles)
         {
-            return new Particle();
+            particle.Render(renderer);
         }
 
-        private static IEnumerable<Particle> GenerateParticles(int max)
+        renderer.DrawColor = Color;
+        renderer.BlendMode = BlendMode.Blend;
+        renderer.FillCircle(Position.X, Position.Y, Radius);
+    }
+
+    private static readonly Random _randomizer = new();
+
+    private static Particle GenerateParticle()
+    {
+        return new Particle();
+    }
+
+    private static IEnumerable<Particle> GenerateParticles(int max)
+    {
+        for (var i = 0; i < max; ++i)
         {
-            for (var i = 0; i < max; ++i)
-            {
-                yield return GenerateParticle();
-            }
+            yield return GenerateParticle();
         }
     }
 }

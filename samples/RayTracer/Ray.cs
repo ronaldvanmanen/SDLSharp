@@ -20,27 +20,24 @@
 
 using System.Numerics;
 
-namespace RayTracer
+internal readonly struct Ray
 {
-    internal readonly struct Ray
+    public Vector3 Origin { get; }
+
+    public Vector3 Direction { get; }
+
+    public Ray(Vector3 origin, Vector3 direction)
     {
-        public Vector3 Origin { get; }
+        Origin = origin;
+        Direction = direction;
+    }
 
-        public Vector3 Direction { get; }
-
-        public Ray(Vector3 origin, Vector3 direction)
-        {
-            Origin = origin;
-            Direction = direction;
-        }
-
-        public static Ray Transform(Ray ray, Matrix4x4 matrix)
-        {
-            var origin = Vector3.Transform(ray.Origin, matrix);
-            var direction = Vector3.Normalize(
-                Vector3.TransformNormal(ray.Direction, matrix)
-            );
-            return new Ray(origin, direction);
-        }
+    public static Ray Transform(Ray ray, Matrix4x4 matrix)
+    {
+        var origin = Vector3.Transform(ray.Origin, matrix);
+        var direction = Vector3.Normalize(
+            Vector3.TransformNormal(ray.Direction, matrix)
+        );
+        return new Ray(origin, direction);
     }
 }

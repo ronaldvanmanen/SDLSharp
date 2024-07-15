@@ -19,21 +19,18 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Numerics;
-using SDL2Sharp.Colors;
+using SDL2Sharp.Video.Colors;
 
-namespace RayTracer
+internal sealed class MatteSurface : ISurface
 {
-    internal sealed class MatteSurface : ISurface
+    public float AmbientCoefficient { get; set; } = 1f;
+
+    public float DiffuseCoefficient { get; set; } = 1f;
+
+    public Rgb32f DiffuseColor { get; set; }
+
+    public Rgb32f Shade(Rgb32f ambient, Vector3 surfaceNormal, Vector3 lightVector, Rgb32f lightColor)
     {
-        public float AmbientCoefficient { get; set; } = 1f;
-
-        public float DiffuseCoefficient { get; set; } = 1f;
-
-        public Rgb32f DiffuseColor { get; set; }
-
-        public Rgb32f Shade(Rgb32f ambient, Vector3 surfaceNormal, Vector3 lightVector, Rgb32f lightColor)
-        {
-            return ambient * AmbientCoefficient + lightColor * DiffuseCoefficient * DiffuseColor * Vector3.Dot(surfaceNormal, lightVector);
-        }
+        return ambient * AmbientCoefficient + lightColor * DiffuseCoefficient * DiffuseColor * Vector3.Dot(surfaceNormal, lightVector);
     }
 }

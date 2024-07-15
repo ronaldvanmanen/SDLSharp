@@ -20,56 +20,53 @@
 
 using System;
 
-namespace RayTracer
+internal struct Resolution
 {
-    internal struct Resolution
+    private int _width;
+
+    private int _height;
+
+    public Resolution(int width, int height)
     {
-        private int _width;
+        if (width <= 0)
+            throw new ArgumentOutOfRangeException(
+                nameof(width), "Width must be greater than zero");
 
-        private int _height;
+        if (height <= 0)
+            throw new ArgumentOutOfRangeException(
+                nameof(height), "Height must be greater than zero");
 
-        public Resolution(int width, int height)
+        _width = width;
+        _height = height;
+    }
+
+    public int Width
+    {
+        get
         {
-            if (width <= 0)
-                throw new ArgumentOutOfRangeException(
-                    nameof(width), "Width must be greater than zero");
-
-            if (height <= 0)
-                throw new ArgumentOutOfRangeException(
-                    nameof(height), "Height must be greater than zero");
-
-            _width = width;
-            _height = height;
+            return _width;
         }
-
-        public int Width
+        set
         {
-            get
-            {
-                return _width;
-            }
-            set
-            {
-                if (_width <= 0)
-                    throw new ArgumentOutOfRangeException(
-                        nameof(value), "Width must be greater than zero");
-                _width = value;
-            }
+            if (_width <= 0)
+                throw new ArgumentOutOfRangeException(
+                    nameof(value), "Width must be greater than zero");
+            _width = value;
         }
+    }
 
-        public int Height
+    public int Height
+    {
+        get
         {
-            get
-            {
-                return _height;
-            }
-            set
-            {
-                if (_height <= 0)
-                    throw new ArgumentOutOfRangeException(
-                        nameof(value), "Height must be greater than zero");
-                _height = value;
-            }
+            return _height;
+        }
+        set
+        {
+            if (_height <= 0)
+                throw new ArgumentOutOfRangeException(
+                    nameof(value), "Height must be greater than zero");
+            _height = value;
         }
     }
 }

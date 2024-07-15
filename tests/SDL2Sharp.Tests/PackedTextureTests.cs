@@ -18,18 +18,22 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using SDL2Sharp.Colors;
+using SDL2Sharp.Video;
+using SDL2Sharp.Video.Colors;
 using Xunit;
 
 namespace SDL2Sharp.Tests
 {
-    public sealed class PackedTextureTests : IAssemblyFixture<AssemblyFixture>
+    public sealed class PackedTextureTests
     {
         [Fact]
-        public static void CreatePackedTextureOfArgb8888()
+        public void CreatePackedTextureOfArgb8888()
         {
             var color = new Argb8888(255, 255, 255, 255);
-            using var window = new Window("CreatePackedTextureOfArgb8888", 640, 480, WindowFlags.Hidden);
+
+            using var mainSystem = new MainSystem();
+            using var videoSystem = new VideoSubsystem();
+            using var window = videoSystem.CreateWindow("CreatePackedTextureOfArgb8888", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
             using var texture = renderer.CreateTexture<Argb8888>(TextureAccess.Streaming, renderer.OutputSize);
             texture.WithLock(pixels => pixels.Fill(color));
@@ -38,10 +42,13 @@ namespace SDL2Sharp.Tests
         }
 
         [Fact]
-        public static void CreatePackedTextureOfYUY2()
+        public void CreatePackedTextureOfYUY2()
         {
             var color = new Yuy2(255, 255, 255, 255);
-            using var window = new Window("CreatePackedTextureOfYUY2", 640, 480, WindowFlags.Hidden);
+
+            using var mainSystem = new MainSystem();
+            using var videoSystem = new VideoSubsystem();
+            using var window = videoSystem.CreateWindow("CreatePackedTextureOfYUY2", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
             using var texture = renderer.CreateTexture<Yuy2>(TextureAccess.Streaming, renderer.OutputSize);
             texture.WithLock(pixels => pixels.Fill(color));
@@ -50,10 +57,13 @@ namespace SDL2Sharp.Tests
         }
 
         [Fact]
-        public static void CreatePackedTextureOfYVYU()
+        public void CreatePackedTextureOfYVYU()
         {
             var color = new Yvyu(255, 255, 255, 255);
-            using var window = new Window("CreatePackedTextureOfYVYU", 640, 480, WindowFlags.Hidden);
+
+            using var mainSystem = new MainSystem();
+            using var videoSystem = new VideoSubsystem();
+            using var window = videoSystem.CreateWindow("CreatePackedTextureOfYVYU", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
             using var texture = renderer.CreateTexture<Yvyu>(TextureAccess.Streaming, renderer.OutputSize);
             texture.WithLock(pixels => pixels.Fill(color));
@@ -62,10 +72,13 @@ namespace SDL2Sharp.Tests
         }
 
         [Fact]
-        public static void CreatePackedTextureOfUYVY()
+        public void CreatePackedTextureOfUYVY()
         {
             var color = new Uyvy(255, 255, 255, 255);
-            using var window = new Window("CreatePackedTextureOfUYVY", 640, 480, WindowFlags.Hidden);
+
+            using var mainSystem = new MainSystem();
+            using var videoSystem = new VideoSubsystem();
+            using var window = videoSystem.CreateWindow("CreatePackedTextureOfUYVY", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
             using var texture = renderer.CreateTexture<Uyvy>(TextureAccess.Streaming, renderer.OutputSize);
             texture.WithLock(pixels => pixels.Fill(color));

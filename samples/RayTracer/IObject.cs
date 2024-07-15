@@ -20,14 +20,11 @@
 
 using System.Numerics;
 
-namespace RayTracer
+internal interface IObject
 {
-    internal interface IObject
-    {
-        ISurface Surface { get; }
+    ISurface Surface { get; }
 
-        Intersection? Intersect(Ray ray);
+    Intersection? Intersect(Ray ray);
 
-        Vector3 NormalAt(Vector3 surfacePoint);
-    }
+    Vector3 NormalAt(Vector3 surfacePoint);
 }

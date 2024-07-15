@@ -19,12 +19,9 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Numerics;
-using SDL2Sharp.Colors;
+using SDL2Sharp.Video.Colors;
 
-namespace RayTracer
+internal interface ISurface
 {
-    internal interface ISurface
-    {
-        Rgb32f Shade(Rgb32f ambient, Vector3 surfaceNormal, Vector3 lightVector, Rgb32f lightColor);
-    }
+    Rgb32f Shade(Rgb32f ambient, Vector3 surfaceNormal, Vector3 lightVector, Rgb32f lightColor);
 }

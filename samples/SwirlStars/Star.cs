@@ -19,16 +19,13 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Numerics;
-using SDL2Sharp.Colors;
+using SDL2Sharp.Video.Colors;
 
-namespace SwirlStars
+internal sealed class Star
 {
-    internal sealed class Star
-    {
-        public Vector3 Position { get; set; } = Vector3.Zero;
+    public Vector3 Position { get; set; } = Vector3.Zero;
 
-        public Vector3 Velocity { get; set; } = Vector3.Zero;
+    public Vector3 Velocity { get; set; } = Vector3.Zero;
 
-        public Rgb32f Color { get; set; } = Rgb32f.Black;
-    }
+    public Rgb32f Color { get; set; } = Rgb32f.Black;
 }

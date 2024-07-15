@@ -20,37 +20,34 @@
 
 using System.Numerics;
 
-namespace RayTracer
+internal sealed class Plane : IObject
 {
-    internal sealed class Plane : IObject
+    public Vector3 Position { get; set; } = new Vector3(0f, 0f, 0f);
+
+    public Vector3 Normal { get; set; } = new Vector3(0f, 1f, 0f);
+
+    public ISurface Surface { get; set; } = new MatteSurface();
+
+    public Vector3 NormalAt(Vector3 point)
     {
-        public Vector3 Position { get; set; } = new Vector3(0f, 0f, 0f);
+        return Normal;
+    }
 
-        public Vector3 Normal { get; set; } = new Vector3(0f, 1f, 0f);
-
-        public ISurface Surface { get; set; } = new MatteSurface();
-
-        public Vector3 NormalAt(Vector3 point)
+    public Intersection? Intersect(Ray ray)
+    {
+        var denominator = Vector3.Dot(Normal, ray.Direction);
+        if (denominator == 0f)
         {
-            return Normal;
+            return null;
         }
 
-        public Intersection? Intersect(Ray ray)
+        var numerator = -Vector3.Dot(Normal, ray.Origin + Position);
+        var t = numerator / denominator;
+        if (t < 0)
         {
-            var denominator = Vector3.Dot(Normal, ray.Direction);
-            if (denominator == 0f)
-            {
-                return null;
-            }
-
-            var numerator = -Vector3.Dot(Normal, ray.Origin + Position);
-            var t = numerator / denominator;
-            if (t < 0)
-            {
-                return null;
-            }
-
-            return new Intersection(this, ray, t);
+            return null;
         }
+
+        return new Intersection(this, ray, t);
     }
 }

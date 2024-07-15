@@ -119,7 +119,7 @@ namespace SDL2Sharp
 
         public static readonly string GameControllerUseButtonLabels = SDL.SDL_HINT_GAMECONTROLLER_USE_BUTTON_LABELS.AsString();
 
-        public static readonly string JOYSTICK_ALLOW_BACKGROUND_EVENTS = SDL.SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS.AsString();
+        public static readonly string JoystickAllowBackgroundEvents = SDL.SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS.AsString();
 
         public static readonly string JoystickHidApi = SDL.SDL_HINT_JOYSTICK_HIDAPI.AsString();
 

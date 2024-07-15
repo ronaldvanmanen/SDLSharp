@@ -19,18 +19,22 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using SDL2Sharp.Colors;
+using SDL2Sharp.Video;
+using SDL2Sharp.Video.Colors;
 using Xunit;
 
 namespace SDL2Sharp.Tests
 {
-    public sealed class TextureTests : IAssemblyFixture<AssemblyFixture>
+    public sealed class TextureTests
     {
         [Fact]
         public void CreateTextureOfArgb8888()
         {
             var color = new Argb8888(255, 255, 255, 255);
-            using var window = new Window("CreateTextureOfArgb8888", 640, 480, WindowFlags.Hidden);
+
+            using var mainSystem = new MainSystem();
+            using var videoSystem = new VideoSubsystem();
+            using var window = videoSystem.CreateWindow("CreateTextureOfArgb8888", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
             using var texture = renderer.CreateTexture(PixelFormatEnum.ARGB8888, TextureAccess.Streaming, renderer.OutputSize);
             texture.WithLock<Argb8888>(pixels => pixels.Fill(color));
@@ -42,7 +46,10 @@ namespace SDL2Sharp.Tests
         public void CreateTextureOfYUY2()
         {
             var color = new Yuy2(255, 255, 255, 255);
-            using var window = new Window("CreateTextureOfYUY2", 640, 480, WindowFlags.Hidden);
+
+            using var mainSystem = new MainSystem();
+            using var videoSystem = new VideoSubsystem();
+            using var window = videoSystem.CreateWindow("CreateTextureOfYUY2", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
             using var texture = renderer.CreateTexture(PixelFormatEnum.YUY2, TextureAccess.Streaming, renderer.OutputSize);
             texture.WithLock<Yuy2>(pixels => pixels.Fill(color));
@@ -54,7 +61,10 @@ namespace SDL2Sharp.Tests
         public void CreateTextureOfYVYU()
         {
             var color = new Yvyu(255, 255, 255, 255);
-            using var window = new Window("CreateTextureOfYVYU", 640, 480, WindowFlags.Hidden);
+
+            using var mainSystem = new MainSystem();
+            using var videoSystem = new VideoSubsystem();
+            using var window = videoSystem.CreateWindow("CreateTextureOfYVYU", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
             using var texture = renderer.CreateTexture(PixelFormatEnum.YVYU, TextureAccess.Streaming, renderer.OutputSize);
             texture.WithLock<Yvyu>(pixels => pixels.Fill(color));
@@ -66,7 +76,10 @@ namespace SDL2Sharp.Tests
         public void CreateTextureOfUYVY()
         {
             var color = new Uyvy(255, 255, 255, 255);
-            using var window = new Window("CreateTextureOfUYVY", 640, 480, WindowFlags.Hidden);
+
+            using var mainSystem = new MainSystem();
+            using var videoSystem = new VideoSubsystem();
+            using var window = videoSystem.CreateWindow("CreateTextureOfUYVY", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
             using var texture = renderer.CreateTexture(PixelFormatEnum.UYVY, TextureAccess.Streaming, renderer.OutputSize);
             texture.WithLock<Uyvy>(pixels => pixels.Fill(color));
@@ -78,7 +91,10 @@ namespace SDL2Sharp.Tests
         public void CreateTextureOfYV12()
         {
             var color = new Uyvy(255, 255, 255, 255);
-            using var window = new Window("CreateTextureOfYV12", 640, 480, WindowFlags.Hidden);
+
+            using var mainSystem = new MainSystem();
+            using var videoSystem = new VideoSubsystem();
+            using var window = videoSystem.CreateWindow("CreateTextureOfYV12", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
             using var texture = renderer.CreateTexture(PixelFormatEnum.YV12, TextureAccess.Streaming, renderer.OutputSize);
             texture.WithLock((Yv12Image pixels) =>
