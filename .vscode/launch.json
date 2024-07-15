@@ -29,7 +29,7 @@
             "type": "coreclr",
             "request": "launch",
             "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/BitmapViewer/${input:Configuration}/${input:CoreClrFramework}/BitmapViewer",
-            "args": ["Sample.bmp"],
+            "args": ["${input:BitMapViewerArg}"],
             "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/BitmapViewer/${input:Configuration}/${input:CoreClrFramework}",
             "stopAtEntry": false,
             "console": "internalConsole"
@@ -155,6 +155,12 @@
                 "Test",
                 "Pack",
             ]
+        },
+        {
+            "id": "BitMapViewerArg",
+            "description": "Specify the filename of the bitmap to view",
+            "default": "Sample.bmp",
+            "type": "promptString"
         }
     ]
 }
