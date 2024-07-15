@@ -89,7 +89,7 @@
             "type": "coreclr",
             "request": "launch",
             "program": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/WavePlayer/${input:Configuration}/${input:CoreClrFramework}/WavePlayer",
-            "args": ["Roland-GR-1-Trumpet-C5.wav"],
+            "args": ["${input:WavePlayerArg}"],
             "cwd": "${workspaceFolder:SDL2Sharp}/artifacts/bin/samples/WavePlayer/${input:Configuration}/${input:CoreClrFramework}",
             "stopAtEntry": false,
             "console": "internalConsole"
@@ -160,6 +160,12 @@
             "id": "BitMapViewerArg",
             "description": "Specify the filename of the bitmap to view",
             "default": "Sample.bmp",
+            "type": "promptString"
+        },
+        {
+            "id": "WavePlayerArg",
+            "description": "Specify the filename of the WAVE file to play.",
+            "default": "Roland-GR-1-Trumpet-C5.wav",
             "type": "promptString"
         }
     ]
