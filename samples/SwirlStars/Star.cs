@@ -27,5 +27,5 @@ internal sealed class Star
 
     public Vector3 Velocity { get; set; } = Vector3.Zero;
 
-    public Rgb32f Color { get; set; } = Rgb32f.Black;
+    public Rgb96f Color { get; set; } = Rgb96f.Black;
 }

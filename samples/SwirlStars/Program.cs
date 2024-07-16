@@ -150,7 +150,7 @@ internal static class Program
             x: 0f,
             y: 0f,
             z: -(.5f + 4.5f * _randomizer.NextSingle()));
-        star.Color = new Rgb32f(
+        star.Color = new Rgb96f(
             r: _randomizer.NextSingle(),
             g: _randomizer.NextSingle(),
             b: _randomizer.NextSingle()

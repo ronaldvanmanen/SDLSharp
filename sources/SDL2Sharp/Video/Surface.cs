@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -31,7 +31,7 @@ namespace SDL2Sharp.Video
 
         private readonly bool _freeHandle;
 
-        public PixelFormat Format => new(_handle->format, false);
+        public PixelFormatDescriptor Format => new(_handle->format, false);
 
         public int Width => _handle->w;
 
@@ -67,7 +67,7 @@ namespace SDL2Sharp.Video
             _freeHandle = freeHandle;
         }
 
-        public Surface(int width, int height, PixelFormatEnum format)
+        public Surface(int width, int height, PixelFormat format)
         : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurfaceWithFormat(0, width, height, 0, (uint)format)))
         { }
 
@@ -75,7 +75,7 @@ namespace SDL2Sharp.Video
         : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurface(0, width, height, 0, redMask, greenMask, blueMask, alphaMask)))
         { }
 
-        public Surface(void* pixels, int width, int height, int pitch, PixelFormatEnum format)
+        public Surface(void* pixels, int width, int height, int pitch, PixelFormat format)
         : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurfaceWithFormatFrom(pixels, width, height, 0, pitch, (uint)format)))
         { }
 
@@ -123,7 +123,7 @@ namespace SDL2Sharp.Video
             );
         }
 
-        public Surface ConvertTo(PixelFormatEnum format)
+        public Surface ConvertTo(PixelFormat format)
         {
             ThrowWhenDisposed();
 
@@ -139,8 +139,8 @@ namespace SDL2Sharp.Video
             );
         }
 
-        public void WithLock<TPackedColor>(WithLockPackedImageCallback<TPackedColor> callback)
-            where TPackedColor : struct
+        public void WithLock<TPackedPixelFormat>(SurfaceLockCallback<TPackedPixelFormat> callback)
+            where TPackedPixelFormat : struct
         {
             ThrowWhenDisposed();
 
@@ -152,10 +152,10 @@ namespace SDL2Sharp.Video
                 );
             }
 
-            var bytesPerPixel = Marshal.SizeOf<TPackedColor>();
+            var bytesPerPixel = Marshal.SizeOf<TPackedPixelFormat>();
             var pitchInBytes = _handle->pitch;
             var pitch = pitchInBytes / bytesPerPixel;
-            var pixels = new PackedImage<TPackedColor>(_handle->pixels, _handle->w, _handle->h, pitch);
+            var pixels = new PackedImage<TPackedPixelFormat>(_handle->pixels, _handle->h, _handle->w, pitch);
 
             callback.Invoke(pixels);
 

@@ -39,10 +39,10 @@ internal static class Program
 
         using var window = videoSubystem.CreateWindow("Plasma Fractal", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
         using var renderer = window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
-        using var screenTexture = renderer.CreateTexture<Argb8888>(TextureAccess.Streaming, renderer.OutputSize);
+        using var screenTexture = renderer.CreatePackedTexture<Argb8888>(TextureAccess.Streaming, renderer.OutputSize);
         using var lazyFont = fontSubsystem.OpenFont("lazy.ttf", 28);
 
-        var screenImage = new MemoryImage<Argb8888>(renderer.OutputSize);
+        var screenImage = new PackedMemoryImage<Argb8888>(renderer.OutputSize);
         var sourceImage = GenerateDiamondSquareImage(renderer.OutputSize);
         var palette = GeneratePalette();
         var reversePaletteRotation = false;
@@ -89,7 +89,7 @@ internal static class Program
                 {
                     for (var x = 0; x < screenImage.Width; ++x)
                     {
-                        screenImage[y, x] = palette[sourceImage[y, x]];
+                        screenImage[x, y] = palette[sourceImage[x, y]];
                     }
                 }
 
@@ -149,27 +149,27 @@ internal static class Program
         return palette;
     }
 
-    private static MemoryImage<byte> GenerateDiamondSquareImage(Size size)
+    private static PackedMemoryImage<byte> GenerateDiamondSquareImage(Size size)
     {
         return GenerateDiamondSquareImage(size.Width, size.Height);
     }
 
-    private static MemoryImage<byte> GenerateDiamondSquareImage(int width, int height)
+    private static PackedMemoryImage<byte> GenerateDiamondSquareImage(int width, int height)
     {
         var size = NextPowerOfTwo(Max(width, height)) + 1;
         var image = GenerateDiamondSquareImage(size);
         return image.Crop(0, 0, height, width);
     }
 
-    private static MemoryImage<byte> GenerateDiamondSquareImage(int size)
+    private static PackedMemoryImage<byte> GenerateDiamondSquareImage(int size)
     {
-        var image = new MemoryImage<byte>(size, size);
+        var image = new PackedMemoryImage<byte>(size, size);
 
         var randomness = 256;
 
         image[0, 0] = (byte)_random.Next(0, randomness);
-        image[0, size - 1] = (byte)_random.Next(0, randomness);
         image[size - 1, 0] = (byte)_random.Next(0, randomness);
+        image[0, size - 1] = (byte)_random.Next(0, randomness);
         image[size - 1, size - 1] = (byte)_random.Next(0, randomness);
 
         randomness /= 2;
@@ -199,7 +199,7 @@ internal static class Program
         return image;
     }
 
-    private static void Diamond(MemoryImage<byte> map, int centerX, int centerY, int distance, int randomness)
+    private static void Diamond(PackedMemoryImage<byte> map, int centerX, int centerY, int distance, int randomness)
     {
         var sum = 0;
         var count = 0;
@@ -209,14 +209,14 @@ internal static class Program
             var left = centerX - distance;
             if (left >= 0 && left < map.Width)
             {
-                sum += map[top, left];
+                sum += map[left, top];
                 count++;
             }
 
             var right = centerX + distance;
             if (right >= 0 && right < map.Height)
             {
-                sum += map[top, right];
+                sum += map[right, top];
                 count++;
             }
         }
@@ -227,14 +227,14 @@ internal static class Program
             var left = centerX - distance;
             if (left >= 0 && left < map.Width)
             {
-                sum += map[bottom, left];
+                sum += map[left, bottom];
                 count++;
             }
 
             var right = centerX + distance;
             if (right >= 0 && right < map.Height)
             {
-                sum += map[bottom, right];
+                sum += map[right, bottom];
                 count++;
             }
         }
@@ -243,38 +243,38 @@ internal static class Program
         var random = _random.Next(-randomness, randomness);
         var value = Clamp(average + random, 0, 255);
 
-        map[centerY, centerX] = (byte)value;
+        map[centerX, centerY] = (byte)value;
     }
 
-    private static void Square(MemoryImage<byte> map, int centerX, int centerY, int distance, int randomness)
+    private static void Square(PackedMemoryImage<byte> map, int centerX, int centerY, int distance, int randomness)
     {
         var sum = 0;
         var count = 0;
         var top = centerY - distance;
         if (top >= 0 && top < map.Height)
         {
-            sum += map[top, centerX];
+            sum += map[centerX, top];
             count++;
         }
 
         var left = centerX - distance;
         if (left >= 0 && left < map.Width)
         {
-            sum += map[centerY, left];
+            sum += map[left, centerY];
             count++;
         }
 
         var bottom = centerY + distance;
         if (bottom >= 0 && bottom < map.Height)
         {
-            sum += map[bottom, centerX];
+            sum += map[centerX, bottom];
             count++;
         }
 
         var right = centerX + distance;
         if (right >= 0 && right < map.Height)
         {
-            sum += map[centerY, right];
+            sum += map[right, centerY];
             count++;
         }
 
@@ -282,6 +282,6 @@ internal static class Program
         var random = _random.Next(-randomness, randomness);
         var value = Clamp(average + random, 0, 255);
 
-        map[centerY, centerX] = (byte)value;
+        map[centerX, centerY] = (byte)value;
     }
 }

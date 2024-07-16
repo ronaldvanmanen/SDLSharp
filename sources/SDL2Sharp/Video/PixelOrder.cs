@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,7 +18,9 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-namespace SDL2Sharp.Video
+namespace SDL2Sharp
 {
-    public delegate void WithLockNv12ImageCallback(Nv12Image pixels);
+    public enum PixelOrder : uint
+    {
+    }
 }

@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,43 +20,34 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
-    public readonly ref struct IyuvImage
+    public sealed class Nv21MemoryImage
     {
-        private readonly ColorPlane _yPlane;
+        private readonly ImageMemoryPlane<Y8> _yPlane;
 
-        private readonly ColorPlane _uPlane;
+        private readonly ImageMemoryPlane<VU88> _uvPlane;
 
-        private readonly ColorPlane _vPlane;
+        public ImageMemoryPlane<Y8> Y => _yPlane;
 
-        private readonly int _height;
+        public ImageMemoryPlane<VU88> VU => _uvPlane;
 
-        private readonly int _width;
-
-        public readonly int Width
+        public int Width
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _width;
+            get => _yPlane.Width;
         }
 
-        public readonly int Height
+        public int Height
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _height;
+            get => _yPlane.Height;
         }
 
-        public unsafe IyuvImage(void* pixels, int height, int width, int pitch)
+        public unsafe Nv21MemoryImage(int width, int height)
         {
-            if (height < 0)
-            {
-                throw new ArgumentOutOfRangeException(
-                    nameof(height),
-                    height,
-                    "height cannot be less than zero");
-            }
-
             if (width < 0)
             {
                 throw new ArgumentOutOfRangeException(
@@ -65,25 +56,16 @@ namespace SDL2Sharp.Video
                     "height cannot be less than zero");
             }
 
-            if (pitch < 0)
+            if (height < 0)
             {
                 throw new ArgumentOutOfRangeException(
-                    nameof(pitch),
-                    pitch,
-                    "pitch cannot be less than zero");
+                    nameof(height),
+                    height,
+                    "height cannot be less than zero");
             }
 
-            _yPlane = new ColorPlane(pixels, height, width, pitch, 0);
-            _vPlane = new ColorPlane(pixels, height / 2, width, pitch / 2, width * pitch);
-            _uPlane = new ColorPlane(pixels, height / 2, width, pitch / 2, width * pitch * 2);
-            _height = height;
-            _width = width;
+            _yPlane = new ImageMemoryPlane<Y8>(width, height);
+            _uvPlane = new ImageMemoryPlane<VU88>(width / 2, height / 2);
         }
-
-        public ColorPlane Y => _yPlane;
-
-        public ColorPlane U => _uPlane;
-
-        public ColorPlane V => _vPlane;
     }
 }

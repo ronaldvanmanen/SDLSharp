@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,10 +18,18 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-namespace SDL2Sharp.Video
-{
-    public delegate void WithLockSurfaceCallback(Surface pixels);
+using System.Runtime.InteropServices;
 
-    public delegate void WithLockSurfaceCallback<TPackedColor>(Surface<TPackedColor> pixels)
-        where TPackedColor : struct;
+namespace SDL2Sharp.Video.Colors
+{
+    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 1)]
+    public readonly record struct Y8
+    {
+        private readonly byte _value;
+
+        public Y8(byte value)
+        {
+            _value = value;
+        }
+    }
 }

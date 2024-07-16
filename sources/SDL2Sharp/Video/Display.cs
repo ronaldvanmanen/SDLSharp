@@ -60,7 +60,7 @@ namespace SDL2Sharp.Video
                     SDL.GetCurrentDisplayMode(_displayIndex, &displayMode)
                 );
                 return new DisplayMode(
-                    (PixelFormatEnum)displayMode.format,
+                    (PixelFormat)displayMode.format,
                     displayMode.w,
                     displayMode.h,
                     displayMode.refresh_rate);
@@ -76,7 +76,7 @@ namespace SDL2Sharp.Video
                     SDL.GetDesktopDisplayMode(_displayIndex, &displayMode)
                 );
                 return new DisplayMode(
-                    (PixelFormatEnum)displayMode.format,
+                    (PixelFormat)displayMode.format,
                     displayMode.w,
                     displayMode.h,
                     displayMode.refresh_rate);
@@ -96,7 +96,7 @@ namespace SDL2Sharp.Video
                         SDL.GetDisplayMode(_displayIndex, modeIndex, &displayMode)
                     );
                     modes.Add(new DisplayMode(
-                        (PixelFormatEnum)displayMode.format,
+                        (PixelFormat)displayMode.format,
                         displayMode.w,
                         displayMode.h,
                         displayMode.refresh_rate));

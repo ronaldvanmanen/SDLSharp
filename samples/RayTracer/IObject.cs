@@ -27,7 +27,7 @@ internal interface IObject
 
     float DiffuseCoefficient { get; set; }
 
-    Rgb32f DiffuseColor { get; set; }
+    Rgb96f DiffuseColor { get; set; }
 
     Intersection? Intersect(Ray ray);
 

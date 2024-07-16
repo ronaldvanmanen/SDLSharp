@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -25,17 +25,15 @@ using System.Runtime.InteropServices;
 
 namespace SDL2Sharp.Video
 {
-    public readonly ref struct ColorPlane
+    public readonly ref struct ImagePlane<TPackedPixelFormat> where TPackedPixelFormat : struct
     {
-        private readonly Span<byte> _pixels;
-
-        private readonly int _height;
+        private readonly Span<TPackedPixelFormat> _pixels;
 
         private readonly int _width;
 
-        private readonly int _pitch;
+        private readonly int _height;
 
-        private readonly int _offset;
+        private readonly int _pitch;
 
         public readonly int Width
         {
@@ -49,48 +47,54 @@ namespace SDL2Sharp.Video
             get => _height;
         }
 
-        public ref byte this[int row, int column]
+        public Size Size
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => new(_width, _height);
+        }
+
+        public ref TPackedPixelFormat this[int x, int y]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (row < 0)
+                if (x < 0)
                 {
                     throw new ArgumentOutOfRangeException(
-                        nameof(row),
-                        row,
-                        "row cannot be less than zero");
+                        nameof(x),
+                        x,
+                        "x cannot be less than zero");
                 }
 
-                if (row >= _height)
+                if (x >= _width)
                 {
                     throw new ArgumentOutOfRangeException(
-                        nameof(column),
-                        column,
-                        "row cannot be greater than or equal to the height of the image");
+                        nameof(x),
+                        x,
+                        "x cannot be greater than or equal to the width of the image");
                 }
 
-                if (column < 0)
+                if (y < 0)
                 {
                     throw new ArgumentOutOfRangeException(
-                        nameof(column),
-                        column,
-                        "column cannot be less than zero");
+                        nameof(y),
+                        y,
+                        "y cannot be less than zero");
                 }
 
-                if (column >= _width)
+                if (y >= _height)
                 {
                     throw new ArgumentOutOfRangeException(
-                        nameof(column),
-                        column,
-                        "column cannot be greater than or equal to the width of the image");
+                        nameof(x),
+                        x,
+                        "y cannot be greater than or equal to the height of the image");
                 }
 
-                return ref DangerousGetReferenceAt(row, column);
+                return ref DangerousGetReferenceAt(x, y);
             }
         }
 
-        public unsafe ColorPlane(void* pixels, int height, int width, int pitch, int offset)
+        public unsafe ImagePlane(void* pixels, int width, int height, int pitch)
         {
             if (height < 0)
             {
@@ -116,40 +120,32 @@ namespace SDL2Sharp.Video
                     "pitch cannot be less than zero");
             }
 
-            if (_offset < 0)
-            {
-                throw new ArgumentOutOfRangeException(
-                    nameof(offset),
-                    offset,
-                    "offset cannot be less than zero");
-            }
-
-            _pixels = new Span<byte>(pixels, height * pitch);
+            _pixels = new Span<TPackedPixelFormat>(pixels, height * pitch);
             _height = height;
             _width = width;
             _pitch = pitch;
-            _offset = offset;
         }
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly ref byte DangerousGetReference()
+        public readonly ref TPackedPixelFormat DangerousGetReference()
         {
             ref var r0 = ref MemoryMarshal.GetReference(_pixels);
-            return ref Unsafe.Add(ref r0, _offset);
+            const int index = 0;
+            return ref Unsafe.Add(ref r0, index);
         }
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly ref byte DangerousGetReferenceAt(int row, int column)
+        public readonly ref TPackedPixelFormat DangerousGetReferenceAt(int x, int y)
         {
             ref var r0 = ref MemoryMarshal.GetReference(_pixels);
-            var index = row * _pitch + column + _offset;
+            var index = y * _pitch + x;
             return ref Unsafe.Add(ref r0, index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly void Fill(byte value)
+        public readonly void Fill(TPackedPixelFormat value)
         {
             _pixels.Fill(value);
         }

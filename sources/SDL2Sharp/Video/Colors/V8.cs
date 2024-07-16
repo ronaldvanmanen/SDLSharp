@@ -22,41 +22,14 @@ using System.Runtime.InteropServices;
 
 namespace SDL2Sharp.Video.Colors
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 4, Size = 4)]
-    [PixelFormat(PixelFormat.XBGR8888)]
-    public readonly record struct Xbgr8888
+    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 1)]
+    public readonly record struct V8
     {
-        private static readonly PixelFormatDescriptor _pixelFormat = new(PixelFormat.XBGR8888);
+        private readonly byte _value;
 
-        private readonly uint _value;
-
-        public static Xbgr8888 FromRGB(byte r, byte g, byte b)
-        {
-            return new Xbgr8888(_pixelFormat.MapRGB(r, g, b));
-        }
-
-        public static Xbgr8888 FromRGBA(byte r, byte g, byte b, byte a)
-        {
-            return new Xbgr8888(_pixelFormat.MapRGBA(r, g, b, a));
-        }
-
-        public Xbgr8888(byte b, byte g, byte r)
-        : this(_pixelFormat.MapRGB(r, g, b))
-        { }
-
-        private Xbgr8888(uint value)
+        public V8(byte value)
         {
             _value = value;
-        }
-
-        public (byte r, byte g, byte b) ToRGB()
-        {
-            return _pixelFormat.GetRGB(_value);
-        }
-
-        public (byte r, byte g, byte b, byte a) ToRGBA()
-        {
-            return _pixelFormat.GetRGBA(_value);
         }
     }
 }

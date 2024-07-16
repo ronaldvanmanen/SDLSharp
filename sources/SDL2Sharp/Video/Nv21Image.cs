@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,32 +20,33 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
     public readonly ref struct Nv21Image
     {
-        private readonly ColorPlane _yPlane;
+        private readonly ImagePlane<Y8> _yPlane;
 
-        private readonly ColorPlane _vuPlane;
+        private readonly ImagePlane<VU88> _vuPlane;
 
-        private readonly int _height;
+        public ImagePlane<Y8> Y => _yPlane;
 
-        private readonly int _width;
+        public ImagePlane<VU88> VU => _vuPlane;
 
         public readonly int Width
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _width;
+            get => _yPlane.Width;
         }
 
         public readonly int Height
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _height;
+            get => _yPlane.Height;
         }
 
-        public unsafe Nv21Image(void* pixels, int height, int width, int pitch)
+        public unsafe Nv21Image(void* pixels, int width, int height, int pitch)
         {
             if (height < 0)
             {
@@ -71,14 +72,9 @@ namespace SDL2Sharp.Video
                     "pitch cannot be less than zero");
             }
 
-            _yPlane = new ColorPlane(pixels, height, width, pitch, 0);
-            _vuPlane = new ColorPlane(pixels, height / 2, width, pitch / 2, width * pitch);
-            _height = height;
-            _width = width;
+            _yPlane = new ImagePlane<Y8>(pixels, width, height, pitch);
+            var vuPlanePixels = Unsafe.Add<Y8>(pixels, height * pitch);
+            _vuPlane = new ImagePlane<VU88>(vuPlanePixels, width / 2, height / 2, pitch / 2);
         }
-
-        public ColorPlane Y => _yPlane;
-
-        public ColorPlane VU => _vuPlane;
     }
 }

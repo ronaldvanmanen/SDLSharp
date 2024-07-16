@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,5 +20,19 @@
 
 namespace SDL2Sharp.Video
 {
-    public delegate void WithLockYv12ImageCallback(Yv12Image pixels);
+    public interface IYuvPixelFormat
+    {
+        int GetYPlaneWidth(int imageWidth);
+        int GetYPlaneHeight(int imageHeight);
+        int GetYPlanePitch(int imagePitch);
+        int GetYPlaneOffset(int imageWidth, int imageHeight, int imagePitch);
+        int GetUPlaneWidth(int imageWidth);
+        int GetUPlaneHeight(int imageHeight);
+        int GetUPlanePitch(int imagePitch);
+        int GetUPlaneOffset(int imageWidth, int imageHeight, int imagePitch);
+        int GetVPlaneWidth(int imageWidth);
+        int GetVPlaneHeight(int imageHeight);
+        int GetVPlanePitch(int imagePitch);
+        int GetVPlaneOffset(int imageWidth, int imageHeight, int imagePitch);
+    }
 }

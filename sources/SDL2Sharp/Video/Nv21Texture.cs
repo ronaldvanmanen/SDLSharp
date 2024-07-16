@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -19,14 +19,20 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using SDL2Sharp.Interop;
+using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
     public sealed unsafe partial class Nv21Texture : IDisposable
     {
+        public delegate void LockCallback(Nv21Image pixels);
+
         private Texture _texture;
 
-        public PackedPixelFormat Format => (PackedPixelFormat)_texture.Format;
+        public PixelFormat Format => _texture.Format;
 
         public TextureAccess Access => _texture.Access;
 
@@ -66,20 +72,49 @@ namespace SDL2Sharp.Video
             _texture = null!;
         }
 
-        // public void WithLock(WithLockNv21ImageCallback callback)
-        // {
-        //     WithLock(0, 0, Width, Height, callback);
-        // }
+        public void WithLock(LockCallback callback)
+        {
+            WithLock(0, 0, Width, Height, callback);
+        }
 
-        // public void WithLock(Rectangle rectangle, WithLockNv21ImageCallback callback)
-        // {
-        //     WithLock(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, callback);
-        // }
+        public void WithLock(Rectangle rectangle, LockCallback callback)
+        {
+            WithLock(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, callback);
+        }
 
-        // public void WithLock(int x, int y, int width, int height, WithLockNv21ImageCallback callback)
-        // {
-        //     _texture.WithLock(x, y, width, height, callback);
-        // }
+        public void WithLock(int x, int y, int width, int height, LockCallback callback)
+        {
+            ThrowWhenDisposed();
+
+            var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
+            void* pixels;
+            int pitch;
+            Error.ThrowOnFailure(
+                SDL.LockTexture(_texture, &rect, &pixels, &pitch)
+            );
+
+            var image = new Nv21Image(pixels, width, height, pitch);
+            callback.Invoke(image);
+            SDL.UnlockTexture(_texture);
+        }
+
+        public void Update(Nv21Image image)
+        {
+            var yPlane = (byte*)Unsafe.AsPointer(ref image.Y.DangerousGetReference());
+            var yPitch = image.Y.Width * Marshal.SizeOf<Y8>();
+            var uvPlane = (byte*)Unsafe.AsPointer(ref image.VU.DangerousGetReference());
+            var uvPitch = image.VU.Width * Marshal.SizeOf<VU88>();
+            SDL.UpdateNVTexture(_texture, null, yPlane, yPitch, uvPlane, uvPitch);
+        }
+
+        public void Update(Nv21MemoryImage image)
+        {
+            var yPlane = (byte*)Unsafe.AsPointer(ref image.Y.DangerousGetReference());
+            var yPitch = image.Y.Width * Marshal.SizeOf<Y8>();
+            var uvPlane = (byte*)Unsafe.AsPointer(ref image.VU.DangerousGetReference());
+            var uvPitch = image.VU.Width * Marshal.SizeOf<VU88>();
+            SDL.UpdateNVTexture(_texture, null, yPlane, yPitch, uvPlane, uvPitch);
+        }
 
         private void ThrowWhenDisposed()
         {

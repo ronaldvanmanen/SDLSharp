@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,7 +18,25 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-namespace SDL2Sharp.Video
+using System.Runtime.InteropServices;
+
+namespace SDL2Sharp.Video.Colors
 {
-    public delegate void WithLockIyuvImageCallback(IyuvImage pixels);
+    [StructLayout(LayoutKind.Sequential, Pack = 2, Size = 2)]
+    public readonly record struct UV88
+    {
+        private readonly ushort _value;
+
+        public byte U => (byte)(_value >> 8 & 0xFF);
+
+        public byte V => (byte)(_value & 0xFF);
+
+        public UV88(byte u, byte v)
+        {
+            unchecked
+            {
+                _value = (ushort)(u << 8 | v);
+            }
+        }
+    }
 }

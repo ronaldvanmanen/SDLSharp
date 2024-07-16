@@ -25,25 +25,25 @@ using SDL2Sharp.Video.Colors;
 
 internal sealed class World
 {
-    public Rgb32f Ambient { get; set; }
+    public Rgb96f Ambient { get; set; }
 
     public ICollection<IObject> Objects { get; } = new List<IObject>();
 
     public ICollection<PointLight> Lights { get; } = new List<PointLight>();
 
-    public Rgb32f Trace(Ray ray, int level, float weight)
+    public Rgb96f Trace(Ray ray, int level, float weight)
     {
         var nearestIntersection = ray.Intersect(Objects);
         if (nearestIntersection is not null)
         {
             return Shade(nearestIntersection, level, weight);
         }
-        return Rgb32f.Black;
+        return Rgb96f.Black;
     }
 
-    private Rgb32f Shade(Intersection intersection, int level, float weight)
+    private Rgb96f Shade(Intersection intersection, int level, float weight)
     {
-        var color = Rgb32f.Black;
+        var color = Rgb96f.Black;
         var @object = intersection.Object;
         var surfaceNormal = intersection.Normal;
         var surfacePoint = intersection.Point;

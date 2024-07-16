@@ -32,7 +32,7 @@ internal sealed class Sphere : IObject
 
     public float DiffuseCoefficient { get; set; } = 1f;
 
-    public Rgb32f DiffuseColor { get; set; } = Rgb32f.Black;
+    public Rgb96f DiffuseColor { get; set; } = Rgb96f.Black;
 
     public Vector3 NormalAt(Vector3 point)
     {

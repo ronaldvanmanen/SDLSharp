@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -22,21 +22,37 @@ using System.Runtime.InteropServices;
 
 namespace SDL2Sharp.Video.Colors
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 2)]
-    [PackedColor(PackedPixelFormat.XRGB4444)]
+    [StructLayout(LayoutKind.Sequential, Pack = 2, Size = 2)]
+    [PixelFormat(PixelFormat.XRGB4444)]
     public readonly record struct Xrgb4444
     {
+        private static readonly PixelFormatDescriptor _pixelFormat = new(PixelFormat.XRGB4444);
+
         private readonly ushort _value;
 
-        public byte R => (byte)(_value >> 8 & 0xF);
-
-        public byte G => (byte)(_value >> 4 & 0xF);
-
-        public byte B => (byte)(_value & 0xFF);
-
-        public Xrgb4444(byte r, byte g, byte b)
+        public static Xrgb4444 FromRGB(byte r, byte g, byte b)
         {
-            _value = (ushort)((r & 0xF) << 8 | (g & 0xF) << 4 | b & 0xF);
+            return new Xrgb4444((ushort)_pixelFormat.MapRGB(r, g, b));
+        }
+
+        public static Xrgb4444 FromRGBA(byte r, byte g, byte b, byte a)
+        {
+            return new Xrgb4444((ushort)_pixelFormat.MapRGBA(r, g, b, a));
+        }
+
+        private Xrgb4444(ushort value)
+        {
+            _value = value;
+        }
+
+        public (byte r, byte g, byte b) ToRGB()
+        {
+            return _pixelFormat.GetRGB(_value);
+        }
+
+        public (byte r, byte g, byte b, byte a) ToRGBA()
+        {
+            return _pixelFormat.GetRGBA(_value);
         }
     }
 }

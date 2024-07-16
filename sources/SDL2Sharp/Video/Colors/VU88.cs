@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,30 +18,25 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
-using System.Reflection;
+using System.Runtime.InteropServices;
 
-namespace SDL2Sharp.Video
+namespace SDL2Sharp.Video.Colors
 {
-    [AttributeUsage(AttributeTargets.Struct)]
-    internal sealed class PackedColorAttribute : Attribute
+    [StructLayout(LayoutKind.Sequential, Pack = 2, Size = 2)]
+    public readonly record struct VU88
     {
-        public PackedPixelFormat PixelFormat { get; }
+        private readonly ushort _value;
 
-        public PackedColorAttribute(PackedPixelFormat pixelFormat)
-        {
-            PixelFormat = pixelFormat;
-        }
+        public byte V => (byte)(_value >> 8 & 0xFF);
 
-        public static PackedPixelFormat GetPixelFormatOf<TPackedColor>()
+        public byte U => (byte)(_value & 0xFF);
+
+        public VU88(byte v, byte u)
         {
-            var pixelFormatType = typeof(TPackedColor);
-            var pixelFormatAttribute = pixelFormatType.GetCustomAttribute<PackedColorAttribute>();
-            if (pixelFormatAttribute == null)
+            unchecked
             {
-                throw new NotSupportedException($"The type {pixelFormatType} does not have a {nameof(PackedColorAttribute)}.");
+                _value = (ushort)(v << 8 | u);
             }
-            return pixelFormatAttribute.PixelFormat;
         }
     }
 }

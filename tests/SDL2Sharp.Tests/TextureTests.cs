@@ -30,81 +30,104 @@ namespace SDL2Sharp.Tests
         [Fact]
         public void CreateTextureOfArgb8888()
         {
-            var color = new Argb8888(255, 255, 255, 255);
-
-            using var mainSystem = new MainSystem();
-            using var videoSystem = new VideoSubsystem();
-            using var window = videoSystem.CreateWindow("CreateTextureOfArgb8888", 640, 480, WindowFlags.Hidden);
-            using var renderer = window.CreateRenderer();
-            using var texture = renderer.CreateTexture(PixelFormatEnum.ARGB8888, TextureAccess.Streaming, renderer.OutputSize);
-            texture.WithLock<Argb8888>(pixels => pixels.Fill(color));
-            renderer.Copy(texture);
-            renderer.Present();
+            WithRenderer(renderer =>
+            {
+                using var texture = renderer.CreateTexture(PixelFormat.ARGB8888, TextureAccess.Streaming, renderer.OutputSize);
+                using var packedTexture = texture.AsPacked<Argb8888>();
+                var color = new Argb8888(255, 255, 255, 255);
+                packedTexture.WithLock(pixels => pixels.Fill(color));
+                renderer.Copy(texture);
+                renderer.Present();
+            });
         }
 
         [Fact]
-        public void CreateTextureOfYUY2()
+        public void CreateTextureOfIYUV()
         {
-            var color = new Yuy2(255, 255, 255, 255);
-
-            using var mainSystem = new MainSystem();
-            using var videoSystem = new VideoSubsystem();
-            using var window = videoSystem.CreateWindow("CreateTextureOfYUY2", 640, 480, WindowFlags.Hidden);
-            using var renderer = window.CreateRenderer();
-            using var texture = renderer.CreateTexture(PixelFormatEnum.YUY2, TextureAccess.Streaming, renderer.OutputSize);
-            texture.WithLock<Yuy2>(pixels => pixels.Fill(color));
-            renderer.Copy(texture);
-            renderer.Present();
+            WithRenderer(renderer =>
+            {
+                using var texture = renderer.CreateTexture(PixelFormat.IYUV, TextureAccess.Streaming, renderer.OutputSize);
+                using var planarTexture = texture.AsIYUV();
+                var y = new Y8(255);
+                var u = new U8(128);
+                var v = new V8(128);
+                planarTexture.WithLock(pixels =>
+                {
+                    pixels.Y.Fill(y);
+                    pixels.U.Fill(u);
+                    pixels.V.Fill(v);
+                });
+                renderer.Copy(texture);
+                renderer.Present();
+            });
         }
 
         [Fact]
-        public void CreateTextureOfYVYU()
+        public void CreateTextureOfNV12()
         {
-            var color = new Yvyu(255, 255, 255, 255);
-
-            using var mainSystem = new MainSystem();
-            using var videoSystem = new VideoSubsystem();
-            using var window = videoSystem.CreateWindow("CreateTextureOfYVYU", 640, 480, WindowFlags.Hidden);
-            using var renderer = window.CreateRenderer();
-            using var texture = renderer.CreateTexture(PixelFormatEnum.YVYU, TextureAccess.Streaming, renderer.OutputSize);
-            texture.WithLock<Yvyu>(pixels => pixels.Fill(color));
-            renderer.Copy(texture);
-            renderer.Present();
+            WithRenderer(renderer =>
+            {
+                using var texture = renderer.CreateTexture(PixelFormat.NV12, TextureAccess.Streaming, renderer.OutputSize);
+                using var planarTexture = texture.AsNV12();
+                var y = new Y8(255);
+                var uv = new UV88(128, 128);
+                planarTexture.WithLock(pixels =>
+                {
+                    pixels.Y.Fill(y);
+                    pixels.UV.Fill(uv);
+                });
+                renderer.Copy(texture);
+                renderer.Present();
+            });
         }
 
         [Fact]
-        public void CreateTextureOfUYVY()
+        public void CreateTextureOfNV21()
         {
-            var color = new Uyvy(255, 255, 255, 255);
-
-            using var mainSystem = new MainSystem();
-            using var videoSystem = new VideoSubsystem();
-            using var window = videoSystem.CreateWindow("CreateTextureOfUYVY", 640, 480, WindowFlags.Hidden);
-            using var renderer = window.CreateRenderer();
-            using var texture = renderer.CreateTexture(PixelFormatEnum.UYVY, TextureAccess.Streaming, renderer.OutputSize);
-            texture.WithLock<Uyvy>(pixels => pixels.Fill(color));
-            renderer.Copy(texture);
-            renderer.Present();
+            WithRenderer(renderer =>
+            {
+                using var texture = renderer.CreateTexture(PixelFormat.NV21, TextureAccess.Streaming, renderer.OutputSize);
+                using var planarTexture = texture.AsNV21();
+                var y = new Y8(255);
+                var vu = new VU88(128, 128);
+                planarTexture.WithLock(pixels =>
+                {
+                    pixels.Y.Fill(y);
+                    pixels.VU.Fill(vu);
+                });
+                renderer.Copy(texture);
+                renderer.Present();
+            });
         }
 
         [Fact]
         public void CreateTextureOfYV12()
         {
-            var color = new Uyvy(255, 255, 255, 255);
+            WithRenderer(renderer =>
+            {
+                using var texture = renderer.CreateTexture(PixelFormat.YV12, TextureAccess.Streaming, renderer.OutputSize);
+                using var planarTexture = texture.AsYV12();
+                var y = new Y8(255);
+                var u = new U8(128);
+                var v = new V8(128);
+                planarTexture.WithLock(pixels =>
+                {
+                    pixels.Y.Fill(y);
+                    pixels.V.Fill(v);
+                    pixels.U.Fill(u);
+                });
+                renderer.Copy(texture);
+                renderer.Present();
+            });
+        }
 
+        private static void WithRenderer(Action<Renderer> test)
+        {
             using var mainSystem = new MainSystem();
             using var videoSystem = new VideoSubsystem();
-            using var window = videoSystem.CreateWindow("CreateTextureOfYV12", 640, 480, WindowFlags.Hidden);
+            using var window = videoSystem.CreateWindow("TextureTests", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
-            using var texture = renderer.CreateTexture(PixelFormatEnum.YV12, TextureAccess.Streaming, renderer.OutputSize);
-            texture.WithLock((Yv12Image pixels) =>
-            {
-                pixels.Y.Fill(255);
-                pixels.U.Fill(255);
-                pixels.V.Fill(255);
-            });
-            renderer.Copy(texture);
-            renderer.Present();
+            test(renderer);
         }
     }
 }

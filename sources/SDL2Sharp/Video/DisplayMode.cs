@@ -22,7 +22,7 @@ namespace SDL2Sharp.Video
 {
     public sealed class DisplayMode
     {
-        public PixelFormatEnum Format { get; }
+        public PixelFormat Format { get; }
 
         public int Width { get; }
 
@@ -30,7 +30,7 @@ namespace SDL2Sharp.Video
 
         public int RefreshRate { get; }
 
-        public DisplayMode(PixelFormatEnum format, int width, int height, int refreshRate)
+        public DisplayMode(PixelFormat format, int width, int height, int refreshRate)
         {
             Format = format;
             Width = width;

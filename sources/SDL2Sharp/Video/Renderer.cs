@@ -19,6 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using SDL2Sharp.Interop;
 
 namespace SDL2Sharp.Video
@@ -248,12 +250,12 @@ namespace SDL2Sharp.Video
             _handle = null;
         }
 
-        public Texture CreateTexture(PixelFormatEnum pixelFormat, TextureAccess access, Size size)
+        public Texture CreateTexture(PixelFormat pixelFormat, TextureAccess access, Size size)
         {
             return CreateTexture(pixelFormat, access, size.Width, size.Height);
         }
 
-        public Texture CreateTexture(PixelFormatEnum pixelFormat, TextureAccess access, int width, int height)
+        public Texture CreateTexture(PixelFormat pixelFormat, TextureAccess access, int width, int height)
         {
             ThrowWhenDisposed();
 
@@ -411,6 +413,36 @@ namespace SDL2Sharp.Video
             ThrowWhenDisposed();
 
             SDL.RenderPresent(_handle);
+        }
+
+        public PackedMemoryImage<TPackedPixelFormat> ReadPixels<TPackedPixelFormat>()
+            where TPackedPixelFormat : struct
+        {
+            ThrowWhenDisposed();
+
+            return ReadPixels<TPackedPixelFormat>(
+                new Rectangle(0, 0, OutputWidth, OutputHeight)
+            );
+        }
+
+        public PackedMemoryImage<TPackedPixelFormat> ReadPixels<TPackedPixelFormat>(Rectangle rectangle)
+            where TPackedPixelFormat : struct
+        {
+            ThrowWhenDisposed();
+
+            var rect = new SDL_Rect { x = rectangle.X, y = rectangle.Y, w = rectangle.Width, h = rectangle.Height };
+            var format = PixelFormatAttribute.GetPixelFormatOf<TPackedPixelFormat>();
+            var image = new PackedMemoryImage<TPackedPixelFormat>(rectangle.Width, rectangle.Height);
+            var pixels = Unsafe.AsPointer(ref image.DangerousGetReference());
+            var pitch = rectangle.Width * Marshal.SizeOf<TPackedPixelFormat>();
+            Error.ThrowOnFailure(
+                SDL.RenderReadPixels(_handle,
+                    &rect,
+                    (uint)format,
+                    pixels,
+                    pitch)
+            );
+            return image;
         }
 
         private void ThrowWhenDisposed()

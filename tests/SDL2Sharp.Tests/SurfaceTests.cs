@@ -30,7 +30,7 @@ namespace SDL2Sharp.Tests
         public void CreateSurface()
         {
             var color = new Argb8888(255, 255, 255, 255);
-            using var surface = new Surface(512, 512, PixelFormatEnum.ARGB8888);
+            using var surface = new Surface(512, 512, PixelFormat.ARGB8888);
             surface.WithLock<Argb8888>(pixels => pixels.Fill(color));
         }
 

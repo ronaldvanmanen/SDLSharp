@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -22,11 +22,11 @@ using static System.Math;
 
 namespace SDL2Sharp.Video.Colors
 {
-    public static class Rgb32fExtensions
+    public static class Rgb96fExtensions
     {
-        public static Color ToColor(this Rgb32f color)
+        public static Color ToColor(this Rgb96f color)
         {
-            var clampedColor = Rgb32f.Clamp(color);
+            var clampedColor = Rgb96f.Clamp(color);
             var scaledColor = clampedColor * 255f;
             var r = (byte)Round(scaledColor.R);
             var g = (byte)Round(scaledColor.G);
@@ -34,9 +34,9 @@ namespace SDL2Sharp.Video.Colors
             return new Color(r, g, b, 255);
         }
 
-        public static Rgba8888 ToRgba8888(this Rgb32f color)
+        public static Rgba8888 ToRgba8888(this Rgb96f color)
         {
-            var clampedColor = Rgb32f.Clamp(color);
+            var clampedColor = Rgb96f.Clamp(color);
             var scaledColor = clampedColor * 255f;
             var r = (byte)Round(scaledColor.R);
             var g = (byte)Round(scaledColor.G);
@@ -44,9 +44,9 @@ namespace SDL2Sharp.Video.Colors
             return new Rgba8888(r, g, b, 255);
         }
 
-        public static Argb8888 ToArgb8888(this Rgb32f color)
+        public static Argb8888 ToArgb8888(this Rgb96f color)
         {
-            var clampedColor = Rgb32f.Clamp(color);
+            var clampedColor = Rgb96f.Clamp(color);
             var scaledColor = clampedColor * 255f;
             var r = (byte)Round(scaledColor.R);
             var g = (byte)Round(scaledColor.G);

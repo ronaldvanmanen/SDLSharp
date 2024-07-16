@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,77 +18,61 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
-using SDL2Sharp.Interop;
+using static SDL2Sharp.Interop.SDL_PixelFormatEnum;
 
 namespace SDL2Sharp.Video
 {
-    public sealed unsafe class PixelFormat : IDisposable
+    public enum PixelFormat : uint
     {
-        private SDL_PixelFormat* _handle;
-
-        private readonly bool _ownsHandle;
-
-        public PixelFormatEnum Format => (PixelFormatEnum)_handle->format;
-
-        public byte BitsPerPixel => _handle->BitsPerPixel;
-
-        public byte BytesPerPixel => _handle->BytesPerPixel;
-
-        public uint RedMask => _handle->Rmask;
-
-        public uint GreenMask => _handle->Gmask;
-
-        public uint BlueMask => _handle->Bmask;
-
-        public uint AlphaMask => _handle->Amask;
-
-        public byte RedLoss => _handle->Rloss;
-
-        public byte GreenLoss => _handle->Gloss;
-
-        public byte BlueLoss => _handle->Bloss;
-
-        public byte AlphaLoss => _handle->Aloss;
-
-        public byte RedShift => _handle->Rshift;
-
-        public byte GreenShift => _handle->Gshift;
-
-        public byte BlueShift => _handle->Bshift;
-
-        public byte AlphaShift => _handle->Ashift;
-
-        internal PixelFormat(SDL_PixelFormat* handle, bool ownsHandle)
-        {
-            if (handle == null)
-            {
-                throw new ArgumentNullException(nameof(handle));
-            }
-
-            _handle = handle;
-            _ownsHandle = ownsHandle;
-        }
-
-        public PixelFormat(PixelFormatEnum pixelFormat)
-        : this(Error.ReturnOrThrowOnFailure(SDL.AllocFormat((uint)pixelFormat)), true)
-        { }
-
-        ~PixelFormat()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        private void Dispose(bool _)
-        {
-            if (!_ownsHandle || _handle == null) return;
-            SDL.FreeFormat(_handle);
-            _handle = null;
-        }
+        Unknown = SDL_PIXELFORMAT_UNKNOWN,
+        Index1LSB = SDL_PIXELFORMAT_INDEX1LSB,
+        Index1MSB = SDL_PIXELFORMAT_INDEX1MSB,
+        Index4LSB = SDL_PIXELFORMAT_INDEX4LSB,
+        Index4MSB = SDL_PIXELFORMAT_INDEX4MSB,
+        Index8 = SDL_PIXELFORMAT_INDEX8,
+        RGB332 = SDL_PIXELFORMAT_RGB332,
+        XRGB4444 = SDL_PIXELFORMAT_XRGB4444,
+        RGB444 = SDL_PIXELFORMAT_RGB444,
+        XBGR4444 = SDL_PIXELFORMAT_XBGR4444,
+        BGR444 = SDL_PIXELFORMAT_BGR444,
+        XRGB1555 = SDL_PIXELFORMAT_XRGB1555,
+        RGB555 = SDL_PIXELFORMAT_RGB555,
+        XBGR1555 = SDL_PIXELFORMAT_XBGR1555,
+        BGR555 = SDL_PIXELFORMAT_BGR555,
+        ARGB4444 = SDL_PIXELFORMAT_ARGB4444,
+        RGBA4444 = SDL_PIXELFORMAT_RGBA4444,
+        ABGR4444 = SDL_PIXELFORMAT_ABGR4444,
+        BGRA4444 = SDL_PIXELFORMAT_BGRA4444,
+        ARGB1555 = SDL_PIXELFORMAT_ARGB1555,
+        RGBA5551 = SDL_PIXELFORMAT_RGBA5551,
+        ABGR1555 = SDL_PIXELFORMAT_ABGR1555,
+        BGRA5551 = SDL_PIXELFORMAT_BGRA5551,
+        RGB565 = SDL_PIXELFORMAT_RGB565,
+        BGR565 = SDL_PIXELFORMAT_BGR565,
+        RGB24 = SDL_PIXELFORMAT_RGB24,
+        BGR24 = SDL_PIXELFORMAT_BGR24,
+        XRGB8888 = SDL_PIXELFORMAT_XRGB8888,
+        RGB888 = SDL_PIXELFORMAT_RGB888,
+        RGBX8888 = SDL_PIXELFORMAT_RGBX8888,
+        XBGR8888 = SDL_PIXELFORMAT_XBGR8888,
+        BGR888 = SDL_PIXELFORMAT_BGR888,
+        BGRX8888 = SDL_PIXELFORMAT_BGRX8888,
+        ARGB8888 = SDL_PIXELFORMAT_ARGB8888,
+        RGBA8888 = SDL_PIXELFORMAT_RGBA8888,
+        ABGR8888 = SDL_PIXELFORMAT_ABGR8888,
+        BGRA8888 = SDL_PIXELFORMAT_BGRA8888,
+        ARGB2101010 = SDL_PIXELFORMAT_ARGB2101010,
+        RGBA32 = SDL_PIXELFORMAT_RGBA32,
+        ARGB32 = SDL_PIXELFORMAT_ARGB32,
+        BGRA32 = SDL_PIXELFORMAT_BGRA32,
+        ABGR32 = SDL_PIXELFORMAT_ABGR32,
+        YV12 = SDL_PIXELFORMAT_YV12,
+        IYUV = SDL_PIXELFORMAT_IYUV,
+        YUY2 = SDL_PIXELFORMAT_YUY2,
+        UYVY = SDL_PIXELFORMAT_UYVY,
+        YVYU = SDL_PIXELFORMAT_YVYU,
+        NV12 = SDL_PIXELFORMAT_NV12,
+        NV21 = SDL_PIXELFORMAT_NV21,
+        ExternalOES = SDL_PIXELFORMAT_EXTERNAL_OES,
     }
 }

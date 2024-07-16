@@ -39,11 +39,11 @@ internal static class Program
 
         using var window = videoSubystem.CreateWindow("Tunnel Effect", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
         using var renderer = window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
-        using var screenTexture = renderer.CreateTexture<Argb8888>(TextureAccess.Streaming, renderer.OutputSize);
+        using var screenTexture = renderer.CreatePackedTexture<Argb8888>(TextureAccess.Streaming, renderer.OutputSize);
         using var lazyFont = fontSubsystem.OpenFont("lazy.ttf", 28);
 
         var screenSize = renderer.OutputSize;
-        var screenImage = new MemoryImage<Argb8888>(renderer.OutputSize);
+        var screenImage = new PackedMemoryImage<Argb8888>(renderer.OutputSize);
         var sourceImageSize = NextPowerOfTwo(Max(renderer.OutputWidth, renderer.OutputHeight));
         var sourceImage = GenerateXorImage(sourceImageSize);
         var transformTable = GenerateTransformTable(sourceImageSize);
@@ -102,10 +102,10 @@ internal static class Program
                     for (var screenX = 0; screenX < screenWidth; ++screenX)
                     {
                         var transformX = screenX + lookX;
-                        var transform = transformTable[transformY, transformX];
+                        var transform = transformTable[transformX, transformY];
                         var sourceX = (transform.Distance + shiftLookX) & sourceWidthMask;
                         var sourceY = (transform.Angle + shiftLookY) & sourceHeightMask;
-                        screenImage[screenY, screenX] = sourceImage[sourceY, sourceX];
+                        screenImage[screenX, screenY] = sourceImage[sourceX, sourceY];
                     }
                 }
 
@@ -135,19 +135,19 @@ internal static class Program
         }
     }
 
-    private static MemoryImage<Argb8888> GenerateXorImage(int size)
+    private static PackedMemoryImage<Argb8888> GenerateXorImage(int size)
     {
         return GenerateXorImage(size, size);
     }
 
-    private static MemoryImage<Argb8888> GenerateXorImage(int width, int height)
+    private static PackedMemoryImage<Argb8888> GenerateXorImage(int width, int height)
     {
-        var image = new MemoryImage<Argb8888>(width, height);
+        var image = new PackedMemoryImage<Argb8888>(width, height);
         for (var y = 0; y < height; y++)
         {
             for (var x = 0; x < width; x++)
             {
-                image[y, x] = new Argb8888(
+                image[x, y] = new Argb8888(
                     a: 0xFF,
                     r: 0x00,
                     g: 0x00,
@@ -158,15 +158,15 @@ internal static class Program
         return image;
     }
 
-    private static MemoryImage<Transform> GenerateTransformTable(int size)
+    private static PackedMemoryImage<Transform> GenerateTransformTable(int size)
     {
         return GenerateTransformTable(size, size);
     }
 
-    private static MemoryImage<Transform> GenerateTransformTable(int width, int height)
+    private static PackedMemoryImage<Transform> GenerateTransformTable(int width, int height)
     {
         const double ratio = 32d;
-        var transformTable = new MemoryImage<Transform>(width, height);
+        var transformTable = new PackedMemoryImage<Transform>(width, height);
         for (var y = 0; y < height; y++)
         {
             for (var x = 0; x < width; x++)
@@ -175,7 +175,7 @@ internal static class Program
                 {
                     var angle = (int)(0.5 * width * Atan2(y - height / 2.0, x - width / 2.0) / PI);
                     var distance = (int)(ratio * height / Sqrt((x - width / 2d) * (x - width / 2d) + (y - height / 2d) * (y - height / 2d))) % height;
-                    transformTable[y, x] = new Transform(angle, distance);
+                    transformTable[x, y] = new Transform(angle, distance);
                 }
             }
         }

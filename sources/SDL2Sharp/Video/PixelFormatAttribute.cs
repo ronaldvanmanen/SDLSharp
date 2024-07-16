@@ -1,4 +1,4 @@
-﻿// SDL2Sharp
+// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,30 +18,30 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System.Runtime.InteropServices;
+using System;
+using System.Reflection;
 
-namespace SDL2Sharp.Video.Colors
+namespace SDL2Sharp.Video
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 4, Size = 4)]
-    [PixelFormat(PixelFormat.UYVY)]
-    public readonly record struct Uyvy
+    [AttributeUsage(AttributeTargets.Struct)]
+    internal sealed class PixelFormatAttribute : Attribute
     {
-        private readonly uint _value;
+        public PixelFormat PixelFormat { get; }
 
-        public byte U0 => (byte)(_value & 0xFF);
-
-        public byte Y0 => (byte)(_value >> 8 & 0xFF);
-
-        public byte V0 => (byte)(_value >> 16 & 0xFF);
-
-        public byte Y1 => (byte)(_value >> 24 & 0xFF);
-
-        public Uyvy(byte u0, byte y0, byte v0, byte y1)
+        public PixelFormatAttribute(PixelFormat pixelFormat)
         {
-            unchecked
+            PixelFormat = pixelFormat;
+        }
+
+        public static PixelFormat GetPixelFormatOf<TPackedPixelFormat>()
+        {
+            var pixelFormatType = typeof(TPackedPixelFormat);
+            var pixelFormatAttribute = pixelFormatType.GetCustomAttribute<PixelFormatAttribute>();
+            if (pixelFormatAttribute == null)
             {
-                _value = (uint)(u0 | y0 << 8 | v0 << 16 | y1 << 24);
+                throw new NotSupportedException($"The type {pixelFormatType} does not have a {nameof(PixelFormatAttribute)}.");
             }
+            return pixelFormatAttribute.PixelFormat;
         }
     }
 }

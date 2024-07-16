@@ -26,11 +26,11 @@ using System.Runtime.InteropServices;
 namespace SDL2Sharp.Video.Colors
 {
     [StructLayout(LayoutKind.Sequential, Pack = 4, Size = 12)]
-    public readonly struct Rgb32f : IEquatable<Rgb32f>
+    public readonly struct Rgb96f : IEquatable<Rgb96f>
     {
-        public static Rgb32f Black { get; } = new Rgb32f(0f, 0f, 0f);
+        public static Rgb96f Black { get; } = new Rgb96f(0f, 0f, 0f);
 
-        public static Rgb32f White { get; } = new Rgb32f(1f, 1f, 1f);
+        public static Rgb96f White { get; } = new Rgb96f(1f, 1f, 1f);
 
         private readonly Vector3 _components;
 
@@ -62,23 +62,23 @@ namespace SDL2Sharp.Video.Colors
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Rgb32f(float r, float g, float b)
+        public Rgb96f(float r, float g, float b)
         : this(new Vector3(r, g, b))
         { }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Rgb32f(Rgb32f other)
+        public Rgb96f(Rgb96f other)
         : this(other._components)
         { }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private Rgb32f(Vector3 components)
+        private Rgb96f(Vector3 components)
         {
             _components = components;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly bool Equals(Rgb32f other)
+        public readonly bool Equals(Rgb96f other)
         {
             return _components.Equals(other._components);
         }
@@ -86,7 +86,7 @@ namespace SDL2Sharp.Video.Colors
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override readonly bool Equals(object? obj)
         {
-            if (obj is Rgb32f other)
+            if (obj is Rgb96f other)
             {
                 return Equals(other);
             }
@@ -99,127 +99,127 @@ namespace SDL2Sharp.Video.Colors
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f Negate(Rgb32f value)
+        public static Rgb96f Negate(Rgb96f value)
         {
-            return new Rgb32f(-value._components);
+            return new Rgb96f(-value._components);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f Add(Rgb32f left, Rgb32f right)
+        public static Rgb96f Add(Rgb96f left, Rgb96f right)
         {
-            return new Rgb32f(left._components + right._components);
+            return new Rgb96f(left._components + right._components);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f Subtract(Rgb32f left, Rgb32f right)
+        public static Rgb96f Subtract(Rgb96f left, Rgb96f right)
         {
-            return new Rgb32f(left._components - right._components);
+            return new Rgb96f(left._components - right._components);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f Multiply(float left, Rgb32f right)
+        public static Rgb96f Multiply(float left, Rgb96f right)
         {
-            return new Rgb32f(left * right._components);
+            return new Rgb96f(left * right._components);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f Multiply(Rgb32f left, float right)
+        public static Rgb96f Multiply(Rgb96f left, float right)
         {
-            return new Rgb32f(left._components * right);
+            return new Rgb96f(left._components * right);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f Multiply(Rgb32f left, Rgb32f right)
+        public static Rgb96f Multiply(Rgb96f left, Rgb96f right)
         {
-            return new Rgb32f(left._components * right._components);
+            return new Rgb96f(left._components * right._components);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f Divide(Rgb32f left, Rgb32f right)
+        public static Rgb96f Divide(Rgb96f left, Rgb96f right)
         {
-            return new Rgb32f(left._components / right._components);
+            return new Rgb96f(left._components / right._components);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f Divide(Rgb32f left, float right)
+        public static Rgb96f Divide(Rgb96f left, float right)
         {
-            return new Rgb32f(left._components / right);
+            return new Rgb96f(left._components / right);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f Clamp(Rgb32f value, Rgb32f min, Rgb32f max)
+        public static Rgb96f Clamp(Rgb96f value, Rgb96f min, Rgb96f max)
         {
-            return new Rgb32f(Vector3.Clamp(value._components, min._components, max._components));
+            return new Rgb96f(Vector3.Clamp(value._components, min._components, max._components));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f Clamp(Rgb32f value)
+        public static Rgb96f Clamp(Rgb96f value)
         {
             return Clamp(value, Black, White);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f operator +(Rgb32f value)
+        public static Rgb96f operator +(Rgb96f value)
         {
             return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f operator -(Rgb32f value)
+        public static Rgb96f operator -(Rgb96f value)
         {
             return Negate(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f operator +(Rgb32f left, Rgb32f right)
+        public static Rgb96f operator +(Rgb96f left, Rgb96f right)
         {
             return Add(left, right);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f operator -(Rgb32f left, Rgb32f right)
+        public static Rgb96f operator -(Rgb96f left, Rgb96f right)
         {
             return Subtract(left, right);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f operator *(float left, Rgb32f right)
+        public static Rgb96f operator *(float left, Rgb96f right)
         {
             return Multiply(left, right);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f operator *(Rgb32f left, float right)
+        public static Rgb96f operator *(Rgb96f left, float right)
         {
             return Multiply(left, right);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f operator *(Rgb32f left, Rgb32f right)
+        public static Rgb96f operator *(Rgb96f left, Rgb96f right)
         {
             return Multiply(left, right);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f operator /(Rgb32f left, Rgb32f right)
+        public static Rgb96f operator /(Rgb96f left, Rgb96f right)
         {
             return Divide(left, right);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Rgb32f operator /(Rgb32f left, float right)
+        public static Rgb96f operator /(Rgb96f left, float right)
         {
             return Divide(left, right);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator ==(Rgb32f left, Rgb32f right)
+        public static bool operator ==(Rgb96f left, Rgb96f right)
         {
             return left.Equals(right);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator !=(Rgb32f left, Rgb32f right)
+        public static bool operator !=(Rgb96f left, Rgb96f right)
         {
             return !left.Equals(right);
         }

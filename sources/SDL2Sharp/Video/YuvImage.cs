@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,34 +20,39 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
-    public readonly ref struct Yv12Image
+    public readonly ref struct YuvImage<TYuvPixelFormat> where TYuvPixelFormat : IYuvPixelFormat, new()
     {
-        private readonly ColorPlane _yPlane;
+        private static readonly TYuvPixelFormat _format = new();
 
-        private readonly ColorPlane _vPlane;
+        private readonly ImagePlane<Y8> _yPlane;
 
-        private readonly ColorPlane _uPlane;
+        private readonly ImagePlane<U8> _uPlane;
 
-        private readonly int _height;
+        private readonly ImagePlane<V8> _vPlane;
 
-        private readonly int _width;
+        public ImagePlane<Y8> Y => _yPlane;
+
+        public ImagePlane<U8> U => _uPlane;
+
+        public ImagePlane<V8> V => _vPlane;
 
         public readonly int Width
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _width;
+            get => _yPlane.Width;
         }
 
         public readonly int Height
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _height;
+            get => _yPlane.Height;
         }
 
-        public unsafe Yv12Image(void* pixels, int height, int width, int pitch)
+        public unsafe YuvImage(void* pixels, int width, int height, int pitch)
         {
             if (height < 0)
             {
@@ -73,17 +78,26 @@ namespace SDL2Sharp.Video
                     "pitch cannot be less than zero");
             }
 
-            _yPlane = new ColorPlane(pixels, height, width, pitch, 0);
-            _vPlane = new ColorPlane(pixels, height / 2, width, pitch / 2, width * pitch);
-            _uPlane = new ColorPlane(pixels, height / 2, width, pitch / 2, width * pitch * 2);
-            _height = height;
-            _width = width;
+            var yPlaneHeight = _format.GetYPlaneHeight(height);
+            var yPlaneWidth = _format.GetYPlaneWidth(width);
+            var yPlanePitch = _format.GetYPlanePitch(pitch);
+            var yPlaneOffset = _format.GetYPlaneOffset(width, height, pitch);
+            var yPlanePixels = Unsafe.Add<Y8>(pixels, yPlaneOffset);
+            _yPlane = new ImagePlane<Y8>(yPlanePixels, yPlaneWidth, yPlaneHeight, yPlanePitch);
+
+            var uPlaneHeight = _format.GetUPlaneHeight(height);
+            var uPlaneWidth = _format.GetUPlaneWidth(width);
+            var uPlanePitch = _format.GetUPlanePitch(pitch);
+            var uPlaneOffset = _format.GetUPlaneOffset(width, height, pitch);
+            var uPlanePixels = Unsafe.Add<U8>(pixels, uPlaneOffset);
+            _uPlane = new ImagePlane<U8>(uPlanePixels, uPlaneWidth, uPlaneHeight, uPlanePitch);
+
+            var vPlaneHeight = _format.GetVPlaneHeight(height);
+            var vPlaneWidth = _format.GetVPlaneWidth(width);
+            var vPlanePitch = _format.GetVPlanePitch(pitch);
+            var vPlaneOffset = _format.GetVPlaneOffset(width, height, pitch);
+            var vPlanePixels = Unsafe.Add<V8>(pixels, vPlaneOffset);
+            _vPlane = new ImagePlane<V8>(vPlanePixels, vPlaneWidth, vPlaneHeight, vPlanePitch);
         }
-
-        public ColorPlane Y => _yPlane;
-
-        public ColorPlane V => _vPlane;
-
-        public ColorPlane U => _uPlane;
     }
 }

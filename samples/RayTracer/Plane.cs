@@ -27,7 +27,7 @@ internal sealed class Plane : IObject
 
     public float DiffuseCoefficient { get; set; } = 1f;
 
-    public Rgb32f DiffuseColor { get; set; } = Rgb32f.Black;
+    public Rgb96f DiffuseColor { get; set; } = Rgb96f.Black;
 
     public Vector3 Position { get; set; } = new Vector3(0f, 0f, 0f);
 

@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,134 +18,62 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace SDL2Sharp.Video
 {
-    public ref struct PackedImage<TPackedColor>
+    public readonly ref struct PackedImage<TPackedPixelFormat> where TPackedPixelFormat : struct
     {
-        private readonly Span<TPackedColor> _pixels;
-
-        private readonly int _height;
-
-        private readonly int _width;
-
-        private readonly int _pitch;
+        private readonly ImagePlane<TPackedPixelFormat> _plane;
 
         public int Width
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                return _width;
-            }
+            get => _plane.Width;
         }
 
         public int Height
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                return _height;
-            }
+            get => _plane.Height;
         }
 
-        public ref TPackedColor this[int row, int column]
+        public Size Size
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                if (row < 0)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        nameof(row),
-                        row,
-                        "row cannot be less than zero");
-                }
-
-                if (row >= _height)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        nameof(column),
-                        column,
-                        "row cannot be greater than or equal to the height of the image");
-                }
-
-                if (column < 0)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        nameof(column),
-                        column,
-                        "column cannot be less than zero");
-                }
-
-                if (column >= _width)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        nameof(column),
-                        column,
-                        "column cannot be greater than or equal to the width of the image");
-                }
-
-                return ref DangerousGetReferenceAt(row, column);
-            }
+            get => _plane.Size;
         }
 
-        public unsafe PackedImage(void* pixels, int height, int width, int pitch)
+        public ref TPackedPixelFormat this[int x, int y]
         {
-            if (height < 0)
-            {
-                throw new ArgumentOutOfRangeException(
-                    nameof(height),
-                    height,
-                    "height cannot be less than zero");
-            }
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => ref _plane[x, y];
+        }
 
-            if (width < 0)
-            {
-                throw new ArgumentOutOfRangeException(
-                    nameof(width),
-                    width,
-                    "height cannot be less than zero");
-            }
-
-            if (pitch < 0)
-            {
-                throw new ArgumentOutOfRangeException(
-                    nameof(pitch),
-                    pitch,
-                    "pitch cannot be less than zero");
-            }
-
-            _pixels = new Span<TPackedColor>(pixels, height * pitch);
-            _height = height;
-            _width = width;
-            _pitch = pitch;
+        public unsafe PackedImage(void* pixels, int width, int height, int pitch)
+        {
+            _plane = new ImagePlane<TPackedPixelFormat>(pixels, width, height, pitch);
         }
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ref TPackedColor DangerousGetReference()
+        public ref TPackedPixelFormat DangerousGetReference()
         {
-            return ref MemoryMarshal.GetReference(_pixels);
+            return ref _plane.DangerousGetReference();
         }
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ref TPackedColor DangerousGetReferenceAt(int row, int column)
+        public ref TPackedPixelFormat DangerousGetReferenceAt(int x, int y)
         {
-            ref var r0 = ref MemoryMarshal.GetReference(_pixels);
-            var index = row * _pitch + column;
-            return ref Unsafe.Add(ref r0, index);
+            return ref _plane.DangerousGetReferenceAt(x, y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Fill(TPackedColor value)
+        public void Fill(TPackedPixelFormat value)
         {
-            _pixels.Fill(value);
+            _plane.Fill(value);
         }
     }
 }

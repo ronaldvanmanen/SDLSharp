@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -22,25 +22,25 @@ using System.Runtime.InteropServices;
 
 namespace SDL2Sharp.Video.Colors
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-    [PackedColor(PackedPixelFormat.YUY2)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4, Size = 4)]
+    [PixelFormat(PixelFormat.YUY2)]
     public readonly record struct Yuy2
     {
         private readonly uint _value;
 
-        public byte Y0 => (byte)(_value >> 24 & 0xFF);
+        public byte Y0 => (byte)(_value & 0xFF);
 
-        public byte U0 => (byte)(_value >> 16 & 0xFF);
+        public byte U0 => (byte)(_value >> 8 & 0xFF);
 
-        public byte Y1 => (byte)(_value >> 8 & 0xFF);
+        public byte Y1 => (byte)(_value >> 16 & 0xFF);
 
-        public byte V0 => (byte)(_value & 0xFF);
+        public byte V0 => (byte)(_value >> 24 & 0xFF);
 
         public Yuy2(byte y0, byte u0, byte y1, byte v0)
         {
             unchecked
             {
-                _value = (uint)(y0 << 24 | u0 << 16 | y1 << 8 | v0);
+                _value = (uint)(y0 | u0 << 8 | y1 << 16 | v0 << 24);
             }
         }
     }

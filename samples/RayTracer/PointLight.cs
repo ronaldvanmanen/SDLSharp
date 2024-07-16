@@ -25,5 +25,5 @@ internal sealed class PointLight
 {
     public Vector3 Position { get; set; }
 
-    public Rgb32f Color { get; set; }
+    public Rgb96f Color { get; set; }
 }

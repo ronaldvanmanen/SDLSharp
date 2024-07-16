@@ -28,18 +28,18 @@ namespace SDL2Sharp.Video
     {
         private readonly SDL_RendererInfo _handle;
 
-        private readonly Lazy<IReadOnlyList<PixelFormatEnum>> _textureFormats;
+        private readonly Lazy<IReadOnlyList<PixelFormat>> _textureFormats;
 
         public RendererInfo(SDL_RendererInfo handle)
         {
             _handle = handle;
-            _textureFormats = new Lazy<IReadOnlyList<PixelFormatEnum>>(() =>
+            _textureFormats = new Lazy<IReadOnlyList<PixelFormat>>(() =>
             {
                 var numTextureFormats = (int)_handle.num_texture_formats;
-                var textureFormats = new List<PixelFormatEnum>(numTextureFormats);
+                var textureFormats = new List<PixelFormat>(numTextureFormats);
                 for (var index = 0; index < numTextureFormats; ++index)
                 {
-                    textureFormats.Add((PixelFormatEnum)_handle.texture_formats[index]);
+                    textureFormats.Add((PixelFormat)_handle.texture_formats[index]);
                 }
                 return textureFormats.AsReadOnly();
             });
@@ -49,7 +49,7 @@ namespace SDL2Sharp.Video
 
         public RendererFlags Flags => (RendererFlags)_handle.flags;
 
-        public IReadOnlyList<PixelFormatEnum> TextureFormats => _textureFormats.Value;
+        public IReadOnlyList<PixelFormat> TextureFormats => _textureFormats.Value;
 
         public int MaxTextureWidth => _handle.max_texture_width;
 

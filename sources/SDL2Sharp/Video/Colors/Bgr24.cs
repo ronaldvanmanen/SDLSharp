@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 namespace SDL2Sharp.Video.Colors
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 3)]
-    [PackedColor(PackedPixelFormat.BGR24)]
+    [PixelFormat(PixelFormat.BGR24)]
     public readonly record struct Bgr24
     {
         private readonly byte _r, _g, _b;

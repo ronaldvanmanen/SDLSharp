@@ -18,30 +18,8 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System.Runtime.InteropServices;
-
-namespace SDL2Sharp.Video.Colors
+namespace SDL2Sharp.Video
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 4, Size = 4)]
-    [PixelFormat(PixelFormat.UYVY)]
-    public readonly record struct Uyvy
-    {
-        private readonly uint _value;
-
-        public byte U0 => (byte)(_value & 0xFF);
-
-        public byte Y0 => (byte)(_value >> 8 & 0xFF);
-
-        public byte V0 => (byte)(_value >> 16 & 0xFF);
-
-        public byte Y1 => (byte)(_value >> 24 & 0xFF);
-
-        public Uyvy(byte u0, byte y0, byte v0, byte y1)
-        {
-            unchecked
-            {
-                _value = (uint)(u0 | y0 << 8 | v0 << 16 | y1 << 24);
-            }
-        }
-    }
+    public delegate void SurfaceLockCallback<TPacketColor>(PackedImage<TPacketColor> pixels)
+        where TPacketColor : struct;
 }

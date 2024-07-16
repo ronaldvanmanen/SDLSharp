@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -23,20 +23,36 @@ using System.Runtime.InteropServices;
 namespace SDL2Sharp.Video.Colors
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 1)]
-    [PackedColor(PackedPixelFormat.RGB332)]
+    [PixelFormat(PixelFormat.RGB332)]
     public readonly record struct Rgb332
     {
+        private static readonly PixelFormatDescriptor _pixelFormat = new(PixelFormat.RGB332);
+
         private readonly byte _value;
 
-        public byte R => (byte)(_value >> 5 & 0x7);
-
-        public byte G => (byte)(_value >> 2 & 0x7);
-
-        public byte B => (byte)(_value & 0x3);
-
-        public Rgb332(byte r, byte g, byte b)
+        public static Rgb332 FromRGB(byte r, byte g, byte b)
         {
-            _value = (byte)((r & 0x7) << 5 | (g & 0x7) << 2 | b & 0x3);
+            return new Rgb332((byte)_pixelFormat.MapRGB(r, g, b));
+        }
+
+        public static Rgb332 FromRGBA(byte r, byte g, byte b, byte a)
+        {
+            return new Rgb332((byte)_pixelFormat.MapRGBA(r, g, b, a));
+        }
+
+        private Rgb332(byte value)
+        {
+            _value = value;
+        }
+
+        public (byte r, byte g, byte b) ToRGB()
+        {
+            return _pixelFormat.GetRGB(_value);
+        }
+
+        public (byte r, byte g, byte b, byte a) ToRGBA()
+        {
+            return _pixelFormat.GetRGBA(_value);
         }
     }
 }

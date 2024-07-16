@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -26,17 +26,23 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp.Video
 {
-    public sealed unsafe class PackedTexture<TPackedColor> : IDisposable where TPackedColor : struct
+    public sealed unsafe class PackedTexture<TPackedPixelFormat> : IDisposable where TPackedPixelFormat : struct
     {
+        public delegate void LockCallback(PackedImage<TPackedPixelFormat> pixels);
+
+        public delegate void LockToSurfaceCallback(Surface<TPackedPixelFormat> surface);
+
         private Texture _texture;
 
-        public PackedPixelFormat Format => (PackedPixelFormat)_texture.Format;
+        public PixelFormat Format => _texture.Format;
 
         public TextureAccess Access => _texture.Access;
 
         public int Width => _texture.Width;
 
         public int Height => _texture.Height;
+
+        public Size Size => _texture.Size;
 
         public BlendMode BlendMode
         {
@@ -49,6 +55,11 @@ namespace SDL2Sharp.Video
 
         internal PackedTexture(Texture texture)
         {
+            if (!texture.Format.IsPacked())
+            {
+                throw new ArgumentException("Texture is not in a packed color format.", nameof(texture));
+            }
+
             _texture = texture ?? throw new ArgumentNullException(nameof(texture));
         }
 
@@ -70,63 +81,83 @@ namespace SDL2Sharp.Video
             _texture = null!;
         }
 
-        public void WithLock(WithLockPackedImageCallback<TPackedColor> callback)
+        public void WithLock(LockCallback callback)
         {
             WithLock(0, 0, Width, Height, callback);
         }
 
-        public void WithLock(Rectangle rectangle, WithLockPackedImageCallback<TPackedColor> callback)
+        public void WithLock(Rectangle rectangle, LockCallback callback)
         {
             WithLock(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, callback);
         }
 
-        public void WithLock(int x, int y, int width, int height, WithLockPackedImageCallback<TPackedColor> callback)
-        {
-            _texture.WithLock(x, y, width, height, callback);
-        }
-
-        public void WithLock(WithLockSurfaceCallback<TPackedColor> callback)
-        {
-            WithLock(0, 0, Width, Height, callback);
-        }
-
-        public void WithLock(Rectangle rectangle, WithLockSurfaceCallback<TPackedColor> callback)
-        {
-            WithLock(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, callback);
-        }
-
-        public void WithLock(int x, int y, int width, int height, WithLockSurfaceCallback<TPackedColor> callback)
+        public void WithLock(int x, int y, int width, int height, LockCallback callback)
         {
             ThrowWhenDisposed();
 
-            _texture.WithLock(x, y, width, height, callback);
+            var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
+            void* pixels;
+            int pitchInBytes;
+            Error.ThrowOnFailure(
+                SDL.LockTexture(_texture, &rect, &pixels, &pitchInBytes)
+            );
+
+            var bytesPerPixel = Marshal.SizeOf<TPackedPixelFormat>();
+            var pitch = pitchInBytes / bytesPerPixel;
+            var image = new PackedImage<TPackedPixelFormat>(pixels, width, height, pitch);
+            callback.Invoke(image);
+            SDL.UnlockTexture(_texture);
         }
 
-        public void Update(MemoryImage<TPackedColor> image)
+        public void WithLock(LockToSurfaceCallback callback)
+        {
+            WithLock(0, 0, Width, Height, callback);
+        }
+
+        public void WithLock(Rectangle rectangle, LockToSurfaceCallback callback)
+        {
+            WithLock(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, callback);
+        }
+
+        public void WithLock(int x, int y, int width, int height, LockToSurfaceCallback callback)
+        {
+            ThrowWhenDisposed();
+
+            var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
+            SDL_Surface* surfaceHandle;
+            Error.ThrowOnFailure(
+                SDL.LockTextureToSurface(_texture, &rect, &surfaceHandle)
+            );
+            var surface = new Surface<TPackedPixelFormat>(surfaceHandle, false);
+            callback.Invoke(surface);
+            SDL.UnlockTexture(_texture);
+        }
+
+        public void Update(PackedMemoryImage<TPackedPixelFormat> image)
         {
             ThrowWhenDisposed();
 
             var pointer = Unsafe.AsPointer(ref image.DangerousGetReference());
-            var pitch = image.Width * Marshal.SizeOf<TPackedColor>();
+            var pitch = image.Width * Marshal.SizeOf<TPackedPixelFormat>();
             Update(null, pointer, pitch);
         }
 
-        public void Update(PackedImage<TPackedColor> pixels)
+        public void Update(PackedImage<TPackedPixelFormat> pixels)
         {
             ThrowWhenDisposed();
 
             var pointer = Unsafe.AsPointer(ref pixels.DangerousGetReference());
-            var pitch = pixels.Width * Marshal.SizeOf<TPackedColor>();
+            var pitch = pixels.Width * Marshal.SizeOf<TPackedPixelFormat>();
             Update(null, pointer, pitch);
         }
 
-        public void Update(TPackedColor[,] pixels)
+        public void Update(TPackedPixelFormat[,] pixels)
         {
             ThrowWhenDisposed();
 
             var pointer = Unsafe.AsPointer(ref pixels.DangerousGetReference());
             var width = pixels.GetLength(1);
-            var pitch = width * Marshal.SizeOf<TPackedColor>();
+            var pitch = width * Marshal.SizeOf<TPackedPixelFormat>();
             Update(null, pointer, pitch);
         }
 
@@ -145,7 +176,7 @@ namespace SDL2Sharp.Video
             }
         }
 
-        public static implicit operator Texture(PackedTexture<TPackedColor> texture)
+        public static implicit operator Texture(PackedTexture<TPackedPixelFormat> texture)
         {
             if (texture is null)
             {

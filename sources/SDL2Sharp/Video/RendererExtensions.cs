@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -26,53 +26,56 @@ namespace SDL2Sharp.Video
 {
     public static class RendererExtensions
     {
-        public static PackedTexture<TPackedColor> CreateTexture<TPackedColor>(this Renderer renderer, TextureAccess access, Size size)
-            where TPackedColor : struct
+        public static PackedTexture<TPackedPixelFormat> CreatePackedTexture<TPackedPixelFormat>(this Renderer renderer, TextureAccess access, Size size)
+            where TPackedPixelFormat : struct
         {
             if (renderer is null)
             {
                 throw new ArgumentNullException(nameof(renderer));
             }
 
-            return renderer.CreateTexture<TPackedColor>(access, size.Width, size.Height);
+            return renderer.CreatePackedTexture<TPackedPixelFormat>(access, size.Width, size.Height);
         }
 
-        public static PackedTexture<TPackedColor> CreateTexture<TPackedColor>(this Renderer renderer, TextureAccess access, int width, int height)
-            where TPackedColor : struct
+        public static PackedTexture<TPackedPixelFormat> CreatePackedTexture<TPackedPixelFormat>(this Renderer renderer, TextureAccess access, int width, int height)
+            where TPackedPixelFormat : struct
         {
             if (renderer is null)
             {
                 throw new ArgumentNullException(nameof(renderer));
             }
 
-            var pixelFormat = PackedColorAttribute.GetPixelFormatOf<TPackedColor>();
-            var texture = renderer.CreateTexture((PixelFormatEnum)pixelFormat, access, width, height);
-            return new PackedTexture<TPackedColor>(texture);
+            var pixelFormat = PixelFormatAttribute.GetPixelFormatOf<TPackedPixelFormat>();
+            var texture = renderer.CreateTexture((PixelFormat)pixelFormat, access, width, height);
+            return new PackedTexture<TPackedPixelFormat>(texture);
         }
 
-        public static Yv12Texture CreateYv12Texture(this Renderer renderer, TextureAccess access, Size size)
+        public static YuvTexture<TYuvPixelFormat> CreateYuvTexture<TYuvPixelFormat>(this Renderer renderer, TextureAccess access, Size size)
+            where TYuvPixelFormat : IYuvPixelFormat, new()
         {
             if (renderer is null)
             {
                 throw new ArgumentNullException(nameof(renderer));
             }
 
-            return renderer.CreateYv12Texture(access, size.Width, size.Height);
+            return renderer.CreateYuvTexture<TYuvPixelFormat>(access, size.Width, size.Height);
         }
 
-        public static Yv12Texture CreateYv12Texture(this Renderer renderer, TextureAccess access, int width, int height)
+        public static YuvTexture<TYuvPixelFormat> CreateYuvTexture<TYuvPixelFormat>(this Renderer renderer, TextureAccess access, int width, int height)
+            where TYuvPixelFormat : IYuvPixelFormat, new()
         {
             if (renderer is null)
             {
                 throw new ArgumentNullException(nameof(renderer));
             }
 
-            var texture = renderer.CreateTexture(PixelFormatEnum.YV12, access, width, height);
-            return new Yv12Texture(texture);
+            var pixelFormat = PixelFormatAttribute.GetPixelFormatOf<TYuvPixelFormat>();
+            var texture = renderer.CreateTexture(pixelFormat, access, width, height);
+            return new YuvTexture<TYuvPixelFormat>(texture);
         }
 
-        public static PackedTexture<TPackedColor> CreateTextureFromSurface<TPackedColor>(this Renderer renderer, Surface<TPackedColor> surface)
-            where TPackedColor : struct
+        public static PackedTexture<TPackedPixelFormat> CreateTextureFromSurface<TPackedPixelFormat>(this Renderer renderer, Surface<TPackedPixelFormat> surface)
+            where TPackedPixelFormat : struct
         {
             if (renderer is null)
             {
@@ -80,7 +83,7 @@ namespace SDL2Sharp.Video
             }
 
             var texture = renderer.CreateTextureFromSurface(surface);
-            var packedTexture = new PackedTexture<TPackedColor>(texture);
+            var packedTexture = new PackedTexture<TPackedPixelFormat>(texture);
             return packedTexture;
         }
 

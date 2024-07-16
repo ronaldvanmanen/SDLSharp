@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -19,14 +19,20 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using SDL2Sharp.Interop;
+using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
-    public sealed unsafe partial class Yv12Texture : IDisposable
+    public sealed unsafe partial class YuvTexture<TYuvPixelFormat> : IDisposable where TYuvPixelFormat : IYuvPixelFormat, new()
     {
+        public delegate void LockCallback(YuvImage<TYuvPixelFormat> pixels);
+
         private Texture _texture;
 
-        public PackedPixelFormat Format => (PackedPixelFormat)_texture.Format;
+        public PixelFormat Format => _texture.Format;
 
         public TextureAccess Access => _texture.Access;
 
@@ -43,12 +49,12 @@ namespace SDL2Sharp.Video
 
         public bool IsValid => _texture.IsValid;
 
-        internal Yv12Texture(Texture texture)
+        internal YuvTexture(Texture texture)
         {
             _texture = texture ?? throw new ArgumentNullException(nameof(texture));
         }
 
-        ~Yv12Texture()
+        ~YuvTexture()
         {
             Dispose(false);
         }
@@ -66,19 +72,41 @@ namespace SDL2Sharp.Video
             _texture = null!;
         }
 
-        public void WithLock(WithLockYv12ImageCallback callback)
+        public void WithLock(LockCallback callback)
         {
             WithLock(0, 0, Width, Height, callback);
         }
 
-        public void WithLock(Rectangle rectangle, WithLockYv12ImageCallback callback)
+        public void WithLock(Rectangle rectangle, LockCallback callback)
         {
             WithLock(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, callback);
         }
 
-        public void WithLock(int x, int y, int width, int height, WithLockYv12ImageCallback callback)
+        public void WithLock(int x, int y, int width, int height, LockCallback callback)
         {
-            _texture.WithLock(x, y, width, height, callback);
+            ThrowWhenDisposed();
+
+            var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
+            void* pixels;
+            int pitch;
+            Error.ThrowOnFailure(
+                SDL.LockTexture(_texture, &rect, &pixels, &pitch)
+            );
+
+            var image = new YuvImage<TYuvPixelFormat>(pixels, width, height, pitch);
+            callback.Invoke(image);
+            SDL.UnlockTexture(_texture);
+        }
+
+        public void Update(YuvImage<TYuvPixelFormat> image)
+        {
+            var yPlane = (byte*)Unsafe.AsPointer(ref image.Y.DangerousGetReference());
+            var yPitch = image.Y.Width * Marshal.SizeOf<Y8>();
+            var uPlane = (byte*)Unsafe.AsPointer(ref image.U.DangerousGetReference());
+            var uPitch = image.U.Width * Marshal.SizeOf<U8>();
+            var vPlane = (byte*)Unsafe.AsPointer(ref image.V.DangerousGetReference());
+            var vPitch = image.V.Width * Marshal.SizeOf<V8>();
+            SDL.UpdateYUVTexture(_texture, null, yPlane, yPitch, uPlane, uPitch, vPlane, vPitch);
         }
 
         private void ThrowWhenDisposed()
@@ -89,7 +117,7 @@ namespace SDL2Sharp.Video
             }
         }
 
-        public static implicit operator Texture(Yv12Texture texture)
+        public static implicit operator Texture(YuvTexture<TYuvPixelFormat> texture)
         {
             if (texture is null)
             {

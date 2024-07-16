@@ -40,7 +40,7 @@ internal sealed class Camera
 
     public float FocalLength { get; private set; }
 
-    public MemoryImage<Argb8888> Snapshot { get; }
+    public PackedMemoryImage<Argb8888> Snapshot { get; }
 
     public Camera()
     {
@@ -49,7 +49,7 @@ internal sealed class Camera
         Frustum = new Frustum(-4f / 3f, 4f / 3f, -1f, +1f, float.Epsilon, float.PositiveInfinity);
         FieldOfView = 90f;
         FocalLength = (float)(Resolution.Width / Resolution.Height / MathF.Tan(FieldOfView * MathF.PI / 180f / 2f));
-        Snapshot = new MemoryImage<Argb8888>(Resolution.Width, Resolution.Height);
+        Snapshot = new PackedMemoryImage<Argb8888>(Resolution.Width, Resolution.Height);
     }
 
     public void LookAt(Vector3 position, Vector3 target, Vector3 up)
@@ -122,7 +122,7 @@ internal sealed class Camera
         _orientation *= rotation;
     }
 
-    public MemoryImage<Argb8888> TakeSnapshot(World world)
+    public PackedMemoryImage<Argb8888> TakeSnapshot(World world)
     {
         if (world is null)
         {
@@ -147,7 +147,7 @@ internal sealed class Camera
                 var ray = new Ray(Vector3.Zero, Vector3.Normalize(rayDirection));
                 var rayWorld = Ray.Transform(ray, viewMatrix);
                 var color = world.Trace(rayWorld, 0, 1f);
-                Snapshot[y, x] = color.ToArgb8888();
+                Snapshot[x, y] = color.ToArgb8888();
             }
         });
 

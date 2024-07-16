@@ -18,72 +18,236 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System;
 using SDL2Sharp.Video;
 using SDL2Sharp.Video.Colors;
 using Xunit;
 
 namespace SDL2Sharp.Tests
 {
-    public sealed class PackedTextureTests
+    public static class PackedTextureTests
     {
-        [Fact]
-        public void CreatePackedTextureOfArgb8888()
-        {
-            var color = new Argb8888(255, 255, 255, 255);
+        private static readonly Random _random = new();
 
+        [Fact]
+        public static void WriteAndReadAbgr1555() => WriteAndRead
+        (
+            () => Abgr1555.FromRGBA(
+                r: (byte)_random.Next(0, 256),
+                g: (byte)_random.Next(0, 256),
+                b: (byte)_random.Next(0, 256),
+                a: (byte)_random.Next(0, 256)
+            )
+        );
+
+        [Fact]
+        public static void WriteAndReadAbgr4444() => WriteAndRead
+        (
+            () => Abgr4444.FromRGBA(
+                r: (byte)_random.Next(0, 256),
+                g: (byte)_random.Next(0, 256),
+                b: (byte)_random.Next(0, 256),
+                a: (byte)_random.Next(0, 256)
+            )
+        );
+
+        [Fact]
+        public static void WriteAndReadAbgr8888() => WriteAndRead
+        (
+            () => Abgr8888.FromRGBA(
+                r: (byte)_random.Next(0, 256),
+                g: (byte)_random.Next(0, 256),
+                b: (byte)_random.Next(0, 256),
+                a: (byte)_random.Next(0, 256)
+            )
+        );
+
+        [Fact]
+        public static void WriteAndReadArgb1555() => WriteAndRead
+        (
+            () => Argb1555.FromRGBA(
+                r: (byte)_random.Next(0, 256),
+                g: (byte)_random.Next(0, 256),
+                b: (byte)_random.Next(0, 256),
+                a: (byte)_random.Next(0, 256)
+            )
+        );
+
+        [Fact]
+        public static void WriteAndReadArgb2101010() => WriteAndRead
+        (
+            () => Argb2101010.FromRGBA(
+                r: (byte)_random.Next(0, 256),
+                g: (byte)_random.Next(0, 256),
+                b: (byte)_random.Next(0, 256),
+                a: (byte)_random.Next(0, 256)
+            )
+        );
+
+        [Fact]
+        public static void WriteAndReadArgb4444() => WriteAndRead
+        (
+            () => Argb4444.FromRGBA(
+                r: (byte)_random.Next(0, 256),
+                g: (byte)_random.Next(0, 256),
+                b: (byte)_random.Next(0, 256),
+                a: (byte)_random.Next(0, 256)
+            )
+        );
+
+        [Fact]
+        public static void WriteAndReadArgb8888() => WriteAndRead(
+            () => Argb8888.FromRGBA(
+                r: (byte)_random.Next(0, 256),
+                g: (byte)_random.Next(0, 256),
+                b: (byte)_random.Next(0, 256),
+                a: (byte)_random.Next(0, 256)
+            )
+        );
+
+        [Fact]
+        public static void WriteAndReadRgba8888() => WriteAndRead(
+            () => new Rgba8888(
+                a: (byte)_random.Next(0, 256),
+                r: (byte)_random.Next(0, 256),
+                g: (byte)_random.Next(0, 256),
+                b: (byte)_random.Next(0, 256)
+            )
+        );
+
+        [Fact]
+        public static void WriteAndReadBgr565() => WriteAndRead(
+            () => Bgr565.FromRGB(
+                r: (byte)_random.Next(0, 256),
+                g: (byte)_random.Next(0, 256),
+                b: (byte)_random.Next(0, 256)
+            )
+        );
+
+        [Fact]
+        public static void WriteAndReadBgra4444() => WriteAndRead(
+            () => Bgra4444.FromRGBA(
+                r: (byte)_random.Next(0, 256),
+                g: (byte)_random.Next(0, 256),
+                b: (byte)_random.Next(0, 256),
+                a: (byte)_random.Next(0, 256)
+            )
+        );
+
+        [Fact]
+        public static void WriteAndReadBgra5551() => WriteAndRead(
+            () => Bgra4444.FromRGBA(
+                r: (byte)_random.Next(0, 256),
+                g: (byte)_random.Next(0, 256),
+                b: (byte)_random.Next(0, 256),
+                a: (byte)_random.Next(0, 256)
+            )
+        );
+
+        [Fact]
+        public static void WriteAndReadBgra8888() => WriteAndRead(
+            () => new Bgra8888(
+                b: (byte)_random.Next(0, 256),
+                g: (byte)_random.Next(0, 256),
+                r: (byte)_random.Next(0, 256),
+                a: (byte)_random.Next(0, 256)
+            )
+        );
+
+        [Fact]
+        public static void WriteAndReadRgb332() => WriteAndRead(
+            () => Rgb332.FromRGB(
+                r: (byte)_random.Next(0, 256),
+                g: (byte)_random.Next(0, 256),
+                b: (byte)_random.Next(0, 256)
+            )
+        );
+
+        [Fact]
+        public static void WriteAndReadRgb565() => WriteAndRead(
+            () => Rgb565.FromRGB(
+                r: (byte)_random.Next(0, 256),
+                g: (byte)_random.Next(0, 256),
+                b: (byte)_random.Next(0, 256)
+            )
+        );
+
+        private static void WriteAndRead<TPackedPixelFormat>(Func<TPackedPixelFormat> colorGenerator)
+            where TPackedPixelFormat : struct, IEquatable<TPackedPixelFormat>
+        {
             using var mainSystem = new MainSystem();
             using var videoSystem = new VideoSubsystem();
-            using var window = videoSystem.CreateWindow("CreatePackedTextureOfArgb8888", 640, 480, WindowFlags.Hidden);
-            using var renderer = window.CreateRenderer();
-            using var texture = renderer.CreateTexture<Argb8888>(TextureAccess.Streaming, renderer.OutputSize);
-            texture.WithLock(pixels => pixels.Fill(color));
-            renderer.Copy(texture);
+            using var window = videoSystem.CreateWindow("PackedTextureTests", 640, 480, WindowFlags.Hidden);
+            using var renderer = window.CreateRenderer(RendererFlags.Software | RendererFlags.TargetTexture);
+            using var sourceTexture = renderer.CreatePackedTexture<TPackedPixelFormat>(TextureAccess.Streaming, renderer.OutputSize);
+            using var targetTexture = renderer.CreatePackedTexture<TPackedPixelFormat>(TextureAccess.Target, renderer.OutputSize);
+            var sourceImage = GenerateImage(renderer.OutputSize, colorGenerator);
+
+            sourceTexture.Update(sourceImage);
+
+            //sourceTexture.WithLock(pixels =>
+            //{
+            //    for (var y = 0; y < pixels.Height; y++)
+            //    {
+            //        for (var x = 0; x < pixels.Width; x++)
+            //        {
+            //            pixels[x, y] = sourceImage[x, y];
+            //        }
+            //    }
+            //});
+
+            renderer.Target = targetTexture;
+            renderer.Copy(sourceTexture);
             renderer.Present();
+
+            var targetImage = renderer.ReadPixels<TPackedPixelFormat>();
+
+            Assert.Equal(sourceImage.Size, targetImage.Size);
+            Assert.Equal(sourceImage.Height, targetImage.Height);
+            Assert.Equal(sourceImage.Width, targetImage.Width);
+            Assert.Equal(sourceImage, targetImage, (expectedImage, actualImage) =>
+            {
+                if (expectedImage is null && actualImage is null)
+                {
+                    return true;
+                }
+
+                if (expectedImage is null || actualImage is null)
+                {
+                    return false;
+                }
+
+                if (expectedImage.Size != actualImage.Size)
+                {
+                    return false;
+                }
+
+                for (var y = 0; y < expectedImage.Height; y++)
+                {
+                    for (var x = 0; x < expectedImage.Width; x++)
+                    {
+                        if (!expectedImage[x, y].Equals(actualImage[x, y]))
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            });
         }
 
-        [Fact]
-        public void CreatePackedTextureOfYUY2()
+        private static PackedMemoryImage<TColor> GenerateImage<TColor>(Size size, Func<TColor> createRandomColor) where TColor : struct
         {
-            var color = new Yuy2(255, 255, 255, 255);
-
-            using var mainSystem = new MainSystem();
-            using var videoSystem = new VideoSubsystem();
-            using var window = videoSystem.CreateWindow("CreatePackedTextureOfYUY2", 640, 480, WindowFlags.Hidden);
-            using var renderer = window.CreateRenderer();
-            using var texture = renderer.CreateTexture<Yuy2>(TextureAccess.Streaming, renderer.OutputSize);
-            texture.WithLock(pixels => pixels.Fill(color));
-            renderer.Copy(texture);
-            renderer.Present();
-        }
-
-        [Fact]
-        public void CreatePackedTextureOfYVYU()
-        {
-            var color = new Yvyu(255, 255, 255, 255);
-
-            using var mainSystem = new MainSystem();
-            using var videoSystem = new VideoSubsystem();
-            using var window = videoSystem.CreateWindow("CreatePackedTextureOfYVYU", 640, 480, WindowFlags.Hidden);
-            using var renderer = window.CreateRenderer();
-            using var texture = renderer.CreateTexture<Yvyu>(TextureAccess.Streaming, renderer.OutputSize);
-            texture.WithLock(pixels => pixels.Fill(color));
-            renderer.Copy(texture);
-            renderer.Present();
-        }
-
-        [Fact]
-        public void CreatePackedTextureOfUYVY()
-        {
-            var color = new Uyvy(255, 255, 255, 255);
-
-            using var mainSystem = new MainSystem();
-            using var videoSystem = new VideoSubsystem();
-            using var window = videoSystem.CreateWindow("CreatePackedTextureOfUYVY", 640, 480, WindowFlags.Hidden);
-            using var renderer = window.CreateRenderer();
-            using var texture = renderer.CreateTexture<Uyvy>(TextureAccess.Streaming, renderer.OutputSize);
-            texture.WithLock(pixels => pixels.Fill(color));
-            renderer.Copy(texture);
-            renderer.Present();
+            var image = new PackedMemoryImage<TColor>(size.Width, size.Height);
+            for (var y = 0; y < image.Height; y++)
+            {
+                for (var x = 0; x < image.Width; x++)
+                {
+                    image[x, y] = createRandomColor();
+                }
+            }
+            return image;
         }
     }
 }

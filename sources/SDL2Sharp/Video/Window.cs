@@ -172,7 +172,7 @@ namespace SDL2Sharp.Video
             }
         }
 
-        public PixelFormatEnum PixelFormat
+        public PixelFormat PixelFormat
         {
             get
             {
@@ -180,7 +180,7 @@ namespace SDL2Sharp.Video
 
                 var pixelFormat = SDL.GetWindowPixelFormat(_handle);
                 Error.ThrowOnFailure(pixelFormat);
-                return (PixelFormatEnum)pixelFormat;
+                return (PixelFormat)pixelFormat;
             }
         }
 

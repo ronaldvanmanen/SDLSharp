@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,8 +18,30 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-namespace SDL2Sharp.Video
+using SDL2Sharp.Video.Colors;
+using Xunit;
+
+namespace SDL2Sharp.Tests.Colors
 {
-    public delegate void WithLockPackedImageCallback<TPackedColor>(PackedImage<TPackedColor> pixels)
-        where TPackedColor : struct;
+    public static class Argb2101010Tests
+    {
+        [Fact]
+        public static void SelfEquality()
+        {
+#pragma warning disable CS1718 // Comparison made to same variable
+            var color = Argb2101010.FromRGBA(r: 63, g: 127, b: 191, a: 255);
+            Assert.True(color == color);
+            Assert.False(color != color);
+#pragma warning restore CS1718 // Comparison made to same variable
+        }
+
+        [Fact]
+        public static void Equality()
+        {
+            var a = Argb2101010.FromRGBA(r: 63, g: 127, b: 191, a: 255);
+            var b = Argb2101010.FromRGBA(r: 63, g: 127, b: 191, a: 255);
+            Assert.True(a == b);
+            Assert.False(a != b);
+        }
+    }
 }

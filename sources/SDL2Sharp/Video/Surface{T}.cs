@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -19,15 +19,16 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Collections.Generic;
 using SDL2Sharp.Interop;
 
 namespace SDL2Sharp.Video
 {
-    public sealed class Surface<TPackedColor> : IDisposable where TPackedColor : struct
+    public sealed class Surface<TPackedPixelFormat> : IDisposable where TPackedPixelFormat : struct
     {
         private Surface _surface;
 
-        public PixelFormat Format => _surface.Format;
+        public PixelFormatDescriptor Format => _surface.Format;
 
         public int Width => _surface.Width;
 
@@ -35,8 +36,10 @@ namespace SDL2Sharp.Video
 
         public int Pitch => _surface.Pitch;
 
+        public IEnumerable<object>? Size { get; internal set; }
+
         public Surface(int width, int height)
-        : this(new Surface(width, height, (PixelFormatEnum)PackedColorAttribute.GetPixelFormatOf<TPackedColor>()))
+        : this(new Surface(width, height, (PixelFormat)PixelFormatAttribute.GetPixelFormatOf<TPackedPixelFormat>()))
         { }
 
         internal unsafe Surface(SDL_Surface* surface)
@@ -70,7 +73,7 @@ namespace SDL2Sharp.Video
             _surface = null!;
         }
 
-        public void Blit(Surface<TPackedColor> surface)
+        public void Blit(Surface<TPackedPixelFormat> surface)
         {
             ThrowWhenDisposed();
 
@@ -86,8 +89,8 @@ namespace SDL2Sharp.Video
         {
             ThrowWhenDisposed();
 
-            var targetPixelFormat = PackedColorAttribute.GetPixelFormatOf<TTargetColor>();
-            var targetSurface = _surface.ConvertTo((PixelFormatEnum)targetPixelFormat);
+            var targetPixelFormat = PixelFormatAttribute.GetPixelFormatOf<TTargetColor>();
+            var targetSurface = _surface.ConvertTo((PixelFormat)targetPixelFormat);
             return new Surface<TTargetColor>(targetSurface);
         }
 
@@ -98,7 +101,7 @@ namespace SDL2Sharp.Video
             _surface.FillRect(color);
         }
 
-        public void WithLock(WithLockPackedImageCallback<TPackedColor> callback)
+        public void WithLock(SurfaceLockCallback<TPackedPixelFormat> callback)
         {
             _surface.WithLock(callback);
         }
@@ -111,7 +114,7 @@ namespace SDL2Sharp.Video
             }
         }
 
-        public static implicit operator Surface(Surface<TPackedColor> surface)
+        public static implicit operator Surface(Surface<TPackedPixelFormat> surface)
         {
             if (surface is null)
             {
