@@ -23,14 +23,16 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Microsoft.Toolkit.HighPerformance;
 using SDL2Sharp.Interop;
+using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
-    public sealed unsafe class PackedTexture<TPackedPixelFormat> : IDisposable where TPackedPixelFormat : struct
+    public sealed unsafe class PackedTexture<TPackedPixel> : IDisposable
+        where TPackedPixel : struct, IPackedPixel<TPackedPixel>
     {
-        public delegate void LockCallback(PackedImage<TPackedPixelFormat> pixels);
+        public delegate void LockCallback(PackedImage<TPackedPixel> pixels);
 
-        public delegate void LockToSurfaceCallback(Surface<TPackedPixelFormat> surface);
+        public delegate void LockToSurfaceCallback(Surface<TPackedPixel> surface);
 
         private Texture _texture;
 
@@ -102,9 +104,9 @@ namespace SDL2Sharp.Video
                 SDL.LockTexture(_texture, &rect, &pixels, &pitchInBytes)
             );
 
-            var bytesPerPixel = Marshal.SizeOf<TPackedPixelFormat>();
+            var bytesPerPixel = Marshal.SizeOf<TPackedPixel>();
             var pitch = pitchInBytes / bytesPerPixel;
-            var image = new PackedImage<TPackedPixelFormat>(pixels, width, height, pitch);
+            var image = new PackedImage<TPackedPixel>(pixels, width, height, pitch);
             callback.Invoke(image);
             SDL.UnlockTexture(_texture);
         }
@@ -128,36 +130,36 @@ namespace SDL2Sharp.Video
             Error.ThrowOnFailure(
                 SDL.LockTextureToSurface(_texture, &rect, &surfaceHandle)
             );
-            var surface = new Surface<TPackedPixelFormat>(surfaceHandle, false);
+            var surface = new Surface<TPackedPixel>(surfaceHandle, false);
             callback.Invoke(surface);
             SDL.UnlockTexture(_texture);
         }
 
-        public void Update(PackedMemoryImage<TPackedPixelFormat> image)
+        public void Update(PackedMemoryImage<TPackedPixel> image)
         {
             ThrowWhenDisposed();
 
             var pointer = Unsafe.AsPointer(ref image.DangerousGetReference());
-            var pitch = image.Width * Marshal.SizeOf<TPackedPixelFormat>();
+            var pitch = image.Width * Marshal.SizeOf<TPackedPixel>();
             Update(null, pointer, pitch);
         }
 
-        public void Update(PackedImage<TPackedPixelFormat> pixels)
+        public void Update(PackedImage<TPackedPixel> pixels)
         {
             ThrowWhenDisposed();
 
             var pointer = Unsafe.AsPointer(ref pixels.DangerousGetReference());
-            var pitch = pixels.Width * Marshal.SizeOf<TPackedPixelFormat>();
+            var pitch = pixels.Width * Marshal.SizeOf<TPackedPixel>();
             Update(null, pointer, pitch);
         }
 
-        public void Update(TPackedPixelFormat[,] pixels)
+        public void Update(TPackedPixel[,] pixels)
         {
             ThrowWhenDisposed();
 
             var pointer = Unsafe.AsPointer(ref pixels.DangerousGetReference());
             var width = pixels.GetLength(1);
-            var pitch = width * Marshal.SizeOf<TPackedPixelFormat>();
+            var pitch = width * Marshal.SizeOf<TPackedPixel>();
             Update(null, pointer, pitch);
         }
 
@@ -170,18 +172,12 @@ namespace SDL2Sharp.Video
 
         private void ThrowWhenDisposed()
         {
-            if (_texture is null)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
+            ObjectDisposedException.ThrowIf(_texture is null, this);
         }
 
-        public static implicit operator Texture(PackedTexture<TPackedPixelFormat> texture)
+        public static implicit operator Texture(PackedTexture<TPackedPixel> texture)
         {
-            if (texture is null)
-            {
-                throw new ArgumentNullException(nameof(texture));
-            }
+            ArgumentNullException.ThrowIfNull(texture);
 
             return texture._texture;
         }

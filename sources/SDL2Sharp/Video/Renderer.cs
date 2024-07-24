@@ -22,6 +22,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SDL2Sharp.Interop;
+using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
@@ -415,30 +416,30 @@ namespace SDL2Sharp.Video
             SDL.RenderPresent(_handle);
         }
 
-        public PackedMemoryImage<TPackedPixelFormat> ReadPixels<TPackedPixelFormat>()
-            where TPackedPixelFormat : struct
+        public PackedMemoryImage<TPackedPixel> ReadPixels<TPackedPixel>()
+            where TPackedPixel : struct, IPackedPixel<TPackedPixel>
         {
             ThrowWhenDisposed();
 
-            return ReadPixels<TPackedPixelFormat>(
+            return ReadPixels<TPackedPixel>(
                 new Rectangle(0, 0, OutputWidth, OutputHeight)
             );
         }
 
-        public PackedMemoryImage<TPackedPixelFormat> ReadPixels<TPackedPixelFormat>(Rectangle rectangle)
-            where TPackedPixelFormat : struct
+        public PackedMemoryImage<TPackedPixel> ReadPixels<TPackedPixel>(Rectangle rectangle)
+            where TPackedPixel : struct, IPackedPixel<TPackedPixel>
         {
             ThrowWhenDisposed();
 
             var rect = new SDL_Rect { x = rectangle.X, y = rectangle.Y, w = rectangle.Width, h = rectangle.Height };
-            var format = PixelFormatAttribute.GetPixelFormatOf<TPackedPixelFormat>();
-            var image = new PackedMemoryImage<TPackedPixelFormat>(rectangle.Width, rectangle.Height);
+            var format = (uint)TPackedPixel.Format;
+            var image = new PackedMemoryImage<TPackedPixel>(rectangle.Width, rectangle.Height);
             var pixels = Unsafe.AsPointer(ref image.DangerousGetReference());
-            var pitch = rectangle.Width * Marshal.SizeOf<TPackedPixelFormat>();
+            var pitch = rectangle.Width * Marshal.SizeOf<TPackedPixel>();
             Error.ThrowOnFailure(
                 SDL.RenderReadPixels(_handle,
                     &rect,
-                    (uint)format,
+                    format,
                     pixels,
                     pitch)
             );

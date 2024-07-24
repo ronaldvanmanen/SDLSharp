@@ -139,8 +139,8 @@ namespace SDL2Sharp.Video
             );
         }
 
-        public void WithLock<TPackedPixelFormat>(SurfaceLockCallback<TPackedPixelFormat> callback)
-            where TPackedPixelFormat : struct
+        public void WithLock<TPackedPixel>(SurfaceLockCallback<TPackedPixel> callback)
+            where TPackedPixel : struct
         {
             ThrowWhenDisposed();
 
@@ -152,10 +152,10 @@ namespace SDL2Sharp.Video
                 );
             }
 
-            var bytesPerPixel = Marshal.SizeOf<TPackedPixelFormat>();
+            var bytesPerPixel = Marshal.SizeOf<TPackedPixel>();
             var pitchInBytes = _handle->pitch;
             var pitch = pitchInBytes / bytesPerPixel;
-            var pixels = new PackedImage<TPackedPixelFormat>(_handle->pixels, _handle->h, _handle->w, pitch);
+            var pixels = new PackedImage<TPackedPixel>(_handle->pixels, _handle->h, _handle->w, pitch);
 
             callback.Invoke(pixels);
 

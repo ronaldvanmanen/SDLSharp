@@ -23,13 +23,13 @@ using Microsoft.Toolkit.HighPerformance;
 
 namespace SDL2Sharp.Video
 {
-    public sealed class ImageMemoryPlane<TPackedPixelFormat> where TPackedPixelFormat : struct
+    public sealed class ImageMemoryPlane<TPackedPixel> where TPackedPixel : struct
     {
         private readonly int _width;
 
         private readonly int _height;
 
-        private readonly TPackedPixelFormat[] _pixels;
+        private readonly TPackedPixel[] _pixels;
 
         public int Width => _width;
 
@@ -37,7 +37,7 @@ namespace SDL2Sharp.Video
 
         public Size Size => new(_width, _height);
 
-        public TPackedPixelFormat this[int x, int y]
+        public TPackedPixel this[int x, int y]
         {
             get
             {
@@ -69,14 +69,14 @@ namespace SDL2Sharp.Video
 
             _width = width;
             _height = height;
-            _pixels = new TPackedPixelFormat[_height * _width];
+            _pixels = new TPackedPixel[_height * _width];
         }
 
         public ImageMemoryPlane(Size size)
         : this(size.Width, size.Height)
         { }
 
-        public ImageMemoryPlane<TPackedPixelFormat> Crop(int top, int left, int bottom, int right)
+        public ImageMemoryPlane<TPackedPixel> Crop(int top, int left, int bottom, int right)
         {
             if (top < 0)
             {
@@ -126,7 +126,7 @@ namespace SDL2Sharp.Video
                     "The right of the crop rectangle cannot be less than or equal to the left of the crop rectangle.");
             }
 
-            var croppedImage = new ImageMemoryPlane<TPackedPixelFormat>(right - left, bottom - top);
+            var croppedImage = new ImageMemoryPlane<TPackedPixel>(right - left, bottom - top);
             for (var y = 0; y < croppedImage.Height; ++y)
             {
                 for (var x = 0; x < croppedImage.Width; ++x)
@@ -137,7 +137,7 @@ namespace SDL2Sharp.Video
             return croppedImage;
         }
 
-        public ref TPackedPixelFormat DangerousGetReference()
+        public ref TPackedPixel DangerousGetReference()
         {
             return ref _pixels.DangerousGetReference();
         }

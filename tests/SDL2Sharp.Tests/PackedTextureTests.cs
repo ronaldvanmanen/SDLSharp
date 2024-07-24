@@ -173,7 +173,7 @@ namespace SDL2Sharp.Tests
         );
 
         private static void WriteAndRead<TPackedPixelFormat>(Func<TPackedPixelFormat> colorGenerator)
-            where TPackedPixelFormat : struct, IEquatable<TPackedPixelFormat>
+            where TPackedPixelFormat : struct, IPackedPixel<TPackedPixelFormat>
         {
             using var mainSystem = new MainSystem();
             using var videoSystem = new VideoSubsystem();

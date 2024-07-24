@@ -23,9 +23,9 @@ using System.Runtime.CompilerServices;
 
 namespace SDL2Sharp.Video
 {
-    public readonly ref struct PackedImage<TPackedPixelFormat> where TPackedPixelFormat : struct
+    public readonly ref struct PackedImage<TPackedPixel> where TPackedPixel : struct
     {
-        private readonly ImagePlane<TPackedPixelFormat> _plane;
+        private readonly ImagePlane<TPackedPixel> _plane;
 
         public int Width
         {
@@ -45,7 +45,7 @@ namespace SDL2Sharp.Video
             get => _plane.Size;
         }
 
-        public ref TPackedPixelFormat this[int x, int y]
+        public ref TPackedPixel this[int x, int y]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => ref _plane[x, y];
@@ -53,25 +53,25 @@ namespace SDL2Sharp.Video
 
         public unsafe PackedImage(void* pixels, int width, int height, int pitch)
         {
-            _plane = new ImagePlane<TPackedPixelFormat>(pixels, width, height, pitch);
+            _plane = new ImagePlane<TPackedPixel>(pixels, width, height, pitch);
         }
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ref TPackedPixelFormat DangerousGetReference()
+        public ref TPackedPixel DangerousGetReference()
         {
             return ref _plane.DangerousGetReference();
         }
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ref TPackedPixelFormat DangerousGetReferenceAt(int x, int y)
+        public ref TPackedPixel DangerousGetReferenceAt(int x, int y)
         {
             return ref _plane.DangerousGetReferenceAt(x, y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Fill(TPackedPixelFormat value)
+        public void Fill(TPackedPixel value)
         {
             _plane.Fill(value);
         }

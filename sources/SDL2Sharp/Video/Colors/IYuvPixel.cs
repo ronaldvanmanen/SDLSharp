@@ -18,29 +18,34 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System.Runtime.InteropServices;
-
 namespace SDL2Sharp.Video.Colors
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 4, Size = 4)]
-    public readonly record struct Uyvy
+    public interface IYuvPixel
     {
-        private readonly uint _value;
+        static abstract PixelFormat Format { get; }
 
-        public byte U0 => (byte)(_value & 0xFF);
+        static abstract int GetYPlaneWidth(int imageWidth);
 
-        public byte Y0 => (byte)(_value >> 8 & 0xFF);
+        static abstract int GetYPlaneHeight(int imageHeight);
 
-        public byte V0 => (byte)(_value >> 16 & 0xFF);
+        static abstract int GetYPlanePitch(int imagePitch);
 
-        public byte Y1 => (byte)(_value >> 24 & 0xFF);
+        static abstract int GetYPlaneOffset(int imageWidth, int imageHeight, int imagePitch);
 
-        public Uyvy(byte u0, byte y0, byte v0, byte y1)
-        {
-            unchecked
-            {
-                _value = (uint)(u0 | y0 << 8 | v0 << 16 | y1 << 24);
-            }
-        }
+        static abstract int GetUPlaneWidth(int imageWidth);
+
+        static abstract int GetUPlaneHeight(int imageHeight);
+
+        static abstract int GetUPlanePitch(int imagePitch);
+
+        static abstract int GetUPlaneOffset(int imageWidth, int imageHeight, int imagePitch);
+
+        static abstract int GetVPlaneWidth(int imageWidth);
+
+        static abstract int GetVPlaneHeight(int imageHeight);
+
+        static abstract int GetVPlanePitch(int imagePitch);
+
+        static abstract int GetVPlaneOffset(int imageWidth, int imageHeight, int imagePitch);
     }
 }

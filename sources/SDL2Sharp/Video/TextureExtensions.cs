@@ -19,15 +19,16 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
     public static class TextureExtensions
     {
-        public static PackedTexture<TPacketColor> AsPacked<TPacketColor>(this Texture texture)
-            where TPacketColor : struct
+        public static PackedTexture<TPackedPixel> AsPacked<TPackedPixel>(this Texture texture)
+            where TPackedPixel : struct, IPackedPixel<TPackedPixel>
         {
-            return new PackedTexture<TPacketColor>(texture);
+            return new PackedTexture<TPackedPixel>(texture);
         }
 
         public static YuvTexture<Iyuv> AsIYUV(this Texture texture)

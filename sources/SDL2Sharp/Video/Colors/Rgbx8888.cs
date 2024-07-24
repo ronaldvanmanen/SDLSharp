@@ -23,25 +23,26 @@ using System.Runtime.InteropServices;
 namespace SDL2Sharp.Video.Colors
 {
     [StructLayout(LayoutKind.Sequential, Pack = 4, Size = 4)]
-    [PixelFormat(PixelFormat.RGBX8888)]
-    public readonly record struct Rgbx8888
+    public readonly record struct Rgbx8888 : IPackedPixel<Rgbx8888>
     {
-        private static readonly PixelFormatDescriptor _pixelFormat = new(PixelFormat.RGBX8888);
+        private static readonly PixelFormatDescriptor _formatDescriptor = new(PixelFormat.RGBX8888);
 
         private readonly uint _value;
 
+        public static PixelFormat Format => _formatDescriptor.Format;
+
         public static Rgbx8888 FromRGB(byte r, byte g, byte b)
         {
-            return new Rgbx8888(_pixelFormat.MapRGB(r, g, b));
+            return new Rgbx8888(_formatDescriptor.MapRGB(r, g, b));
         }
 
         public static Rgbx8888 FromRGBA(byte r, byte g, byte b, byte a)
         {
-            return new Rgbx8888(_pixelFormat.MapRGBA(r, g, b, a));
+            return new Rgbx8888(_formatDescriptor.MapRGBA(r, g, b, a));
         }
 
         public Rgbx8888(byte r, byte g, byte b)
-        : this(_pixelFormat.MapRGB(r, g, b))
+        : this(_formatDescriptor.MapRGB(r, g, b))
         { }
 
         private Rgbx8888(uint value)
@@ -51,12 +52,12 @@ namespace SDL2Sharp.Video.Colors
 
         public (byte r, byte g, byte b) ToRGB()
         {
-            return _pixelFormat.GetRGB(_value);
+            return _formatDescriptor.GetRGB(_value);
         }
 
         public (byte r, byte g, byte b, byte a) ToRGBA()
         {
-            return _pixelFormat.GetRGBA(_value);
+            return _formatDescriptor.GetRGBA(_value);
         }
     }
 }

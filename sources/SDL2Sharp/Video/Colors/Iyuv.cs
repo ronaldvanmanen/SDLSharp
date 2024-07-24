@@ -18,68 +18,69 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-namespace SDL2Sharp.Video
+namespace SDL2Sharp.Video.Colors
 {
-    [PixelFormat(PixelFormat.IYUV)]
-    public readonly struct Iyuv : IYuvPixelFormat
+    public readonly struct Iyuv : IYuvPixel
     {
-        public int GetYPlaneWidth(int imageWidth)
+        public static PixelFormat Format => PixelFormat.IYUV;
+
+        public static int GetYPlaneWidth(int imageWidth)
         {
             return imageWidth;
         }
 
-        public int GetYPlaneHeight(int imageHeight)
+        public static int GetYPlaneHeight(int imageHeight)
         {
             return imageHeight;
         }
 
-        public int GetYPlanePitch(int imagePitch)
+        public static int GetYPlanePitch(int imagePitch)
         {
             return imagePitch;
         }
 
-        public int GetYPlaneOffset(int imageWidth, int imageHeight, int imagePitch)
+        public static int GetYPlaneOffset(int imageWidth, int imageHeight, int imagePitch)
         {
             return 0;
         }
 
-        public int GetUPlaneWidth(int imageWidth)
+        public static int GetUPlaneWidth(int imageWidth)
         {
             return GetYPlaneWidth(imageWidth) / 2;
         }
 
-        public int GetUPlaneHeight(int imageHeight)
+        public static int GetUPlaneHeight(int imageHeight)
         {
             return GetYPlaneHeight(imageHeight) / 2;
         }
 
-        public int GetUPlanePitch(int imagePitch)
+        public static int GetUPlanePitch(int imagePitch)
         {
             return GetYPlanePitch(imagePitch) / 2;
         }
 
-        public int GetUPlaneOffset(int imageWidth, int imageHeight, int imagePitch)
+        public static int GetUPlaneOffset(int imageWidth, int imageHeight, int imagePitch)
         {
             return GetYPlaneOffset(imageWidth, imageHeight, imagePitch)
                  + GetYPlaneHeight(imageHeight) * GetYPlanePitch(imagePitch);
         }
 
-        public int GetVPlaneWidth(int imageWidth)
+        public static int GetVPlaneWidth(int imageWidth)
         {
             return GetUPlaneHeight(imageWidth);
         }
 
-        public int GetVPlaneHeight(int imageHeight)
+        public static int GetVPlaneHeight(int imageHeight)
         {
             return GetUPlaneHeight(imageHeight);
         }
 
-        public int GetVPlanePitch(int imagePitch)
+        public static int GetVPlanePitch(int imagePitch)
         {
             return GetUPlaneHeight(imagePitch);
         }
 
-        public int GetVPlaneOffset(int imageWidth, int imageHeight, int imagePitch)
+        public static int GetVPlaneOffset(int imageWidth, int imageHeight, int imagePitch)
         {
             return GetUPlaneOffset(imageWidth, imageHeight, imagePitch)
                  + GetUPlaneHeight(imageHeight) * GetUPlanePitch(imagePitch);

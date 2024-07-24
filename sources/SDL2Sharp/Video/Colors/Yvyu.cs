@@ -23,7 +23,6 @@ using System.Runtime.InteropServices;
 namespace SDL2Sharp.Video.Colors
 {
     [StructLayout(LayoutKind.Sequential, Pack = 4, Size = 4)]
-    [PixelFormat(PixelFormat.YVYU)]
     public readonly record struct Yvyu
     {
         private readonly uint _value;

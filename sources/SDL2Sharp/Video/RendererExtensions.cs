@@ -20,79 +20,62 @@
 
 using System;
 using SDL2Sharp.Fonts;
+using SDL2Sharp.Video.Colors;
 using static System.Math;
 
 namespace SDL2Sharp.Video
 {
     public static class RendererExtensions
     {
-        public static PackedTexture<TPackedPixelFormat> CreatePackedTexture<TPackedPixelFormat>(this Renderer renderer, TextureAccess access, Size size)
-            where TPackedPixelFormat : struct
+        public static PackedTexture<TPackedPixel> CreatePackedTexture<TPackedPixel>(this Renderer renderer, TextureAccess access, Size size)
+            where TPackedPixel : struct, IPackedPixel<TPackedPixel>
         {
-            if (renderer is null)
-            {
-                throw new ArgumentNullException(nameof(renderer));
-            }
+            ArgumentNullException.ThrowIfNull(renderer);
 
-            return renderer.CreatePackedTexture<TPackedPixelFormat>(access, size.Width, size.Height);
+            return renderer.CreatePackedTexture<TPackedPixel>(access, size.Width, size.Height);
         }
 
-        public static PackedTexture<TPackedPixelFormat> CreatePackedTexture<TPackedPixelFormat>(this Renderer renderer, TextureAccess access, int width, int height)
-            where TPackedPixelFormat : struct
+        public static PackedTexture<TPackedPixel> CreatePackedTexture<TPackedPixel>(this Renderer renderer, TextureAccess access, int width, int height)
+            where TPackedPixel : struct, IPackedPixel<TPackedPixel>
         {
-            if (renderer is null)
-            {
-                throw new ArgumentNullException(nameof(renderer));
-            }
+            ArgumentNullException.ThrowIfNull(renderer);
 
-            var pixelFormat = PixelFormatAttribute.GetPixelFormatOf<TPackedPixelFormat>();
-            var texture = renderer.CreateTexture((PixelFormat)pixelFormat, access, width, height);
-            return new PackedTexture<TPackedPixelFormat>(texture);
+            var pixelFormat = TPackedPixel.Format;
+            var texture = renderer.CreateTexture(pixelFormat, access, width, height);
+            return new PackedTexture<TPackedPixel>(texture);
         }
 
         public static YuvTexture<TYuvPixelFormat> CreateYuvTexture<TYuvPixelFormat>(this Renderer renderer, TextureAccess access, Size size)
-            where TYuvPixelFormat : IYuvPixelFormat, new()
+            where TYuvPixelFormat : IYuvPixel, new()
         {
-            if (renderer is null)
-            {
-                throw new ArgumentNullException(nameof(renderer));
-            }
+            ArgumentNullException.ThrowIfNull(renderer);
 
             return renderer.CreateYuvTexture<TYuvPixelFormat>(access, size.Width, size.Height);
         }
 
         public static YuvTexture<TYuvPixelFormat> CreateYuvTexture<TYuvPixelFormat>(this Renderer renderer, TextureAccess access, int width, int height)
-            where TYuvPixelFormat : IYuvPixelFormat, new()
+            where TYuvPixelFormat : IYuvPixel, new()
         {
-            if (renderer is null)
-            {
-                throw new ArgumentNullException(nameof(renderer));
-            }
+            ArgumentNullException.ThrowIfNull(renderer);
 
-            var pixelFormat = PixelFormatAttribute.GetPixelFormatOf<TYuvPixelFormat>();
+            var pixelFormat = TYuvPixelFormat.Format;
             var texture = renderer.CreateTexture(pixelFormat, access, width, height);
             return new YuvTexture<TYuvPixelFormat>(texture);
         }
 
-        public static PackedTexture<TPackedPixelFormat> CreateTextureFromSurface<TPackedPixelFormat>(this Renderer renderer, Surface<TPackedPixelFormat> surface)
-            where TPackedPixelFormat : struct
+        public static PackedTexture<TPackedPixel> CreateTextureFromSurface<TPackedPixel>(this Renderer renderer, Surface<TPackedPixel> surface)
+            where TPackedPixel : struct, IPackedPixel<TPackedPixel>
         {
-            if (renderer is null)
-            {
-                throw new ArgumentNullException(nameof(renderer));
-            }
+            ArgumentNullException.ThrowIfNull(renderer);
 
             var texture = renderer.CreateTextureFromSurface(surface);
-            var packedTexture = new PackedTexture<TPackedPixelFormat>(texture);
+            var packedTexture = new PackedTexture<TPackedPixel>(texture);
             return packedTexture;
         }
 
         public static Texture CreateTextureFromBitmap(this Renderer renderer, string filename)
         {
-            if (renderer is null)
-            {
-                throw new ArgumentNullException(nameof(renderer));
-            }
+            ArgumentNullException.ThrowIfNull(renderer);
 
             if (string.IsNullOrWhiteSpace(filename))
             {
@@ -106,10 +89,7 @@ namespace SDL2Sharp.Video
 
         public static void DrawCircle(this Renderer renderer, int centerX, int centerY, int radius)
         {
-            if (renderer is null)
-            {
-                throw new ArgumentNullException(nameof(renderer));
-            }
+            ArgumentNullException.ThrowIfNull(renderer);
 
             if (radius < 0)
             {
@@ -157,10 +137,7 @@ namespace SDL2Sharp.Video
             //
             // See: http://enchantia.com/software/graphapp/doc/tech/ellipses.html
 
-            if (renderer is null)
-            {
-                throw new ArgumentNullException(nameof(renderer));
-            }
+            ArgumentNullException.ThrowIfNull(renderer);
 
             if (radiusX < 0)
             {
@@ -242,10 +219,7 @@ namespace SDL2Sharp.Video
             //
             // See: http://enchantia.com/software/graphapp/doc/tech/ellipses.html
 
-            if (renderer is null)
-            {
-                throw new ArgumentNullException(nameof(renderer));
-            }
+            ArgumentNullException.ThrowIfNull(renderer);
 
             if (radiusX < 0)
             {
@@ -358,20 +332,8 @@ namespace SDL2Sharp.Video
 
         public static void DrawTextBlended(this Renderer renderer, int x, int y, Font font, string text)
         {
-            if (renderer is null)
-            {
-                throw new ArgumentNullException(nameof(renderer));
-            }
-
-            if (font is null)
-            {
-                throw new ArgumentNullException(nameof(font));
-            }
-
-            if (text is null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
+            ArgumentNullException.ThrowIfNull(renderer);
+            ArgumentNullException.ThrowIfNull(text);
 
             using var surface = font.RenderBlended(text, renderer.DrawColor);
             using var texture = renderer.CreateTextureFromSurface(surface);
@@ -381,20 +343,8 @@ namespace SDL2Sharp.Video
         }
         public static void DrawTextBlendedCentered(this Renderer renderer, Font font, string text)
         {
-            if (renderer is null)
-            {
-                throw new ArgumentNullException(nameof(renderer));
-            }
-
-            if (font is null)
-            {
-                throw new ArgumentNullException(nameof(font));
-            }
-
-            if (text is null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
+            ArgumentNullException.ThrowIfNull(renderer);
+            ArgumentNullException.ThrowIfNull(text);
 
             using var surface = font.RenderBlended(text, renderer.DrawColor);
             using var texture = renderer.CreateTextureFromSurface(surface);

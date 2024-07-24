@@ -24,10 +24,8 @@ using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
-    public readonly ref struct YuvImage<TYuvPixelFormat> where TYuvPixelFormat : IYuvPixelFormat, new()
+    public readonly ref struct YuvImage<TYuvPixelFormat> where TYuvPixelFormat : IYuvPixel, new()
     {
-        private static readonly TYuvPixelFormat _format = new();
-
         private readonly ImagePlane<Y8> _yPlane;
 
         private readonly ImagePlane<U8> _uPlane;
@@ -78,24 +76,24 @@ namespace SDL2Sharp.Video
                     "pitch cannot be less than zero");
             }
 
-            var yPlaneHeight = _format.GetYPlaneHeight(height);
-            var yPlaneWidth = _format.GetYPlaneWidth(width);
-            var yPlanePitch = _format.GetYPlanePitch(pitch);
-            var yPlaneOffset = _format.GetYPlaneOffset(width, height, pitch);
+            var yPlaneHeight = TYuvPixelFormat.GetYPlaneHeight(height);
+            var yPlaneWidth = TYuvPixelFormat.GetYPlaneWidth(width);
+            var yPlanePitch = TYuvPixelFormat.GetYPlanePitch(pitch);
+            var yPlaneOffset = TYuvPixelFormat.GetYPlaneOffset(width, height, pitch);
             var yPlanePixels = Unsafe.Add<Y8>(pixels, yPlaneOffset);
             _yPlane = new ImagePlane<Y8>(yPlanePixels, yPlaneWidth, yPlaneHeight, yPlanePitch);
 
-            var uPlaneHeight = _format.GetUPlaneHeight(height);
-            var uPlaneWidth = _format.GetUPlaneWidth(width);
-            var uPlanePitch = _format.GetUPlanePitch(pitch);
-            var uPlaneOffset = _format.GetUPlaneOffset(width, height, pitch);
+            var uPlaneHeight = TYuvPixelFormat.GetUPlaneHeight(height);
+            var uPlaneWidth = TYuvPixelFormat.GetUPlaneWidth(width);
+            var uPlanePitch = TYuvPixelFormat.GetUPlanePitch(pitch);
+            var uPlaneOffset = TYuvPixelFormat.GetUPlaneOffset(width, height, pitch);
             var uPlanePixels = Unsafe.Add<U8>(pixels, uPlaneOffset);
             _uPlane = new ImagePlane<U8>(uPlanePixels, uPlaneWidth, uPlaneHeight, uPlanePitch);
 
-            var vPlaneHeight = _format.GetVPlaneHeight(height);
-            var vPlaneWidth = _format.GetVPlaneWidth(width);
-            var vPlanePitch = _format.GetVPlanePitch(pitch);
-            var vPlaneOffset = _format.GetVPlaneOffset(width, height, pitch);
+            var vPlaneHeight = TYuvPixelFormat.GetVPlaneHeight(height);
+            var vPlaneWidth = TYuvPixelFormat.GetVPlaneWidth(width);
+            var vPlanePitch = TYuvPixelFormat.GetVPlanePitch(pitch);
+            var vPlaneOffset = TYuvPixelFormat.GetVPlaneOffset(width, height, pitch);
             var vPlanePixels = Unsafe.Add<V8>(pixels, vPlaneOffset);
             _vPlane = new ImagePlane<V8>(vPlanePixels, vPlaneWidth, vPlaneHeight, vPlanePitch);
         }

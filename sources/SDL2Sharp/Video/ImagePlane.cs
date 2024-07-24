@@ -25,9 +25,9 @@ using System.Runtime.InteropServices;
 
 namespace SDL2Sharp.Video
 {
-    public readonly ref struct ImagePlane<TPackedPixelFormat> where TPackedPixelFormat : struct
+    public readonly ref struct ImagePlane<TPackedPixel> where TPackedPixel : struct
     {
-        private readonly Span<TPackedPixelFormat> _pixels;
+        private readonly Span<TPackedPixel> _pixels;
 
         private readonly int _width;
 
@@ -53,7 +53,7 @@ namespace SDL2Sharp.Video
             get => new(_width, _height);
         }
 
-        public ref TPackedPixelFormat this[int x, int y]
+        public ref TPackedPixel this[int x, int y]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
@@ -120,7 +120,7 @@ namespace SDL2Sharp.Video
                     "pitch cannot be less than zero");
             }
 
-            _pixels = new Span<TPackedPixelFormat>(pixels, height * pitch);
+            _pixels = new Span<TPackedPixel>(pixels, height * pitch);
             _height = height;
             _width = width;
             _pitch = pitch;
@@ -128,7 +128,7 @@ namespace SDL2Sharp.Video
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly ref TPackedPixelFormat DangerousGetReference()
+        public readonly ref TPackedPixel DangerousGetReference()
         {
             ref var r0 = ref MemoryMarshal.GetReference(_pixels);
             const int index = 0;
@@ -137,7 +137,7 @@ namespace SDL2Sharp.Video
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly ref TPackedPixelFormat DangerousGetReferenceAt(int x, int y)
+        public readonly ref TPackedPixel DangerousGetReferenceAt(int x, int y)
         {
             ref var r0 = ref MemoryMarshal.GetReference(_pixels);
             var index = y * _pitch + x;
@@ -145,7 +145,7 @@ namespace SDL2Sharp.Video
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly void Fill(TPackedPixelFormat value)
+        public readonly void Fill(TPackedPixel value)
         {
             _pixels.Fill(value);
         }

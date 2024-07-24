@@ -41,23 +41,5 @@ namespace SDL2Sharp.Tests
             using var surface = new Surface<Argb8888>(512, 512);
             surface.WithLock(pixels => pixels.Fill(color));
         }
-
-        [Fact]
-        public void CreateSurfaceOfYuy2()
-        {
-            Assert.Throws<Error>(() => new Surface<Yuy2>(512, 512));
-        }
-
-        [Fact]
-        public void CreateSurfaceOfYvyu()
-        {
-            Assert.Throws<Error>(() => new Surface<Yvyu>(512, 512));
-        }
-
-        [Fact]
-        public void CreateSurfaceOfUyvy()
-        {
-            Assert.Throws<Error>(() => new Surface<Uyvy>(512, 512));
-        }
     }
 }

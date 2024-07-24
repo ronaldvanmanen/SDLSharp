@@ -18,21 +18,18 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-namespace SDL2Sharp.Video
+namespace SDL2Sharp.Video.Colors
 {
-    public interface IYuvPixelFormat
+    public interface IPackedPixel<TPackedPixel> where TPackedPixel : struct
     {
-        int GetYPlaneWidth(int imageWidth);
-        int GetYPlaneHeight(int imageHeight);
-        int GetYPlanePitch(int imagePitch);
-        int GetYPlaneOffset(int imageWidth, int imageHeight, int imagePitch);
-        int GetUPlaneWidth(int imageWidth);
-        int GetUPlaneHeight(int imageHeight);
-        int GetUPlanePitch(int imagePitch);
-        int GetUPlaneOffset(int imageWidth, int imageHeight, int imagePitch);
-        int GetVPlaneWidth(int imageWidth);
-        int GetVPlaneHeight(int imageHeight);
-        int GetVPlanePitch(int imagePitch);
-        int GetVPlaneOffset(int imageWidth, int imageHeight, int imagePitch);
+        public static abstract PixelFormat Format { get; }
+
+        public static abstract TPackedPixel FromRGB(byte r, byte g, byte b);
+
+        public static abstract TPackedPixel FromRGBA(byte r, byte g, byte b, byte a);
+
+        public abstract (byte r, byte g, byte b) ToRGB();
+
+        public abstract (byte r, byte g, byte b, byte a) ToRGBA();
     }
 }
