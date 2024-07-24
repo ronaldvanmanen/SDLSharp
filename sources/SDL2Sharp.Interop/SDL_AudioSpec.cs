@@ -18,8 +18,6 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
-
 namespace SDL2Sharp.Interop
 {
     public unsafe partial struct SDL_AudioSpec
@@ -45,7 +43,7 @@ namespace SDL2Sharp.Interop
         public uint size;
 
         [NativeTypeName("SDL_AudioCallback")]
-        public IntPtr callback;
+        public delegate* unmanaged[Cdecl]<void*, byte*, int, void> callback;
 
         public void* userdata;
     }

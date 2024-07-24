@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SDL2Sharp.Interop;
 
@@ -32,29 +33,25 @@ namespace SDL2Sharp.Input
 
         private const uint InitSubsystemFlags = SDL.SDL_INIT_EVENTS;
 
-        private readonly EventWatchCallbackDelegate _watchCallback = null!;
-
         private GCHandle _watchCallbackUserData = default;
 
-        private readonly HashSet<Action<Event>> _watchCallbacks = new();
+        private readonly HashSet<Action<Event>> _watchCallbacks = [];
 
         public EventSubsystem()
         {
-            SDL.InitSubSystem(InitSubsystemFlags);
+            Error.ThrowOnFailure(
+                SDL.InitSubSystem(InitSubsystemFlags)
+            );
 
             _watchCallbackUserData = GCHandle.Alloc(this, GCHandleType.Normal);
             var watchUserDataPointer = (void*)(IntPtr)_watchCallbackUserData;
-            _watchCallback = new EventWatchCallbackDelegate(OnEventWatchCallback);
-            var watchCallbackPointer = Marshal.GetFunctionPointerForDelegate(_watchCallback);
-
-            SDL.AddEventWatch(watchCallbackPointer, watchUserDataPointer);
+            SDL.AddEventWatch(&OnEventWatchCallback, watchUserDataPointer);
         }
 
         public void Dispose()
         {
             var watchUserDataPointer = (void*)(IntPtr)_watchCallbackUserData;
-            var watchCallbackPointer = Marshal.GetFunctionPointerForDelegate(_watchCallback);
-            SDL.DelEventWatch(watchCallbackPointer, watchUserDataPointer);
+            SDL.DelEventWatch(&OnEventWatchCallback, watchUserDataPointer);
 
             if (_watchCallbackUserData.IsAllocated)
             {
@@ -64,7 +61,9 @@ namespace SDL2Sharp.Input
             SDL.QuitSubSystem(InitSubsystemFlags);
         }
 
+#pragma warning disable CA1822 // Mark members as static
         public Event? PollEvent()
+#pragma warning restore CA1822 // Mark members as static
         {
             var @event = new SDL_Event();
             if (SDL.PollEvent(&@event) == 0)
@@ -74,7 +73,9 @@ namespace SDL2Sharp.Input
             return WrapEvent(@event);
         }
 
+#pragma warning disable CA1822 // Mark members as static
         public void PushEvent(Event @event)
+#pragma warning restore CA1822 // Mark members as static
         {
             var eventHandle = @event.Handle;
             var result = SDL.PushEvent(&@eventHandle);
@@ -262,6 +263,7 @@ namespace SDL2Sharp.Input
             }
         }
 
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
         private static int OnEventWatchCallback(void* userdata, SDL_Event* @event)
         {
             var eventSubsystemHandle = GCHandle.FromIntPtr((IntPtr)userdata);

@@ -18,27 +18,26 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
 using System.Runtime.InteropServices;
 
 namespace SDL2Sharp.Interop
 {
-    public partial struct SDL_RWops
+    public unsafe partial struct SDL_RWops
     {
         [NativeTypeName("Sint64 (*)(struct SDL_RWops *) __attribute__((cdecl))")]
-        public IntPtr size;
+        public delegate* unmanaged[Cdecl]<SDL_RWops*, long> size;
 
         [NativeTypeName("Sint64 (*)(struct SDL_RWops *, Sint64, int) __attribute__((cdecl))")]
-        public IntPtr seek;
+        public delegate* unmanaged[Cdecl]<SDL_RWops*, long, int, long> seek;
 
         [NativeTypeName("size_t (*)(struct SDL_RWops *, void *, size_t, size_t) __attribute__((cdecl))")]
-        public IntPtr read;
+        public delegate* unmanaged[Cdecl]<SDL_RWops*, void*, nuint, nuint, nuint> read;
 
         [NativeTypeName("size_t (*)(struct SDL_RWops *, const void *, size_t, size_t) __attribute__((cdecl))")]
-        public IntPtr write;
+        public delegate* unmanaged[Cdecl]<SDL_RWops*, void*, nuint, nuint, nuint> write;
 
         [NativeTypeName("int (*)(struct SDL_RWops *) __attribute__((cdecl))")]
-        public IntPtr close;
+        public delegate* unmanaged[Cdecl]<SDL_RWops*, int> close;
 
         [NativeTypeName("Uint32")]
         public uint type;
@@ -75,10 +74,10 @@ namespace SDL2Sharp.Interop
                     public void* data;
 
                     [NativeTypeName("size_t")]
-                    public UIntPtr size;
+                    public nuint size;
 
                     [NativeTypeName("size_t")]
-                    public UIntPtr left;
+                    public nuint left;
                 }
             }
 

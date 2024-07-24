@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -19,6 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SDL2Sharp.Interop;
 
@@ -29,8 +30,6 @@ namespace SDL2Sharp.Audio
         private uint _deviceID = 0;
 
         private AudioDeviceCallback _callback = null!;
-
-        private AudioDeviceCallbackDelegate _callbackDelegate = null!;
 
         private GCHandle _callbackUserData = default;
 
@@ -144,8 +143,7 @@ namespace SDL2Sharp.Audio
             {
                 _callback = callback;
                 _callbackUserData = GCHandle.Alloc(this, GCHandleType.Normal);
-                _callbackDelegate = new AudioDeviceCallbackDelegate(OnAudioDeviceCallback);
-                desiredSpec.callback = Marshal.GetFunctionPointerForDelegate(_callbackDelegate);
+                desiredSpec.callback = &OnAudioDeviceCallback;
                 desiredSpec.userdata = (void*)(IntPtr)_callbackUserData;
             }
 
@@ -176,11 +174,8 @@ namespace SDL2Sharp.Audio
             if (_deviceID != 0)
             {
                 SDL.CloseAudioDevice(_deviceID);
-
                 _deviceID = 0;
                 _callback = null!;
-                _callbackDelegate = null!;
-
                 if (_callbackUserData.IsAllocated)
                 {
                     _callbackUserData.Free();
@@ -246,15 +241,10 @@ namespace SDL2Sharp.Audio
 
         private void ThrowIfDisposed()
         {
-            if (IsDisposed)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
+            ObjectDisposedException.ThrowIf(IsDisposed, this);
         }
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void AudioDeviceCallbackDelegate(void* userdata, byte* stream, int len);
-
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
         private static void OnAudioDeviceCallback(void* userdata, byte* stream, int len)
         {
             var audioDeviceHandle = GCHandle.FromIntPtr((IntPtr)userdata);

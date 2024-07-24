@@ -18,6 +18,8 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System.Runtime.CompilerServices;
+
 namespace SDL2Sharp.Interop
 {
     public unsafe partial struct SDL_RendererInfo
@@ -32,10 +34,16 @@ namespace SDL2Sharp.Interop
         public uint num_texture_formats;
 
         [NativeTypeName("Uint32[16]")]
-        public fixed uint texture_formats[16];
+        public _texture_formats_e__FixedBuffer texture_formats;
 
         public int max_texture_width;
 
         public int max_texture_height;
+
+        [InlineArray(16)]
+        public partial struct _texture_formats_e__FixedBuffer
+        {
+            public uint e0;
+        }
     }
 }

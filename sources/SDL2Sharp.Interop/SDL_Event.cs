@@ -18,12 +18,13 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace SDL2Sharp.Interop
 {
     [StructLayout(LayoutKind.Explicit)]
-    public unsafe partial struct SDL_Event
+    public partial struct SDL_Event
     {
         [FieldOffset(0)]
         [NativeTypeName("Uint32")]
@@ -121,6 +122,12 @@ namespace SDL2Sharp.Interop
 
         [FieldOffset(0)]
         [NativeTypeName("Uint8[56]")]
-        public fixed byte padding[56];
+        public _padding_e__FixedBuffer padding;
+
+        [InlineArray(56)]
+        public partial struct _padding_e__FixedBuffer
+        {
+            public byte e0;
+        }
     }
 }

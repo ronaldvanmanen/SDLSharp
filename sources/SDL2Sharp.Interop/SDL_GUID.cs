@@ -18,11 +18,19 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System.Runtime.CompilerServices;
+
 namespace SDL2Sharp.Interop
 {
-    public unsafe partial struct SDL_GUID
+    public partial struct SDL_GUID
     {
         [NativeTypeName("Uint8[16]")]
-        public fixed byte data[16];
+        public _data_e__FixedBuffer data;
+
+        [InlineArray(16)]
+        public partial struct _data_e__FixedBuffer
+        {
+            public byte e0;
+        }
     }
 }

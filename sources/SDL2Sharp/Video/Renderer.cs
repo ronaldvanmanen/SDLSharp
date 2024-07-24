@@ -447,10 +447,7 @@ namespace SDL2Sharp.Video
 
         private void ThrowWhenDisposed()
         {
-            if (_handle is null)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
+            ObjectDisposedException.ThrowIf(_handle is null, this);
         }
     }
 }

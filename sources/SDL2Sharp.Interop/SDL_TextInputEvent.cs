@@ -18,9 +18,11 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System.Runtime.CompilerServices;
+
 namespace SDL2Sharp.Interop
 {
-    public unsafe partial struct SDL_TextInputEvent
+    public partial struct SDL_TextInputEvent
     {
         [NativeTypeName("Uint32")]
         public uint type;
@@ -32,6 +34,12 @@ namespace SDL2Sharp.Interop
         public uint windowID;
 
         [NativeTypeName("char[32]")]
-        public fixed sbyte text[32];
+        public _text_e__FixedBuffer text;
+
+        [InlineArray(32)]
+        public partial struct _text_e__FixedBuffer
+        {
+            public sbyte e0;
+        }
     }
 }

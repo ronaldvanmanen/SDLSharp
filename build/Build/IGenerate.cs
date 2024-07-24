@@ -43,7 +43,7 @@ interface IGenerate : IBuild
 
     private void GenerateBindingsForSDL2()
     {
-        var headerFile = RootDirectory / "sources" / "Build" / "Header.txt";
+        var headerFile = RootDirectory / "build" / "Build" / "Header.txt";
         var outputDirectory = RootDirectory / "sources" / "SDL2Sharp.Interop";
         var testOutputDirectory = RootDirectory / "tests" / "SDL2Sharp.Interop.Tests";
 
@@ -58,7 +58,7 @@ interface IGenerate : IBuild
         ClangSharpPInvokeGenerator(settings => settings
             .SetConfig
             (
-                compatible_codegen,
+                latest_codegen,
                 generate_aggressive_inlining,
                 generate_macro_bindings,
                 generate_tests_xunit,
@@ -334,7 +334,7 @@ interface IGenerate : IBuild
 
     private void GenerateBindingsForSDL2Image()
     {
-        var headerFile = RootDirectory / "sources" / "Build" / "Header.txt";
+        var headerFile = RootDirectory / "build" / "Build" / "Header.txt";
         var outputDirectory = RootDirectory / "sources" / "SDL2Sharp.Interop";
         var testOutputDirectory = RootDirectory / "tests" / "SDL2Sharp.Interop.Tests";
 
@@ -389,7 +389,7 @@ interface IGenerate : IBuild
 
     private void GenerateBindingsForSDL2TTF()
     {
-        var headerFile = RootDirectory / "sources" / "Build" / "Header.txt";
+        var headerFile = RootDirectory / "build" / "Build" / "Header.txt";
         var outputDirectory = RootDirectory / "sources" / "SDL2Sharp.Interop";
         var testOutputDirectory = RootDirectory / "tests" / "SDL2Sharp.Interop.Tests";
 

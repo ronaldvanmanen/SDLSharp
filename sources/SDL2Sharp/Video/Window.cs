@@ -22,14 +22,13 @@ using System;
 using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace SDL2Sharp.Video
 {
     public sealed unsafe class Window : IDisposable
     {
         private SDL_Window* _handle;
-
-        private readonly HitTestCallbackDelegate _hitTestCallback;
 
         public uint Id
         {
@@ -301,15 +300,9 @@ namespace SDL2Sharp.Video
 
             if (!IsBordered)
             {
-                _hitTestCallback = new HitTestCallbackDelegate(HitTestCallback);
-                var hitTestCallback = Marshal.GetFunctionPointerForDelegate(_hitTestCallback);
                 Error.ThrowOnFailure(
-                    SDL.SetWindowHitTest(_handle, hitTestCallback, null)
+                    SDL.SetWindowHitTest(_handle, &HitTestCallback, null)
                 );
-            }
-            else
-            {
-                _hitTestCallback = null!;
             }
         }
 
@@ -440,35 +433,35 @@ namespace SDL2Sharp.Video
 
         private void ThrowWhenDisposed()
         {
-            if (_handle is null)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
+            ObjectDisposedException.ThrowIf(_handle is null, this);
         }
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate SDL_HitTestResult HitTestCallbackDelegate(SDL_Window* win, SDL_Point* area, void* data);
-
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
         private static unsafe SDL_HitTestResult HitTestCallback(SDL_Window* win, SDL_Point* area, void* data)
         {
-            int x = area->x;
-            int y = area->y;
+            var x = area->x;
+            var y = area->y;
 
             int windowWidth = 0, windowHeight = 0;
             SDL.GetWindowSize(win, &windowWidth, &windowHeight);
 
-            int windowTop = 0;
-            int windowLeft = 0;
-            int windowBottom = windowTop + windowHeight;
-            int windowRight = windowLeft + windowWidth;
+            var windowTop = 0;
+            var windowLeft = 0;
+            var windowBottom = windowTop + windowHeight;
+            var windowRight = windowLeft + windowWidth;
 
-            int borderTop = 0, borderLeft = 0, borderBottom = 0, borderRight = 0;
+            var borderTop = 0;
+            var borderLeft = 0;
+            var borderBottom = 0;
+            var borderRight = 0;
+#pragma warning disable CA1806 // Do not ignore method results
             SDL.GetWindowBordersSize(win, &borderTop, &borderLeft, &borderBottom, &borderRight);
+#pragma warning restore CA1806 // Do not ignore method results
 
-            int clientAreaTop = windowTop + borderTop;
-            int clientAreaLeft = windowLeft + borderLeft;
-            int clientAreaBottom = windowBottom - borderBottom;
-            int clientAreaRight = windowRight - borderRight;
+            var clientAreaTop = windowTop + borderTop;
+            var clientAreaLeft = windowLeft + borderLeft;
+            var clientAreaBottom = windowBottom - borderBottom;
+            var clientAreaRight = windowRight - borderRight;
 
             if (y > windowTop && y < clientAreaTop)
             {

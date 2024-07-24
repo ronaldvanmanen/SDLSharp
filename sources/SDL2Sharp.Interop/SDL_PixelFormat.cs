@@ -18,6 +18,8 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System.Runtime.CompilerServices;
+
 namespace SDL2Sharp.Interop
 {
     public unsafe partial struct SDL_PixelFormat
@@ -34,7 +36,7 @@ namespace SDL2Sharp.Interop
         public byte BytesPerPixel;
 
         [NativeTypeName("Uint8[2]")]
-        public fixed byte padding[2];
+        public _padding_e__FixedBuffer padding;
 
         [NativeTypeName("Uint32")]
         public uint Rmask;
@@ -76,5 +78,11 @@ namespace SDL2Sharp.Interop
 
         [NativeTypeName("struct SDL_PixelFormat *")]
         public SDL_PixelFormat* next;
+
+        [InlineArray(2)]
+        public partial struct _padding_e__FixedBuffer
+        {
+            public byte e0;
+        }
     }
 }

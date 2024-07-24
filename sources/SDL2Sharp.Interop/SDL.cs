@@ -330,19 +330,19 @@ namespace SDL2Sharp.Interop
         public static extern int PushEvent(SDL_Event* @event);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetEventFilter", ExactSpelling = true)]
-        public static extern void SetEventFilter([NativeTypeName("SDL_EventFilter")] IntPtr filter, void* userdata);
+        public static extern void SetEventFilter([NativeTypeName("SDL_EventFilter")] delegate* unmanaged[Cdecl]<void*, SDL_Event*, int> filter, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetEventFilter", ExactSpelling = true)]
-        public static extern SDL_bool GetEventFilter([NativeTypeName("SDL_EventFilter *")] IntPtr* filter, void** userdata);
+        public static extern SDL_bool GetEventFilter([NativeTypeName("SDL_EventFilter *")] delegate* unmanaged[Cdecl]<void*, SDL_Event*, int>* filter, void** userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AddEventWatch", ExactSpelling = true)]
-        public static extern void AddEventWatch([NativeTypeName("SDL_EventFilter")] IntPtr filter, void* userdata);
+        public static extern void AddEventWatch([NativeTypeName("SDL_EventFilter")] delegate* unmanaged[Cdecl]<void*, SDL_Event*, int> filter, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_DelEventWatch", ExactSpelling = true)]
-        public static extern void DelEventWatch([NativeTypeName("SDL_EventFilter")] IntPtr filter, void* userdata);
+        public static extern void DelEventWatch([NativeTypeName("SDL_EventFilter")] delegate* unmanaged[Cdecl]<void*, SDL_Event*, int> filter, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_FilterEvents", ExactSpelling = true)]
-        public static extern void FilterEvents([NativeTypeName("SDL_EventFilter")] IntPtr filter, void* userdata);
+        public static extern void FilterEvents([NativeTypeName("SDL_EventFilter")] delegate* unmanaged[Cdecl]<void*, SDL_Event*, int> filter, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_EventState", ExactSpelling = true)]
         [return: NativeTypeName("Uint8")]
@@ -402,535 +402,535 @@ namespace SDL2Sharp.Interop
         public static extern SDL_bool GetHintBoolean([NativeTypeName("const char *")] sbyte* name, SDL_bool default_value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_AddHintCallback", ExactSpelling = true)]
-        public static extern void AddHintCallback([NativeTypeName("const char *")] sbyte* name, [NativeTypeName("SDL_HintCallback")] IntPtr callback, void* userdata);
+        public static extern void AddHintCallback([NativeTypeName("const char *")] sbyte* name, [NativeTypeName("SDL_HintCallback")] delegate* unmanaged[Cdecl]<void*, sbyte*, sbyte*, sbyte*, void> callback, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_DelHintCallback", ExactSpelling = true)]
-        public static extern void DelHintCallback([NativeTypeName("const char *")] sbyte* name, [NativeTypeName("SDL_HintCallback")] IntPtr callback, void* userdata);
+        public static extern void DelHintCallback([NativeTypeName("const char *")] sbyte* name, [NativeTypeName("SDL_HintCallback")] delegate* unmanaged[Cdecl]<void*, sbyte*, sbyte*, sbyte*, void> callback, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ClearHints", ExactSpelling = true)]
         public static extern void ClearHints();
 
         [NativeTypeName("#define SDL_HINT_ACCELEROMETER_AS_JOYSTICK \"SDL_ACCELEROMETER_AS_JOYSTICK\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_ACCELEROMETER_AS_JOYSTICK => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x43, 0x43, 0x45, 0x4C, 0x45, 0x52, 0x4F, 0x4D, 0x45, 0x54, 0x45, 0x52, 0x5F, 0x41, 0x53, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_ACCELEROMETER_AS_JOYSTICK => "SDL_ACCELEROMETER_AS_JOYSTICK"u8;
 
         [NativeTypeName("#define SDL_HINT_ALLOW_ALT_TAB_WHILE_GRABBED \"SDL_ALLOW_ALT_TAB_WHILE_GRABBED\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_ALLOW_ALT_TAB_WHILE_GRABBED => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x4C, 0x4C, 0x4F, 0x57, 0x5F, 0x41, 0x4C, 0x54, 0x5F, 0x54, 0x41, 0x42, 0x5F, 0x57, 0x48, 0x49, 0x4C, 0x45, 0x5F, 0x47, 0x52, 0x41, 0x42, 0x42, 0x45, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_ALLOW_ALT_TAB_WHILE_GRABBED => "SDL_ALLOW_ALT_TAB_WHILE_GRABBED"u8;
 
         [NativeTypeName("#define SDL_HINT_ALLOW_TOPMOST \"SDL_ALLOW_TOPMOST\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_ALLOW_TOPMOST => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x4C, 0x4C, 0x4F, 0x57, 0x5F, 0x54, 0x4F, 0x50, 0x4D, 0x4F, 0x53, 0x54, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_ALLOW_TOPMOST => "SDL_ALLOW_TOPMOST"u8;
 
         [NativeTypeName("#define SDL_HINT_ANDROID_APK_EXPANSION_MAIN_FILE_VERSION \"SDL_ANDROID_APK_EXPANSION_MAIN_FILE_VERSION\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_ANDROID_APK_EXPANSION_MAIN_FILE_VERSION => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x4E, 0x44, 0x52, 0x4F, 0x49, 0x44, 0x5F, 0x41, 0x50, 0x4B, 0x5F, 0x45, 0x58, 0x50, 0x41, 0x4E, 0x53, 0x49, 0x4F, 0x4E, 0x5F, 0x4D, 0x41, 0x49, 0x4E, 0x5F, 0x46, 0x49, 0x4C, 0x45, 0x5F, 0x56, 0x45, 0x52, 0x53, 0x49, 0x4F, 0x4E, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_ANDROID_APK_EXPANSION_MAIN_FILE_VERSION => "SDL_ANDROID_APK_EXPANSION_MAIN_FILE_VERSION"u8;
 
         [NativeTypeName("#define SDL_HINT_ANDROID_APK_EXPANSION_PATCH_FILE_VERSION \"SDL_ANDROID_APK_EXPANSION_PATCH_FILE_VERSION\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_ANDROID_APK_EXPANSION_PATCH_FILE_VERSION => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x4E, 0x44, 0x52, 0x4F, 0x49, 0x44, 0x5F, 0x41, 0x50, 0x4B, 0x5F, 0x45, 0x58, 0x50, 0x41, 0x4E, 0x53, 0x49, 0x4F, 0x4E, 0x5F, 0x50, 0x41, 0x54, 0x43, 0x48, 0x5F, 0x46, 0x49, 0x4C, 0x45, 0x5F, 0x56, 0x45, 0x52, 0x53, 0x49, 0x4F, 0x4E, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_ANDROID_APK_EXPANSION_PATCH_FILE_VERSION => "SDL_ANDROID_APK_EXPANSION_PATCH_FILE_VERSION"u8;
 
         [NativeTypeName("#define SDL_HINT_ANDROID_BLOCK_ON_PAUSE \"SDL_ANDROID_BLOCK_ON_PAUSE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_ANDROID_BLOCK_ON_PAUSE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x4E, 0x44, 0x52, 0x4F, 0x49, 0x44, 0x5F, 0x42, 0x4C, 0x4F, 0x43, 0x4B, 0x5F, 0x4F, 0x4E, 0x5F, 0x50, 0x41, 0x55, 0x53, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_ANDROID_BLOCK_ON_PAUSE => "SDL_ANDROID_BLOCK_ON_PAUSE"u8;
 
         [NativeTypeName("#define SDL_HINT_ANDROID_BLOCK_ON_PAUSE_PAUSEAUDIO \"SDL_ANDROID_BLOCK_ON_PAUSE_PAUSEAUDIO\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_ANDROID_BLOCK_ON_PAUSE_PAUSEAUDIO => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x4E, 0x44, 0x52, 0x4F, 0x49, 0x44, 0x5F, 0x42, 0x4C, 0x4F, 0x43, 0x4B, 0x5F, 0x4F, 0x4E, 0x5F, 0x50, 0x41, 0x55, 0x53, 0x45, 0x5F, 0x50, 0x41, 0x55, 0x53, 0x45, 0x41, 0x55, 0x44, 0x49, 0x4F, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_ANDROID_BLOCK_ON_PAUSE_PAUSEAUDIO => "SDL_ANDROID_BLOCK_ON_PAUSE_PAUSEAUDIO"u8;
 
         [NativeTypeName("#define SDL_HINT_ANDROID_TRAP_BACK_BUTTON \"SDL_ANDROID_TRAP_BACK_BUTTON\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_ANDROID_TRAP_BACK_BUTTON => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x4E, 0x44, 0x52, 0x4F, 0x49, 0x44, 0x5F, 0x54, 0x52, 0x41, 0x50, 0x5F, 0x42, 0x41, 0x43, 0x4B, 0x5F, 0x42, 0x55, 0x54, 0x54, 0x4F, 0x4E, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_ANDROID_TRAP_BACK_BUTTON => "SDL_ANDROID_TRAP_BACK_BUTTON"u8;
 
         [NativeTypeName("#define SDL_HINT_APP_NAME \"SDL_APP_NAME\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_APP_NAME => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x50, 0x50, 0x5F, 0x4E, 0x41, 0x4D, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_APP_NAME => "SDL_APP_NAME"u8;
 
         [NativeTypeName("#define SDL_HINT_APPLE_TV_CONTROLLER_UI_EVENTS \"SDL_APPLE_TV_CONTROLLER_UI_EVENTS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_APPLE_TV_CONTROLLER_UI_EVENTS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x50, 0x50, 0x4C, 0x45, 0x5F, 0x54, 0x56, 0x5F, 0x43, 0x4F, 0x4E, 0x54, 0x52, 0x4F, 0x4C, 0x4C, 0x45, 0x52, 0x5F, 0x55, 0x49, 0x5F, 0x45, 0x56, 0x45, 0x4E, 0x54, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_APPLE_TV_CONTROLLER_UI_EVENTS => "SDL_APPLE_TV_CONTROLLER_UI_EVENTS"u8;
 
         [NativeTypeName("#define SDL_HINT_APPLE_TV_REMOTE_ALLOW_ROTATION \"SDL_APPLE_TV_REMOTE_ALLOW_ROTATION\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_APPLE_TV_REMOTE_ALLOW_ROTATION => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x50, 0x50, 0x4C, 0x45, 0x5F, 0x54, 0x56, 0x5F, 0x52, 0x45, 0x4D, 0x4F, 0x54, 0x45, 0x5F, 0x41, 0x4C, 0x4C, 0x4F, 0x57, 0x5F, 0x52, 0x4F, 0x54, 0x41, 0x54, 0x49, 0x4F, 0x4E, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_APPLE_TV_REMOTE_ALLOW_ROTATION => "SDL_APPLE_TV_REMOTE_ALLOW_ROTATION"u8;
 
         [NativeTypeName("#define SDL_HINT_AUDIO_CATEGORY \"SDL_AUDIO_CATEGORY\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_AUDIO_CATEGORY => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x55, 0x44, 0x49, 0x4F, 0x5F, 0x43, 0x41, 0x54, 0x45, 0x47, 0x4F, 0x52, 0x59, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_AUDIO_CATEGORY => "SDL_AUDIO_CATEGORY"u8;
 
         [NativeTypeName("#define SDL_HINT_AUDIO_DEVICE_APP_NAME \"SDL_AUDIO_DEVICE_APP_NAME\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_AUDIO_DEVICE_APP_NAME => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x55, 0x44, 0x49, 0x4F, 0x5F, 0x44, 0x45, 0x56, 0x49, 0x43, 0x45, 0x5F, 0x41, 0x50, 0x50, 0x5F, 0x4E, 0x41, 0x4D, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_AUDIO_DEVICE_APP_NAME => "SDL_AUDIO_DEVICE_APP_NAME"u8;
 
         [NativeTypeName("#define SDL_HINT_AUDIO_DEVICE_STREAM_NAME \"SDL_AUDIO_DEVICE_STREAM_NAME\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_AUDIO_DEVICE_STREAM_NAME => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x55, 0x44, 0x49, 0x4F, 0x5F, 0x44, 0x45, 0x56, 0x49, 0x43, 0x45, 0x5F, 0x53, 0x54, 0x52, 0x45, 0x41, 0x4D, 0x5F, 0x4E, 0x41, 0x4D, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_AUDIO_DEVICE_STREAM_NAME => "SDL_AUDIO_DEVICE_STREAM_NAME"u8;
 
         [NativeTypeName("#define SDL_HINT_AUDIO_DEVICE_STREAM_ROLE \"SDL_AUDIO_DEVICE_STREAM_ROLE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_AUDIO_DEVICE_STREAM_ROLE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x55, 0x44, 0x49, 0x4F, 0x5F, 0x44, 0x45, 0x56, 0x49, 0x43, 0x45, 0x5F, 0x53, 0x54, 0x52, 0x45, 0x41, 0x4D, 0x5F, 0x52, 0x4F, 0x4C, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_AUDIO_DEVICE_STREAM_ROLE => "SDL_AUDIO_DEVICE_STREAM_ROLE"u8;
 
         [NativeTypeName("#define SDL_HINT_AUDIO_RESAMPLING_MODE \"SDL_AUDIO_RESAMPLING_MODE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_AUDIO_RESAMPLING_MODE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x55, 0x44, 0x49, 0x4F, 0x5F, 0x52, 0x45, 0x53, 0x41, 0x4D, 0x50, 0x4C, 0x49, 0x4E, 0x47, 0x5F, 0x4D, 0x4F, 0x44, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_AUDIO_RESAMPLING_MODE => "SDL_AUDIO_RESAMPLING_MODE"u8;
 
         [NativeTypeName("#define SDL_HINT_AUTO_UPDATE_JOYSTICKS \"SDL_AUTO_UPDATE_JOYSTICKS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_AUTO_UPDATE_JOYSTICKS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x55, 0x54, 0x4F, 0x5F, 0x55, 0x50, 0x44, 0x41, 0x54, 0x45, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_AUTO_UPDATE_JOYSTICKS => "SDL_AUTO_UPDATE_JOYSTICKS"u8;
 
         [NativeTypeName("#define SDL_HINT_AUTO_UPDATE_SENSORS \"SDL_AUTO_UPDATE_SENSORS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_AUTO_UPDATE_SENSORS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x55, 0x54, 0x4F, 0x5F, 0x55, 0x50, 0x44, 0x41, 0x54, 0x45, 0x5F, 0x53, 0x45, 0x4E, 0x53, 0x4F, 0x52, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_AUTO_UPDATE_SENSORS => "SDL_AUTO_UPDATE_SENSORS"u8;
 
         [NativeTypeName("#define SDL_HINT_BMP_SAVE_LEGACY_FORMAT \"SDL_BMP_SAVE_LEGACY_FORMAT\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_BMP_SAVE_LEGACY_FORMAT => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x42, 0x4D, 0x50, 0x5F, 0x53, 0x41, 0x56, 0x45, 0x5F, 0x4C, 0x45, 0x47, 0x41, 0x43, 0x59, 0x5F, 0x46, 0x4F, 0x52, 0x4D, 0x41, 0x54, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_BMP_SAVE_LEGACY_FORMAT => "SDL_BMP_SAVE_LEGACY_FORMAT"u8;
 
         [NativeTypeName("#define SDL_HINT_DISPLAY_USABLE_BOUNDS \"SDL_DISPLAY_USABLE_BOUNDS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_DISPLAY_USABLE_BOUNDS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x44, 0x49, 0x53, 0x50, 0x4C, 0x41, 0x59, 0x5F, 0x55, 0x53, 0x41, 0x42, 0x4C, 0x45, 0x5F, 0x42, 0x4F, 0x55, 0x4E, 0x44, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_DISPLAY_USABLE_BOUNDS => "SDL_DISPLAY_USABLE_BOUNDS"u8;
 
         [NativeTypeName("#define SDL_HINT_EMSCRIPTEN_ASYNCIFY \"SDL_EMSCRIPTEN_ASYNCIFY\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_EMSCRIPTEN_ASYNCIFY => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x45, 0x4D, 0x53, 0x43, 0x52, 0x49, 0x50, 0x54, 0x45, 0x4E, 0x5F, 0x41, 0x53, 0x59, 0x4E, 0x43, 0x49, 0x46, 0x59, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_EMSCRIPTEN_ASYNCIFY => "SDL_EMSCRIPTEN_ASYNCIFY"u8;
 
         [NativeTypeName("#define SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT \"SDL_EMSCRIPTEN_KEYBOARD_ELEMENT\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x45, 0x4D, 0x53, 0x43, 0x52, 0x49, 0x50, 0x54, 0x45, 0x4E, 0x5F, 0x4B, 0x45, 0x59, 0x42, 0x4F, 0x41, 0x52, 0x44, 0x5F, 0x45, 0x4C, 0x45, 0x4D, 0x45, 0x4E, 0x54, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT => "SDL_EMSCRIPTEN_KEYBOARD_ELEMENT"u8;
 
         [NativeTypeName("#define SDL_HINT_ENABLE_SCREEN_KEYBOARD \"SDL_ENABLE_SCREEN_KEYBOARD\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_ENABLE_SCREEN_KEYBOARD => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x45, 0x4E, 0x41, 0x42, 0x4C, 0x45, 0x5F, 0x53, 0x43, 0x52, 0x45, 0x45, 0x4E, 0x5F, 0x4B, 0x45, 0x59, 0x42, 0x4F, 0x41, 0x52, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_ENABLE_SCREEN_KEYBOARD => "SDL_ENABLE_SCREEN_KEYBOARD"u8;
 
         [NativeTypeName("#define SDL_HINT_ENABLE_STEAM_CONTROLLERS \"SDL_ENABLE_STEAM_CONTROLLERS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_ENABLE_STEAM_CONTROLLERS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x45, 0x4E, 0x41, 0x42, 0x4C, 0x45, 0x5F, 0x53, 0x54, 0x45, 0x41, 0x4D, 0x5F, 0x43, 0x4F, 0x4E, 0x54, 0x52, 0x4F, 0x4C, 0x4C, 0x45, 0x52, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_ENABLE_STEAM_CONTROLLERS => "SDL_ENABLE_STEAM_CONTROLLERS"u8;
 
         [NativeTypeName("#define SDL_HINT_EVENT_LOGGING \"SDL_EVENT_LOGGING\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_EVENT_LOGGING => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x45, 0x56, 0x45, 0x4E, 0x54, 0x5F, 0x4C, 0x4F, 0x47, 0x47, 0x49, 0x4E, 0x47, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_EVENT_LOGGING => "SDL_EVENT_LOGGING"u8;
 
         [NativeTypeName("#define SDL_HINT_FORCE_RAISEWINDOW \"SDL_HINT_FORCE_RAISEWINDOW\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_FORCE_RAISEWINDOW => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x48, 0x49, 0x4E, 0x54, 0x5F, 0x46, 0x4F, 0x52, 0x43, 0x45, 0x5F, 0x52, 0x41, 0x49, 0x53, 0x45, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_FORCE_RAISEWINDOW => "SDL_HINT_FORCE_RAISEWINDOW"u8;
 
         [NativeTypeName("#define SDL_HINT_FRAMEBUFFER_ACCELERATION \"SDL_FRAMEBUFFER_ACCELERATION\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_FRAMEBUFFER_ACCELERATION => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x46, 0x52, 0x41, 0x4D, 0x45, 0x42, 0x55, 0x46, 0x46, 0x45, 0x52, 0x5F, 0x41, 0x43, 0x43, 0x45, 0x4C, 0x45, 0x52, 0x41, 0x54, 0x49, 0x4F, 0x4E, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_FRAMEBUFFER_ACCELERATION => "SDL_FRAMEBUFFER_ACCELERATION"u8;
 
         [NativeTypeName("#define SDL_HINT_GAMECONTROLLERCONFIG \"SDL_GAMECONTROLLERCONFIG\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_GAMECONTROLLERCONFIG => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x47, 0x41, 0x4D, 0x45, 0x43, 0x4F, 0x4E, 0x54, 0x52, 0x4F, 0x4C, 0x4C, 0x45, 0x52, 0x43, 0x4F, 0x4E, 0x46, 0x49, 0x47, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_GAMECONTROLLERCONFIG => "SDL_GAMECONTROLLERCONFIG"u8;
 
         [NativeTypeName("#define SDL_HINT_GAMECONTROLLERCONFIG_FILE \"SDL_GAMECONTROLLERCONFIG_FILE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_GAMECONTROLLERCONFIG_FILE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x47, 0x41, 0x4D, 0x45, 0x43, 0x4F, 0x4E, 0x54, 0x52, 0x4F, 0x4C, 0x4C, 0x45, 0x52, 0x43, 0x4F, 0x4E, 0x46, 0x49, 0x47, 0x5F, 0x46, 0x49, 0x4C, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_GAMECONTROLLERCONFIG_FILE => "SDL_GAMECONTROLLERCONFIG_FILE"u8;
 
         [NativeTypeName("#define SDL_HINT_GAMECONTROLLERTYPE \"SDL_GAMECONTROLLERTYPE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_GAMECONTROLLERTYPE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x47, 0x41, 0x4D, 0x45, 0x43, 0x4F, 0x4E, 0x54, 0x52, 0x4F, 0x4C, 0x4C, 0x45, 0x52, 0x54, 0x59, 0x50, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_GAMECONTROLLERTYPE => "SDL_GAMECONTROLLERTYPE"u8;
 
         [NativeTypeName("#define SDL_HINT_GAMECONTROLLER_IGNORE_DEVICES \"SDL_GAMECONTROLLER_IGNORE_DEVICES\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_GAMECONTROLLER_IGNORE_DEVICES => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x47, 0x41, 0x4D, 0x45, 0x43, 0x4F, 0x4E, 0x54, 0x52, 0x4F, 0x4C, 0x4C, 0x45, 0x52, 0x5F, 0x49, 0x47, 0x4E, 0x4F, 0x52, 0x45, 0x5F, 0x44, 0x45, 0x56, 0x49, 0x43, 0x45, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_GAMECONTROLLER_IGNORE_DEVICES => "SDL_GAMECONTROLLER_IGNORE_DEVICES"u8;
 
         [NativeTypeName("#define SDL_HINT_GAMECONTROLLER_IGNORE_DEVICES_EXCEPT \"SDL_GAMECONTROLLER_IGNORE_DEVICES_EXCEPT\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_GAMECONTROLLER_IGNORE_DEVICES_EXCEPT => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x47, 0x41, 0x4D, 0x45, 0x43, 0x4F, 0x4E, 0x54, 0x52, 0x4F, 0x4C, 0x4C, 0x45, 0x52, 0x5F, 0x49, 0x47, 0x4E, 0x4F, 0x52, 0x45, 0x5F, 0x44, 0x45, 0x56, 0x49, 0x43, 0x45, 0x53, 0x5F, 0x45, 0x58, 0x43, 0x45, 0x50, 0x54, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_GAMECONTROLLER_IGNORE_DEVICES_EXCEPT => "SDL_GAMECONTROLLER_IGNORE_DEVICES_EXCEPT"u8;
 
         [NativeTypeName("#define SDL_HINT_GAMECONTROLLER_USE_BUTTON_LABELS \"SDL_GAMECONTROLLER_USE_BUTTON_LABELS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_GAMECONTROLLER_USE_BUTTON_LABELS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x47, 0x41, 0x4D, 0x45, 0x43, 0x4F, 0x4E, 0x54, 0x52, 0x4F, 0x4C, 0x4C, 0x45, 0x52, 0x5F, 0x55, 0x53, 0x45, 0x5F, 0x42, 0x55, 0x54, 0x54, 0x4F, 0x4E, 0x5F, 0x4C, 0x41, 0x42, 0x45, 0x4C, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_GAMECONTROLLER_USE_BUTTON_LABELS => "SDL_GAMECONTROLLER_USE_BUTTON_LABELS"u8;
 
         [NativeTypeName("#define SDL_HINT_GRAB_KEYBOARD \"SDL_GRAB_KEYBOARD\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_GRAB_KEYBOARD => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x47, 0x52, 0x41, 0x42, 0x5F, 0x4B, 0x45, 0x59, 0x42, 0x4F, 0x41, 0x52, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_GRAB_KEYBOARD => "SDL_GRAB_KEYBOARD"u8;
 
         [NativeTypeName("#define SDL_HINT_HIDAPI_IGNORE_DEVICES \"SDL_HIDAPI_IGNORE_DEVICES\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_HIDAPI_IGNORE_DEVICES => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x49, 0x47, 0x4E, 0x4F, 0x52, 0x45, 0x5F, 0x44, 0x45, 0x56, 0x49, 0x43, 0x45, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_HIDAPI_IGNORE_DEVICES => "SDL_HIDAPI_IGNORE_DEVICES"u8;
 
         [NativeTypeName("#define SDL_HINT_IDLE_TIMER_DISABLED \"SDL_IOS_IDLE_TIMER_DISABLED\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_IDLE_TIMER_DISABLED => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x49, 0x4F, 0x53, 0x5F, 0x49, 0x44, 0x4C, 0x45, 0x5F, 0x54, 0x49, 0x4D, 0x45, 0x52, 0x5F, 0x44, 0x49, 0x53, 0x41, 0x42, 0x4C, 0x45, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_IDLE_TIMER_DISABLED => "SDL_IOS_IDLE_TIMER_DISABLED"u8;
 
         [NativeTypeName("#define SDL_HINT_IME_INTERNAL_EDITING \"SDL_IME_INTERNAL_EDITING\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_IME_INTERNAL_EDITING => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x49, 0x4D, 0x45, 0x5F, 0x49, 0x4E, 0x54, 0x45, 0x52, 0x4E, 0x41, 0x4C, 0x5F, 0x45, 0x44, 0x49, 0x54, 0x49, 0x4E, 0x47, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_IME_INTERNAL_EDITING => "SDL_IME_INTERNAL_EDITING"u8;
 
         [NativeTypeName("#define SDL_HINT_IME_SHOW_UI \"SDL_IME_SHOW_UI\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_IME_SHOW_UI => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x49, 0x4D, 0x45, 0x5F, 0x53, 0x48, 0x4F, 0x57, 0x5F, 0x55, 0x49, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_IME_SHOW_UI => "SDL_IME_SHOW_UI"u8;
 
         [NativeTypeName("#define SDL_HINT_IME_SUPPORT_EXTENDED_TEXT \"SDL_IME_SUPPORT_EXTENDED_TEXT\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_IME_SUPPORT_EXTENDED_TEXT => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x49, 0x4D, 0x45, 0x5F, 0x53, 0x55, 0x50, 0x50, 0x4F, 0x52, 0x54, 0x5F, 0x45, 0x58, 0x54, 0x45, 0x4E, 0x44, 0x45, 0x44, 0x5F, 0x54, 0x45, 0x58, 0x54, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_IME_SUPPORT_EXTENDED_TEXT => "SDL_IME_SUPPORT_EXTENDED_TEXT"u8;
 
         [NativeTypeName("#define SDL_HINT_IOS_HIDE_HOME_INDICATOR \"SDL_IOS_HIDE_HOME_INDICATOR\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_IOS_HIDE_HOME_INDICATOR => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x49, 0x4F, 0x53, 0x5F, 0x48, 0x49, 0x44, 0x45, 0x5F, 0x48, 0x4F, 0x4D, 0x45, 0x5F, 0x49, 0x4E, 0x44, 0x49, 0x43, 0x41, 0x54, 0x4F, 0x52, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_IOS_HIDE_HOME_INDICATOR => "SDL_IOS_HIDE_HOME_INDICATOR"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS \"SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x41, 0x4C, 0x4C, 0x4F, 0x57, 0x5F, 0x42, 0x41, 0x43, 0x4B, 0x47, 0x52, 0x4F, 0x55, 0x4E, 0x44, 0x5F, 0x45, 0x56, 0x45, 0x4E, 0x54, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS => "SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI \"SDL_JOYSTICK_HIDAPI\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI => "SDL_JOYSTICK_HIDAPI"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_GAMECUBE \"SDL_JOYSTICK_HIDAPI_GAMECUBE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_GAMECUBE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x47, 0x41, 0x4D, 0x45, 0x43, 0x55, 0x42, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_GAMECUBE => "SDL_JOYSTICK_HIDAPI_GAMECUBE"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_GAMECUBE_RUMBLE_BRAKE \"SDL_JOYSTICK_GAMECUBE_RUMBLE_BRAKE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_GAMECUBE_RUMBLE_BRAKE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x47, 0x41, 0x4D, 0x45, 0x43, 0x55, 0x42, 0x45, 0x5F, 0x52, 0x55, 0x4D, 0x42, 0x4C, 0x45, 0x5F, 0x42, 0x52, 0x41, 0x4B, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_GAMECUBE_RUMBLE_BRAKE => "SDL_JOYSTICK_GAMECUBE_RUMBLE_BRAKE"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_JOY_CONS \"SDL_JOYSTICK_HIDAPI_JOY_CONS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_JOY_CONS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x4A, 0x4F, 0x59, 0x5F, 0x43, 0x4F, 0x4E, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_JOY_CONS => "SDL_JOYSTICK_HIDAPI_JOY_CONS"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_COMBINE_JOY_CONS \"SDL_JOYSTICK_HIDAPI_COMBINE_JOY_CONS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_COMBINE_JOY_CONS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x43, 0x4F, 0x4D, 0x42, 0x49, 0x4E, 0x45, 0x5F, 0x4A, 0x4F, 0x59, 0x5F, 0x43, 0x4F, 0x4E, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_COMBINE_JOY_CONS => "SDL_JOYSTICK_HIDAPI_COMBINE_JOY_CONS"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_VERTICAL_JOY_CONS \"SDL_JOYSTICK_HIDAPI_VERTICAL_JOY_CONS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_VERTICAL_JOY_CONS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x56, 0x45, 0x52, 0x54, 0x49, 0x43, 0x41, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x5F, 0x43, 0x4F, 0x4E, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_VERTICAL_JOY_CONS => "SDL_JOYSTICK_HIDAPI_VERTICAL_JOY_CONS"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_LUNA \"SDL_JOYSTICK_HIDAPI_LUNA\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_LUNA => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x4C, 0x55, 0x4E, 0x41, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_LUNA => "SDL_JOYSTICK_HIDAPI_LUNA"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_NINTENDO_CLASSIC \"SDL_JOYSTICK_HIDAPI_NINTENDO_CLASSIC\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_NINTENDO_CLASSIC => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x4E, 0x49, 0x4E, 0x54, 0x45, 0x4E, 0x44, 0x4F, 0x5F, 0x43, 0x4C, 0x41, 0x53, 0x53, 0x49, 0x43, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_NINTENDO_CLASSIC => "SDL_JOYSTICK_HIDAPI_NINTENDO_CLASSIC"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_SHIELD \"SDL_JOYSTICK_HIDAPI_SHIELD\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_SHIELD => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x53, 0x48, 0x49, 0x45, 0x4C, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_SHIELD => "SDL_JOYSTICK_HIDAPI_SHIELD"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_PS3 \"SDL_JOYSTICK_HIDAPI_PS3\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS3 => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x50, 0x53, 0x33, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS3 => "SDL_JOYSTICK_HIDAPI_PS3"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_PS4 \"SDL_JOYSTICK_HIDAPI_PS4\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS4 => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x50, 0x53, 0x34, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS4 => "SDL_JOYSTICK_HIDAPI_PS4"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE \"SDL_JOYSTICK_HIDAPI_PS4_RUMBLE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x50, 0x53, 0x34, 0x5F, 0x52, 0x55, 0x4D, 0x42, 0x4C, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE => "SDL_JOYSTICK_HIDAPI_PS4_RUMBLE"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_PS5 \"SDL_JOYSTICK_HIDAPI_PS5\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS5 => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x50, 0x53, 0x35, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS5 => "SDL_JOYSTICK_HIDAPI_PS5"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_PS5_PLAYER_LED \"SDL_JOYSTICK_HIDAPI_PS5_PLAYER_LED\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS5_PLAYER_LED => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x50, 0x53, 0x35, 0x5F, 0x50, 0x4C, 0x41, 0x59, 0x45, 0x52, 0x5F, 0x4C, 0x45, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS5_PLAYER_LED => "SDL_JOYSTICK_HIDAPI_PS5_PLAYER_LED"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE \"SDL_JOYSTICK_HIDAPI_PS5_RUMBLE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x50, 0x53, 0x35, 0x5F, 0x52, 0x55, 0x4D, 0x42, 0x4C, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE => "SDL_JOYSTICK_HIDAPI_PS5_RUMBLE"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_STADIA \"SDL_JOYSTICK_HIDAPI_STADIA\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_STADIA => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x53, 0x54, 0x41, 0x44, 0x49, 0x41, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_STADIA => "SDL_JOYSTICK_HIDAPI_STADIA"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_STEAM \"SDL_JOYSTICK_HIDAPI_STEAM\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_STEAM => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x53, 0x54, 0x45, 0x41, 0x4D, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_STEAM => "SDL_JOYSTICK_HIDAPI_STEAM"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_SWITCH \"SDL_JOYSTICK_HIDAPI_SWITCH\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_SWITCH => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x53, 0x57, 0x49, 0x54, 0x43, 0x48, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_SWITCH => "SDL_JOYSTICK_HIDAPI_SWITCH"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_SWITCH_HOME_LED \"SDL_JOYSTICK_HIDAPI_SWITCH_HOME_LED\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_SWITCH_HOME_LED => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x53, 0x57, 0x49, 0x54, 0x43, 0x48, 0x5F, 0x48, 0x4F, 0x4D, 0x45, 0x5F, 0x4C, 0x45, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_SWITCH_HOME_LED => "SDL_JOYSTICK_HIDAPI_SWITCH_HOME_LED"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_JOYCON_HOME_LED \"SDL_JOYSTICK_HIDAPI_JOYCON_HOME_LED\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_JOYCON_HOME_LED => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x4A, 0x4F, 0x59, 0x43, 0x4F, 0x4E, 0x5F, 0x48, 0x4F, 0x4D, 0x45, 0x5F, 0x4C, 0x45, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_JOYCON_HOME_LED => "SDL_JOYSTICK_HIDAPI_JOYCON_HOME_LED"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_SWITCH_PLAYER_LED \"SDL_JOYSTICK_HIDAPI_SWITCH_PLAYER_LED\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_SWITCH_PLAYER_LED => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x53, 0x57, 0x49, 0x54, 0x43, 0x48, 0x5F, 0x50, 0x4C, 0x41, 0x59, 0x45, 0x52, 0x5F, 0x4C, 0x45, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_SWITCH_PLAYER_LED => "SDL_JOYSTICK_HIDAPI_SWITCH_PLAYER_LED"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_WII \"SDL_JOYSTICK_HIDAPI_WII\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_WII => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x57, 0x49, 0x49, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_WII => "SDL_JOYSTICK_HIDAPI_WII"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_WII_PLAYER_LED \"SDL_JOYSTICK_HIDAPI_WII_PLAYER_LED\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_WII_PLAYER_LED => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x57, 0x49, 0x49, 0x5F, 0x50, 0x4C, 0x41, 0x59, 0x45, 0x52, 0x5F, 0x4C, 0x45, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_WII_PLAYER_LED => "SDL_JOYSTICK_HIDAPI_WII_PLAYER_LED"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_XBOX \"SDL_JOYSTICK_HIDAPI_XBOX\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_XBOX => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x58, 0x42, 0x4F, 0x58, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_XBOX => "SDL_JOYSTICK_HIDAPI_XBOX"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_XBOX_360 \"SDL_JOYSTICK_HIDAPI_XBOX_360\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_XBOX_360 => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x58, 0x42, 0x4F, 0x58, 0x5F, 0x33, 0x36, 0x30, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_XBOX_360 => "SDL_JOYSTICK_HIDAPI_XBOX_360"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_XBOX_360_PLAYER_LED \"SDL_JOYSTICK_HIDAPI_XBOX_360_PLAYER_LED\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_XBOX_360_PLAYER_LED => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x58, 0x42, 0x4F, 0x58, 0x5F, 0x33, 0x36, 0x30, 0x5F, 0x50, 0x4C, 0x41, 0x59, 0x45, 0x52, 0x5F, 0x4C, 0x45, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_XBOX_360_PLAYER_LED => "SDL_JOYSTICK_HIDAPI_XBOX_360_PLAYER_LED"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_XBOX_360_WIRELESS \"SDL_JOYSTICK_HIDAPI_XBOX_360_WIRELESS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_XBOX_360_WIRELESS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x58, 0x42, 0x4F, 0x58, 0x5F, 0x33, 0x36, 0x30, 0x5F, 0x57, 0x49, 0x52, 0x45, 0x4C, 0x45, 0x53, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_XBOX_360_WIRELESS => "SDL_JOYSTICK_HIDAPI_XBOX_360_WIRELESS"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_XBOX_ONE \"SDL_JOYSTICK_HIDAPI_XBOX_ONE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_XBOX_ONE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x58, 0x42, 0x4F, 0x58, 0x5F, 0x4F, 0x4E, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_XBOX_ONE => "SDL_JOYSTICK_HIDAPI_XBOX_ONE"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_HIDAPI_XBOX_ONE_HOME_LED \"SDL_JOYSTICK_HIDAPI_XBOX_ONE_HOME_LED\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_XBOX_ONE_HOME_LED => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x48, 0x49, 0x44, 0x41, 0x50, 0x49, 0x5F, 0x58, 0x42, 0x4F, 0x58, 0x5F, 0x4F, 0x4E, 0x45, 0x5F, 0x48, 0x4F, 0x4D, 0x45, 0x5F, 0x4C, 0x45, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_HIDAPI_XBOX_ONE_HOME_LED => "SDL_JOYSTICK_HIDAPI_XBOX_ONE_HOME_LED"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_RAWINPUT \"SDL_JOYSTICK_RAWINPUT\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_RAWINPUT => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x52, 0x41, 0x57, 0x49, 0x4E, 0x50, 0x55, 0x54, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_RAWINPUT => "SDL_JOYSTICK_RAWINPUT"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_RAWINPUT_CORRELATE_XINPUT \"SDL_JOYSTICK_RAWINPUT_CORRELATE_XINPUT\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_RAWINPUT_CORRELATE_XINPUT => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x52, 0x41, 0x57, 0x49, 0x4E, 0x50, 0x55, 0x54, 0x5F, 0x43, 0x4F, 0x52, 0x52, 0x45, 0x4C, 0x41, 0x54, 0x45, 0x5F, 0x58, 0x49, 0x4E, 0x50, 0x55, 0x54, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_RAWINPUT_CORRELATE_XINPUT => "SDL_JOYSTICK_RAWINPUT_CORRELATE_XINPUT"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_ROG_CHAKRAM \"SDL_JOYSTICK_ROG_CHAKRAM\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_ROG_CHAKRAM => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x52, 0x4F, 0x47, 0x5F, 0x43, 0x48, 0x41, 0x4B, 0x52, 0x41, 0x4D, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_ROG_CHAKRAM => "SDL_JOYSTICK_ROG_CHAKRAM"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_THREAD \"SDL_JOYSTICK_THREAD\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_THREAD => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x54, 0x48, 0x52, 0x45, 0x41, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_THREAD => "SDL_JOYSTICK_THREAD"u8;
 
         [NativeTypeName("#define SDL_HINT_KMSDRM_REQUIRE_DRM_MASTER \"SDL_KMSDRM_REQUIRE_DRM_MASTER\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_KMSDRM_REQUIRE_DRM_MASTER => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4B, 0x4D, 0x53, 0x44, 0x52, 0x4D, 0x5F, 0x52, 0x45, 0x51, 0x55, 0x49, 0x52, 0x45, 0x5F, 0x44, 0x52, 0x4D, 0x5F, 0x4D, 0x41, 0x53, 0x54, 0x45, 0x52, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_KMSDRM_REQUIRE_DRM_MASTER => "SDL_KMSDRM_REQUIRE_DRM_MASTER"u8;
 
         [NativeTypeName("#define SDL_HINT_JOYSTICK_DEVICE \"SDL_JOYSTICK_DEVICE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_DEVICE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x44, 0x45, 0x56, 0x49, 0x43, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_JOYSTICK_DEVICE => "SDL_JOYSTICK_DEVICE"u8;
 
         [NativeTypeName("#define SDL_HINT_LINUX_DIGITAL_HATS \"SDL_LINUX_DIGITAL_HATS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_LINUX_DIGITAL_HATS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4C, 0x49, 0x4E, 0x55, 0x58, 0x5F, 0x44, 0x49, 0x47, 0x49, 0x54, 0x41, 0x4C, 0x5F, 0x48, 0x41, 0x54, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_LINUX_DIGITAL_HATS => "SDL_LINUX_DIGITAL_HATS"u8;
 
         [NativeTypeName("#define SDL_HINT_LINUX_HAT_DEADZONES \"SDL_LINUX_HAT_DEADZONES\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_LINUX_HAT_DEADZONES => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4C, 0x49, 0x4E, 0x55, 0x58, 0x5F, 0x48, 0x41, 0x54, 0x5F, 0x44, 0x45, 0x41, 0x44, 0x5A, 0x4F, 0x4E, 0x45, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_LINUX_HAT_DEADZONES => "SDL_LINUX_HAT_DEADZONES"u8;
 
         [NativeTypeName("#define SDL_HINT_LINUX_JOYSTICK_CLASSIC \"SDL_LINUX_JOYSTICK_CLASSIC\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_LINUX_JOYSTICK_CLASSIC => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4C, 0x49, 0x4E, 0x55, 0x58, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x43, 0x4C, 0x41, 0x53, 0x53, 0x49, 0x43, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_LINUX_JOYSTICK_CLASSIC => "SDL_LINUX_JOYSTICK_CLASSIC"u8;
 
         [NativeTypeName("#define SDL_HINT_LINUX_JOYSTICK_DEADZONES \"SDL_LINUX_JOYSTICK_DEADZONES\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_LINUX_JOYSTICK_DEADZONES => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4C, 0x49, 0x4E, 0x55, 0x58, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x44, 0x45, 0x41, 0x44, 0x5A, 0x4F, 0x4E, 0x45, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_LINUX_JOYSTICK_DEADZONES => "SDL_LINUX_JOYSTICK_DEADZONES"u8;
 
         [NativeTypeName("#define SDL_HINT_MAC_BACKGROUND_APP \"SDL_MAC_BACKGROUND_APP\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_MAC_BACKGROUND_APP => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4D, 0x41, 0x43, 0x5F, 0x42, 0x41, 0x43, 0x4B, 0x47, 0x52, 0x4F, 0x55, 0x4E, 0x44, 0x5F, 0x41, 0x50, 0x50, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_MAC_BACKGROUND_APP => "SDL_MAC_BACKGROUND_APP"u8;
 
         [NativeTypeName("#define SDL_HINT_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK \"SDL_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4D, 0x41, 0x43, 0x5F, 0x43, 0x54, 0x52, 0x4C, 0x5F, 0x43, 0x4C, 0x49, 0x43, 0x4B, 0x5F, 0x45, 0x4D, 0x55, 0x4C, 0x41, 0x54, 0x45, 0x5F, 0x52, 0x49, 0x47, 0x48, 0x54, 0x5F, 0x43, 0x4C, 0x49, 0x43, 0x4B, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK => "SDL_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK"u8;
 
         [NativeTypeName("#define SDL_HINT_MAC_OPENGL_ASYNC_DISPATCH \"SDL_MAC_OPENGL_ASYNC_DISPATCH\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_MAC_OPENGL_ASYNC_DISPATCH => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4D, 0x41, 0x43, 0x5F, 0x4F, 0x50, 0x45, 0x4E, 0x47, 0x4C, 0x5F, 0x41, 0x53, 0x59, 0x4E, 0x43, 0x5F, 0x44, 0x49, 0x53, 0x50, 0x41, 0x54, 0x43, 0x48, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_MAC_OPENGL_ASYNC_DISPATCH => "SDL_MAC_OPENGL_ASYNC_DISPATCH"u8;
 
         [NativeTypeName("#define SDL_HINT_MOUSE_DOUBLE_CLICK_RADIUS \"SDL_MOUSE_DOUBLE_CLICK_RADIUS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_DOUBLE_CLICK_RADIUS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4D, 0x4F, 0x55, 0x53, 0x45, 0x5F, 0x44, 0x4F, 0x55, 0x42, 0x4C, 0x45, 0x5F, 0x43, 0x4C, 0x49, 0x43, 0x4B, 0x5F, 0x52, 0x41, 0x44, 0x49, 0x55, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_DOUBLE_CLICK_RADIUS => "SDL_MOUSE_DOUBLE_CLICK_RADIUS"u8;
 
         [NativeTypeName("#define SDL_HINT_MOUSE_DOUBLE_CLICK_TIME \"SDL_MOUSE_DOUBLE_CLICK_TIME\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_DOUBLE_CLICK_TIME => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4D, 0x4F, 0x55, 0x53, 0x45, 0x5F, 0x44, 0x4F, 0x55, 0x42, 0x4C, 0x45, 0x5F, 0x43, 0x4C, 0x49, 0x43, 0x4B, 0x5F, 0x54, 0x49, 0x4D, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_DOUBLE_CLICK_TIME => "SDL_MOUSE_DOUBLE_CLICK_TIME"u8;
 
         [NativeTypeName("#define SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH \"SDL_MOUSE_FOCUS_CLICKTHROUGH\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4D, 0x4F, 0x55, 0x53, 0x45, 0x5F, 0x46, 0x4F, 0x43, 0x55, 0x53, 0x5F, 0x43, 0x4C, 0x49, 0x43, 0x4B, 0x54, 0x48, 0x52, 0x4F, 0x55, 0x47, 0x48, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH => "SDL_MOUSE_FOCUS_CLICKTHROUGH"u8;
 
         [NativeTypeName("#define SDL_HINT_MOUSE_NORMAL_SPEED_SCALE \"SDL_MOUSE_NORMAL_SPEED_SCALE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_NORMAL_SPEED_SCALE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4D, 0x4F, 0x55, 0x53, 0x45, 0x5F, 0x4E, 0x4F, 0x52, 0x4D, 0x41, 0x4C, 0x5F, 0x53, 0x50, 0x45, 0x45, 0x44, 0x5F, 0x53, 0x43, 0x41, 0x4C, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_NORMAL_SPEED_SCALE => "SDL_MOUSE_NORMAL_SPEED_SCALE"u8;
 
         [NativeTypeName("#define SDL_HINT_MOUSE_RELATIVE_MODE_CENTER \"SDL_MOUSE_RELATIVE_MODE_CENTER\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_RELATIVE_MODE_CENTER => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4D, 0x4F, 0x55, 0x53, 0x45, 0x5F, 0x52, 0x45, 0x4C, 0x41, 0x54, 0x49, 0x56, 0x45, 0x5F, 0x4D, 0x4F, 0x44, 0x45, 0x5F, 0x43, 0x45, 0x4E, 0x54, 0x45, 0x52, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_RELATIVE_MODE_CENTER => "SDL_MOUSE_RELATIVE_MODE_CENTER"u8;
 
         [NativeTypeName("#define SDL_HINT_MOUSE_RELATIVE_MODE_WARP \"SDL_MOUSE_RELATIVE_MODE_WARP\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_RELATIVE_MODE_WARP => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4D, 0x4F, 0x55, 0x53, 0x45, 0x5F, 0x52, 0x45, 0x4C, 0x41, 0x54, 0x49, 0x56, 0x45, 0x5F, 0x4D, 0x4F, 0x44, 0x45, 0x5F, 0x57, 0x41, 0x52, 0x50, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_RELATIVE_MODE_WARP => "SDL_MOUSE_RELATIVE_MODE_WARP"u8;
 
         [NativeTypeName("#define SDL_HINT_MOUSE_RELATIVE_SCALING \"SDL_MOUSE_RELATIVE_SCALING\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_RELATIVE_SCALING => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4D, 0x4F, 0x55, 0x53, 0x45, 0x5F, 0x52, 0x45, 0x4C, 0x41, 0x54, 0x49, 0x56, 0x45, 0x5F, 0x53, 0x43, 0x41, 0x4C, 0x49, 0x4E, 0x47, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_RELATIVE_SCALING => "SDL_MOUSE_RELATIVE_SCALING"u8;
 
         [NativeTypeName("#define SDL_HINT_MOUSE_RELATIVE_SPEED_SCALE \"SDL_MOUSE_RELATIVE_SPEED_SCALE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_RELATIVE_SPEED_SCALE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4D, 0x4F, 0x55, 0x53, 0x45, 0x5F, 0x52, 0x45, 0x4C, 0x41, 0x54, 0x49, 0x56, 0x45, 0x5F, 0x53, 0x50, 0x45, 0x45, 0x44, 0x5F, 0x53, 0x43, 0x41, 0x4C, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_RELATIVE_SPEED_SCALE => "SDL_MOUSE_RELATIVE_SPEED_SCALE"u8;
 
         [NativeTypeName("#define SDL_HINT_MOUSE_RELATIVE_SYSTEM_SCALE \"SDL_MOUSE_RELATIVE_SYSTEM_SCALE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_RELATIVE_SYSTEM_SCALE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4D, 0x4F, 0x55, 0x53, 0x45, 0x5F, 0x52, 0x45, 0x4C, 0x41, 0x54, 0x49, 0x56, 0x45, 0x5F, 0x53, 0x59, 0x53, 0x54, 0x45, 0x4D, 0x5F, 0x53, 0x43, 0x41, 0x4C, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_RELATIVE_SYSTEM_SCALE => "SDL_MOUSE_RELATIVE_SYSTEM_SCALE"u8;
 
         [NativeTypeName("#define SDL_HINT_MOUSE_RELATIVE_WARP_MOTION \"SDL_MOUSE_RELATIVE_WARP_MOTION\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_RELATIVE_WARP_MOTION => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4D, 0x4F, 0x55, 0x53, 0x45, 0x5F, 0x52, 0x45, 0x4C, 0x41, 0x54, 0x49, 0x56, 0x45, 0x5F, 0x57, 0x41, 0x52, 0x50, 0x5F, 0x4D, 0x4F, 0x54, 0x49, 0x4F, 0x4E, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_RELATIVE_WARP_MOTION => "SDL_MOUSE_RELATIVE_WARP_MOTION"u8;
 
         [NativeTypeName("#define SDL_HINT_MOUSE_TOUCH_EVENTS \"SDL_MOUSE_TOUCH_EVENTS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_TOUCH_EVENTS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4D, 0x4F, 0x55, 0x53, 0x45, 0x5F, 0x54, 0x4F, 0x55, 0x43, 0x48, 0x5F, 0x45, 0x56, 0x45, 0x4E, 0x54, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_TOUCH_EVENTS => "SDL_MOUSE_TOUCH_EVENTS"u8;
 
         [NativeTypeName("#define SDL_HINT_MOUSE_AUTO_CAPTURE \"SDL_MOUSE_AUTO_CAPTURE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_AUTO_CAPTURE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4D, 0x4F, 0x55, 0x53, 0x45, 0x5F, 0x41, 0x55, 0x54, 0x4F, 0x5F, 0x43, 0x41, 0x50, 0x54, 0x55, 0x52, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_MOUSE_AUTO_CAPTURE => "SDL_MOUSE_AUTO_CAPTURE"u8;
 
         [NativeTypeName("#define SDL_HINT_NO_SIGNAL_HANDLERS \"SDL_NO_SIGNAL_HANDLERS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_NO_SIGNAL_HANDLERS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4E, 0x4F, 0x5F, 0x53, 0x49, 0x47, 0x4E, 0x41, 0x4C, 0x5F, 0x48, 0x41, 0x4E, 0x44, 0x4C, 0x45, 0x52, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_NO_SIGNAL_HANDLERS => "SDL_NO_SIGNAL_HANDLERS"u8;
 
         [NativeTypeName("#define SDL_HINT_OPENGL_ES_DRIVER \"SDL_OPENGL_ES_DRIVER\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_OPENGL_ES_DRIVER => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4F, 0x50, 0x45, 0x4E, 0x47, 0x4C, 0x5F, 0x45, 0x53, 0x5F, 0x44, 0x52, 0x49, 0x56, 0x45, 0x52, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_OPENGL_ES_DRIVER => "SDL_OPENGL_ES_DRIVER"u8;
 
         [NativeTypeName("#define SDL_HINT_ORIENTATIONS \"SDL_IOS_ORIENTATIONS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_ORIENTATIONS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x49, 0x4F, 0x53, 0x5F, 0x4F, 0x52, 0x49, 0x45, 0x4E, 0x54, 0x41, 0x54, 0x49, 0x4F, 0x4E, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_ORIENTATIONS => "SDL_IOS_ORIENTATIONS"u8;
 
         [NativeTypeName("#define SDL_HINT_POLL_SENTINEL \"SDL_POLL_SENTINEL\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_POLL_SENTINEL => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x50, 0x4F, 0x4C, 0x4C, 0x5F, 0x53, 0x45, 0x4E, 0x54, 0x49, 0x4E, 0x45, 0x4C, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_POLL_SENTINEL => "SDL_POLL_SENTINEL"u8;
 
         [NativeTypeName("#define SDL_HINT_PREFERRED_LOCALES \"SDL_PREFERRED_LOCALES\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_PREFERRED_LOCALES => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x50, 0x52, 0x45, 0x46, 0x45, 0x52, 0x52, 0x45, 0x44, 0x5F, 0x4C, 0x4F, 0x43, 0x41, 0x4C, 0x45, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_PREFERRED_LOCALES => "SDL_PREFERRED_LOCALES"u8;
 
         [NativeTypeName("#define SDL_HINT_QTWAYLAND_CONTENT_ORIENTATION \"SDL_QTWAYLAND_CONTENT_ORIENTATION\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_QTWAYLAND_CONTENT_ORIENTATION => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x51, 0x54, 0x57, 0x41, 0x59, 0x4C, 0x41, 0x4E, 0x44, 0x5F, 0x43, 0x4F, 0x4E, 0x54, 0x45, 0x4E, 0x54, 0x5F, 0x4F, 0x52, 0x49, 0x45, 0x4E, 0x54, 0x41, 0x54, 0x49, 0x4F, 0x4E, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_QTWAYLAND_CONTENT_ORIENTATION => "SDL_QTWAYLAND_CONTENT_ORIENTATION"u8;
 
         [NativeTypeName("#define SDL_HINT_QTWAYLAND_WINDOW_FLAGS \"SDL_QTWAYLAND_WINDOW_FLAGS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_QTWAYLAND_WINDOW_FLAGS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x51, 0x54, 0x57, 0x41, 0x59, 0x4C, 0x41, 0x4E, 0x44, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x5F, 0x46, 0x4C, 0x41, 0x47, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_QTWAYLAND_WINDOW_FLAGS => "SDL_QTWAYLAND_WINDOW_FLAGS"u8;
 
         [NativeTypeName("#define SDL_HINT_RENDER_BATCHING \"SDL_RENDER_BATCHING\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_RENDER_BATCHING => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x52, 0x45, 0x4E, 0x44, 0x45, 0x52, 0x5F, 0x42, 0x41, 0x54, 0x43, 0x48, 0x49, 0x4E, 0x47, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_RENDER_BATCHING => "SDL_RENDER_BATCHING"u8;
 
         [NativeTypeName("#define SDL_HINT_RENDER_LINE_METHOD \"SDL_RENDER_LINE_METHOD\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_RENDER_LINE_METHOD => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x52, 0x45, 0x4E, 0x44, 0x45, 0x52, 0x5F, 0x4C, 0x49, 0x4E, 0x45, 0x5F, 0x4D, 0x45, 0x54, 0x48, 0x4F, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_RENDER_LINE_METHOD => "SDL_RENDER_LINE_METHOD"u8;
 
         [NativeTypeName("#define SDL_HINT_RENDER_DIRECT3D11_DEBUG \"SDL_RENDER_DIRECT3D11_DEBUG\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_RENDER_DIRECT3D11_DEBUG => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x52, 0x45, 0x4E, 0x44, 0x45, 0x52, 0x5F, 0x44, 0x49, 0x52, 0x45, 0x43, 0x54, 0x33, 0x44, 0x31, 0x31, 0x5F, 0x44, 0x45, 0x42, 0x55, 0x47, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_RENDER_DIRECT3D11_DEBUG => "SDL_RENDER_DIRECT3D11_DEBUG"u8;
 
         [NativeTypeName("#define SDL_HINT_RENDER_DIRECT3D_THREADSAFE \"SDL_RENDER_DIRECT3D_THREADSAFE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_RENDER_DIRECT3D_THREADSAFE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x52, 0x45, 0x4E, 0x44, 0x45, 0x52, 0x5F, 0x44, 0x49, 0x52, 0x45, 0x43, 0x54, 0x33, 0x44, 0x5F, 0x54, 0x48, 0x52, 0x45, 0x41, 0x44, 0x53, 0x41, 0x46, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_RENDER_DIRECT3D_THREADSAFE => "SDL_RENDER_DIRECT3D_THREADSAFE"u8;
 
         [NativeTypeName("#define SDL_HINT_RENDER_DRIVER \"SDL_RENDER_DRIVER\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_RENDER_DRIVER => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x52, 0x45, 0x4E, 0x44, 0x45, 0x52, 0x5F, 0x44, 0x52, 0x49, 0x56, 0x45, 0x52, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_RENDER_DRIVER => "SDL_RENDER_DRIVER"u8;
 
         [NativeTypeName("#define SDL_HINT_RENDER_LOGICAL_SIZE_MODE \"SDL_RENDER_LOGICAL_SIZE_MODE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_RENDER_LOGICAL_SIZE_MODE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x52, 0x45, 0x4E, 0x44, 0x45, 0x52, 0x5F, 0x4C, 0x4F, 0x47, 0x49, 0x43, 0x41, 0x4C, 0x5F, 0x53, 0x49, 0x5A, 0x45, 0x5F, 0x4D, 0x4F, 0x44, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_RENDER_LOGICAL_SIZE_MODE => "SDL_RENDER_LOGICAL_SIZE_MODE"u8;
 
         [NativeTypeName("#define SDL_HINT_RENDER_OPENGL_SHADERS \"SDL_RENDER_OPENGL_SHADERS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_RENDER_OPENGL_SHADERS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x52, 0x45, 0x4E, 0x44, 0x45, 0x52, 0x5F, 0x4F, 0x50, 0x45, 0x4E, 0x47, 0x4C, 0x5F, 0x53, 0x48, 0x41, 0x44, 0x45, 0x52, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_RENDER_OPENGL_SHADERS => "SDL_RENDER_OPENGL_SHADERS"u8;
 
         [NativeTypeName("#define SDL_HINT_RENDER_SCALE_QUALITY \"SDL_RENDER_SCALE_QUALITY\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_RENDER_SCALE_QUALITY => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x52, 0x45, 0x4E, 0x44, 0x45, 0x52, 0x5F, 0x53, 0x43, 0x41, 0x4C, 0x45, 0x5F, 0x51, 0x55, 0x41, 0x4C, 0x49, 0x54, 0x59, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_RENDER_SCALE_QUALITY => "SDL_RENDER_SCALE_QUALITY"u8;
 
         [NativeTypeName("#define SDL_HINT_RENDER_VSYNC \"SDL_RENDER_VSYNC\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_RENDER_VSYNC => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x52, 0x45, 0x4E, 0x44, 0x45, 0x52, 0x5F, 0x56, 0x53, 0x59, 0x4E, 0x43, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_RENDER_VSYNC => "SDL_RENDER_VSYNC"u8;
 
         [NativeTypeName("#define SDL_HINT_PS2_DYNAMIC_VSYNC \"SDL_PS2_DYNAMIC_VSYNC\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_PS2_DYNAMIC_VSYNC => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x50, 0x53, 0x32, 0x5F, 0x44, 0x59, 0x4E, 0x41, 0x4D, 0x49, 0x43, 0x5F, 0x56, 0x53, 0x59, 0x4E, 0x43, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_PS2_DYNAMIC_VSYNC => "SDL_PS2_DYNAMIC_VSYNC"u8;
 
         [NativeTypeName("#define SDL_HINT_RETURN_KEY_HIDES_IME \"SDL_RETURN_KEY_HIDES_IME\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_RETURN_KEY_HIDES_IME => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x52, 0x45, 0x54, 0x55, 0x52, 0x4E, 0x5F, 0x4B, 0x45, 0x59, 0x5F, 0x48, 0x49, 0x44, 0x45, 0x53, 0x5F, 0x49, 0x4D, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_RETURN_KEY_HIDES_IME => "SDL_RETURN_KEY_HIDES_IME"u8;
 
         [NativeTypeName("#define SDL_HINT_RPI_VIDEO_LAYER \"SDL_RPI_VIDEO_LAYER\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_RPI_VIDEO_LAYER => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x52, 0x50, 0x49, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x4C, 0x41, 0x59, 0x45, 0x52, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_RPI_VIDEO_LAYER => "SDL_RPI_VIDEO_LAYER"u8;
 
         [NativeTypeName("#define SDL_HINT_SCREENSAVER_INHIBIT_ACTIVITY_NAME \"SDL_SCREENSAVER_INHIBIT_ACTIVITY_NAME\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_SCREENSAVER_INHIBIT_ACTIVITY_NAME => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x53, 0x43, 0x52, 0x45, 0x45, 0x4E, 0x53, 0x41, 0x56, 0x45, 0x52, 0x5F, 0x49, 0x4E, 0x48, 0x49, 0x42, 0x49, 0x54, 0x5F, 0x41, 0x43, 0x54, 0x49, 0x56, 0x49, 0x54, 0x59, 0x5F, 0x4E, 0x41, 0x4D, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_SCREENSAVER_INHIBIT_ACTIVITY_NAME => "SDL_SCREENSAVER_INHIBIT_ACTIVITY_NAME"u8;
 
         [NativeTypeName("#define SDL_HINT_THREAD_FORCE_REALTIME_TIME_CRITICAL \"SDL_THREAD_FORCE_REALTIME_TIME_CRITICAL\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_THREAD_FORCE_REALTIME_TIME_CRITICAL => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x54, 0x48, 0x52, 0x45, 0x41, 0x44, 0x5F, 0x46, 0x4F, 0x52, 0x43, 0x45, 0x5F, 0x52, 0x45, 0x41, 0x4C, 0x54, 0x49, 0x4D, 0x45, 0x5F, 0x54, 0x49, 0x4D, 0x45, 0x5F, 0x43, 0x52, 0x49, 0x54, 0x49, 0x43, 0x41, 0x4C, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_THREAD_FORCE_REALTIME_TIME_CRITICAL => "SDL_THREAD_FORCE_REALTIME_TIME_CRITICAL"u8;
 
         [NativeTypeName("#define SDL_HINT_THREAD_PRIORITY_POLICY \"SDL_THREAD_PRIORITY_POLICY\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_THREAD_PRIORITY_POLICY => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x54, 0x48, 0x52, 0x45, 0x41, 0x44, 0x5F, 0x50, 0x52, 0x49, 0x4F, 0x52, 0x49, 0x54, 0x59, 0x5F, 0x50, 0x4F, 0x4C, 0x49, 0x43, 0x59, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_THREAD_PRIORITY_POLICY => "SDL_THREAD_PRIORITY_POLICY"u8;
 
         [NativeTypeName("#define SDL_HINT_THREAD_STACK_SIZE \"SDL_THREAD_STACK_SIZE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_THREAD_STACK_SIZE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x54, 0x48, 0x52, 0x45, 0x41, 0x44, 0x5F, 0x53, 0x54, 0x41, 0x43, 0x4B, 0x5F, 0x53, 0x49, 0x5A, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_THREAD_STACK_SIZE => "SDL_THREAD_STACK_SIZE"u8;
 
         [NativeTypeName("#define SDL_HINT_TIMER_RESOLUTION \"SDL_TIMER_RESOLUTION\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_TIMER_RESOLUTION => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x54, 0x49, 0x4D, 0x45, 0x52, 0x5F, 0x52, 0x45, 0x53, 0x4F, 0x4C, 0x55, 0x54, 0x49, 0x4F, 0x4E, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_TIMER_RESOLUTION => "SDL_TIMER_RESOLUTION"u8;
 
         [NativeTypeName("#define SDL_HINT_TOUCH_MOUSE_EVENTS \"SDL_TOUCH_MOUSE_EVENTS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_TOUCH_MOUSE_EVENTS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x54, 0x4F, 0x55, 0x43, 0x48, 0x5F, 0x4D, 0x4F, 0x55, 0x53, 0x45, 0x5F, 0x45, 0x56, 0x45, 0x4E, 0x54, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_TOUCH_MOUSE_EVENTS => "SDL_TOUCH_MOUSE_EVENTS"u8;
 
         [NativeTypeName("#define SDL_HINT_VITA_TOUCH_MOUSE_DEVICE \"SDL_HINT_VITA_TOUCH_MOUSE_DEVICE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VITA_TOUCH_MOUSE_DEVICE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x48, 0x49, 0x4E, 0x54, 0x5F, 0x56, 0x49, 0x54, 0x41, 0x5F, 0x54, 0x4F, 0x55, 0x43, 0x48, 0x5F, 0x4D, 0x4F, 0x55, 0x53, 0x45, 0x5F, 0x44, 0x45, 0x56, 0x49, 0x43, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VITA_TOUCH_MOUSE_DEVICE => "SDL_HINT_VITA_TOUCH_MOUSE_DEVICE"u8;
 
         [NativeTypeName("#define SDL_HINT_TV_REMOTE_AS_JOYSTICK \"SDL_TV_REMOTE_AS_JOYSTICK\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_TV_REMOTE_AS_JOYSTICK => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x54, 0x56, 0x5F, 0x52, 0x45, 0x4D, 0x4F, 0x54, 0x45, 0x5F, 0x41, 0x53, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_TV_REMOTE_AS_JOYSTICK => "SDL_TV_REMOTE_AS_JOYSTICK"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_ALLOW_SCREENSAVER \"SDL_VIDEO_ALLOW_SCREENSAVER\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_ALLOW_SCREENSAVER => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x41, 0x4C, 0x4C, 0x4F, 0x57, 0x5F, 0x53, 0x43, 0x52, 0x45, 0x45, 0x4E, 0x53, 0x41, 0x56, 0x45, 0x52, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_ALLOW_SCREENSAVER => "SDL_VIDEO_ALLOW_SCREENSAVER"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_DOUBLE_BUFFER \"SDL_VIDEO_DOUBLE_BUFFER\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_DOUBLE_BUFFER => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x44, 0x4F, 0x55, 0x42, 0x4C, 0x45, 0x5F, 0x42, 0x55, 0x46, 0x46, 0x45, 0x52, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_DOUBLE_BUFFER => "SDL_VIDEO_DOUBLE_BUFFER"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_EGL_ALLOW_TRANSPARENCY \"SDL_VIDEO_EGL_ALLOW_TRANSPARENCY\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_EGL_ALLOW_TRANSPARENCY => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x45, 0x47, 0x4C, 0x5F, 0x41, 0x4C, 0x4C, 0x4F, 0x57, 0x5F, 0x54, 0x52, 0x41, 0x4E, 0x53, 0x50, 0x41, 0x52, 0x45, 0x4E, 0x43, 0x59, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_EGL_ALLOW_TRANSPARENCY => "SDL_VIDEO_EGL_ALLOW_TRANSPARENCY"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_EXTERNAL_CONTEXT \"SDL_VIDEO_EXTERNAL_CONTEXT\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_EXTERNAL_CONTEXT => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x45, 0x58, 0x54, 0x45, 0x52, 0x4E, 0x41, 0x4C, 0x5F, 0x43, 0x4F, 0x4E, 0x54, 0x45, 0x58, 0x54, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_EXTERNAL_CONTEXT => "SDL_VIDEO_EXTERNAL_CONTEXT"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_HIGHDPI_DISABLED \"SDL_VIDEO_HIGHDPI_DISABLED\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_HIGHDPI_DISABLED => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x48, 0x49, 0x47, 0x48, 0x44, 0x50, 0x49, 0x5F, 0x44, 0x49, 0x53, 0x41, 0x42, 0x4C, 0x45, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_HIGHDPI_DISABLED => "SDL_VIDEO_HIGHDPI_DISABLED"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_MAC_FULLSCREEN_SPACES \"SDL_VIDEO_MAC_FULLSCREEN_SPACES\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_MAC_FULLSCREEN_SPACES => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x4D, 0x41, 0x43, 0x5F, 0x46, 0x55, 0x4C, 0x4C, 0x53, 0x43, 0x52, 0x45, 0x45, 0x4E, 0x5F, 0x53, 0x50, 0x41, 0x43, 0x45, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_MAC_FULLSCREEN_SPACES => "SDL_VIDEO_MAC_FULLSCREEN_SPACES"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS \"SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x4D, 0x49, 0x4E, 0x49, 0x4D, 0x49, 0x5A, 0x45, 0x5F, 0x4F, 0x4E, 0x5F, 0x46, 0x4F, 0x43, 0x55, 0x53, 0x5F, 0x4C, 0x4F, 0x53, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS => "SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_WAYLAND_ALLOW_LIBDECOR \"SDL_VIDEO_WAYLAND_ALLOW_LIBDECOR\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WAYLAND_ALLOW_LIBDECOR => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x57, 0x41, 0x59, 0x4C, 0x41, 0x4E, 0x44, 0x5F, 0x41, 0x4C, 0x4C, 0x4F, 0x57, 0x5F, 0x4C, 0x49, 0x42, 0x44, 0x45, 0x43, 0x4F, 0x52, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WAYLAND_ALLOW_LIBDECOR => "SDL_VIDEO_WAYLAND_ALLOW_LIBDECOR"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_WAYLAND_PREFER_LIBDECOR \"SDL_VIDEO_WAYLAND_PREFER_LIBDECOR\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WAYLAND_PREFER_LIBDECOR => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x57, 0x41, 0x59, 0x4C, 0x41, 0x4E, 0x44, 0x5F, 0x50, 0x52, 0x45, 0x46, 0x45, 0x52, 0x5F, 0x4C, 0x49, 0x42, 0x44, 0x45, 0x43, 0x4F, 0x52, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WAYLAND_PREFER_LIBDECOR => "SDL_VIDEO_WAYLAND_PREFER_LIBDECOR"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_WAYLAND_MODE_EMULATION \"SDL_VIDEO_WAYLAND_MODE_EMULATION\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WAYLAND_MODE_EMULATION => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x57, 0x41, 0x59, 0x4C, 0x41, 0x4E, 0x44, 0x5F, 0x4D, 0x4F, 0x44, 0x45, 0x5F, 0x45, 0x4D, 0x55, 0x4C, 0x41, 0x54, 0x49, 0x4F, 0x4E, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WAYLAND_MODE_EMULATION => "SDL_VIDEO_WAYLAND_MODE_EMULATION"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_WAYLAND_EMULATE_MOUSE_WARP \"SDL_VIDEO_WAYLAND_EMULATE_MOUSE_WARP\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WAYLAND_EMULATE_MOUSE_WARP => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x57, 0x41, 0x59, 0x4C, 0x41, 0x4E, 0x44, 0x5F, 0x45, 0x4D, 0x55, 0x4C, 0x41, 0x54, 0x45, 0x5F, 0x4D, 0x4F, 0x55, 0x53, 0x45, 0x5F, 0x57, 0x41, 0x52, 0x50, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WAYLAND_EMULATE_MOUSE_WARP => "SDL_VIDEO_WAYLAND_EMULATE_MOUSE_WARP"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_WINDOW_SHARE_PIXEL_FORMAT \"SDL_VIDEO_WINDOW_SHARE_PIXEL_FORMAT\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WINDOW_SHARE_PIXEL_FORMAT => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x5F, 0x53, 0x48, 0x41, 0x52, 0x45, 0x5F, 0x50, 0x49, 0x58, 0x45, 0x4C, 0x5F, 0x46, 0x4F, 0x52, 0x4D, 0x41, 0x54, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WINDOW_SHARE_PIXEL_FORMAT => "SDL_VIDEO_WINDOW_SHARE_PIXEL_FORMAT"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_FOREIGN_WINDOW_OPENGL \"SDL_VIDEO_FOREIGN_WINDOW_OPENGL\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_FOREIGN_WINDOW_OPENGL => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x46, 0x4F, 0x52, 0x45, 0x49, 0x47, 0x4E, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x5F, 0x4F, 0x50, 0x45, 0x4E, 0x47, 0x4C, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_FOREIGN_WINDOW_OPENGL => "SDL_VIDEO_FOREIGN_WINDOW_OPENGL"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_FOREIGN_WINDOW_VULKAN \"SDL_VIDEO_FOREIGN_WINDOW_VULKAN\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_FOREIGN_WINDOW_VULKAN => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x46, 0x4F, 0x52, 0x45, 0x49, 0x47, 0x4E, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x5F, 0x56, 0x55, 0x4C, 0x4B, 0x41, 0x4E, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_FOREIGN_WINDOW_VULKAN => "SDL_VIDEO_FOREIGN_WINDOW_VULKAN"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_WIN_D3DCOMPILER \"SDL_VIDEO_WIN_D3DCOMPILER\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WIN_D3DCOMPILER => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x57, 0x49, 0x4E, 0x5F, 0x44, 0x33, 0x44, 0x43, 0x4F, 0x4D, 0x50, 0x49, 0x4C, 0x45, 0x52, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_WIN_D3DCOMPILER => "SDL_VIDEO_WIN_D3DCOMPILER"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_X11_FORCE_EGL \"SDL_VIDEO_X11_FORCE_EGL\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_FORCE_EGL => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x58, 0x31, 0x31, 0x5F, 0x46, 0x4F, 0x52, 0x43, 0x45, 0x5F, 0x45, 0x47, 0x4C, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_FORCE_EGL => "SDL_VIDEO_X11_FORCE_EGL"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR \"SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x58, 0x31, 0x31, 0x5F, 0x4E, 0x45, 0x54, 0x5F, 0x57, 0x4D, 0x5F, 0x42, 0x59, 0x50, 0x41, 0x53, 0x53, 0x5F, 0x43, 0x4F, 0x4D, 0x50, 0x4F, 0x53, 0x49, 0x54, 0x4F, 0x52, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR => "SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_X11_NET_WM_PING \"SDL_VIDEO_X11_NET_WM_PING\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_NET_WM_PING => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x58, 0x31, 0x31, 0x5F, 0x4E, 0x45, 0x54, 0x5F, 0x57, 0x4D, 0x5F, 0x50, 0x49, 0x4E, 0x47, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_NET_WM_PING => "SDL_VIDEO_X11_NET_WM_PING"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_X11_WINDOW_VISUALID \"SDL_VIDEO_X11_WINDOW_VISUALID\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_WINDOW_VISUALID => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x58, 0x31, 0x31, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x5F, 0x56, 0x49, 0x53, 0x55, 0x41, 0x4C, 0x49, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_WINDOW_VISUALID => "SDL_VIDEO_X11_WINDOW_VISUALID"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_X11_XINERAMA \"SDL_VIDEO_X11_XINERAMA\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_XINERAMA => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x58, 0x31, 0x31, 0x5F, 0x58, 0x49, 0x4E, 0x45, 0x52, 0x41, 0x4D, 0x41, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_XINERAMA => "SDL_VIDEO_X11_XINERAMA"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_X11_XRANDR \"SDL_VIDEO_X11_XRANDR\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_XRANDR => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x58, 0x31, 0x31, 0x5F, 0x58, 0x52, 0x41, 0x4E, 0x44, 0x52, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_XRANDR => "SDL_VIDEO_X11_XRANDR"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEO_X11_XVIDMODE \"SDL_VIDEO_X11_XVIDMODE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_XVIDMODE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x5F, 0x58, 0x31, 0x31, 0x5F, 0x58, 0x56, 0x49, 0x44, 0x4D, 0x4F, 0x44, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEO_X11_XVIDMODE => "SDL_VIDEO_X11_XVIDMODE"u8;
 
         [NativeTypeName("#define SDL_HINT_WAVE_FACT_CHUNK \"SDL_WAVE_FACT_CHUNK\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WAVE_FACT_CHUNK => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x41, 0x56, 0x45, 0x5F, 0x46, 0x41, 0x43, 0x54, 0x5F, 0x43, 0x48, 0x55, 0x4E, 0x4B, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WAVE_FACT_CHUNK => "SDL_WAVE_FACT_CHUNK"u8;
 
         [NativeTypeName("#define SDL_HINT_WAVE_RIFF_CHUNK_SIZE \"SDL_WAVE_RIFF_CHUNK_SIZE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WAVE_RIFF_CHUNK_SIZE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x41, 0x56, 0x45, 0x5F, 0x52, 0x49, 0x46, 0x46, 0x5F, 0x43, 0x48, 0x55, 0x4E, 0x4B, 0x5F, 0x53, 0x49, 0x5A, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WAVE_RIFF_CHUNK_SIZE => "SDL_WAVE_RIFF_CHUNK_SIZE"u8;
 
         [NativeTypeName("#define SDL_HINT_WAVE_TRUNCATION \"SDL_WAVE_TRUNCATION\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WAVE_TRUNCATION => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x41, 0x56, 0x45, 0x5F, 0x54, 0x52, 0x55, 0x4E, 0x43, 0x41, 0x54, 0x49, 0x4F, 0x4E, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WAVE_TRUNCATION => "SDL_WAVE_TRUNCATION"u8;
 
         [NativeTypeName("#define SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING \"SDL_WINDOWS_DISABLE_THREAD_NAMING\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x53, 0x5F, 0x44, 0x49, 0x53, 0x41, 0x42, 0x4C, 0x45, 0x5F, 0x54, 0x48, 0x52, 0x45, 0x41, 0x44, 0x5F, 0x4E, 0x41, 0x4D, 0x49, 0x4E, 0x47, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING => "SDL_WINDOWS_DISABLE_THREAD_NAMING"u8;
 
         [NativeTypeName("#define SDL_HINT_WINDOWS_ENABLE_MENU_MNEMONICS \"SDL_WINDOWS_ENABLE_MENU_MNEMONICS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_ENABLE_MENU_MNEMONICS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x53, 0x5F, 0x45, 0x4E, 0x41, 0x42, 0x4C, 0x45, 0x5F, 0x4D, 0x45, 0x4E, 0x55, 0x5F, 0x4D, 0x4E, 0x45, 0x4D, 0x4F, 0x4E, 0x49, 0x43, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_ENABLE_MENU_MNEMONICS => "SDL_WINDOWS_ENABLE_MENU_MNEMONICS"u8;
 
         [NativeTypeName("#define SDL_HINT_WINDOWS_ENABLE_MESSAGELOOP \"SDL_WINDOWS_ENABLE_MESSAGELOOP\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_ENABLE_MESSAGELOOP => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x53, 0x5F, 0x45, 0x4E, 0x41, 0x42, 0x4C, 0x45, 0x5F, 0x4D, 0x45, 0x53, 0x53, 0x41, 0x47, 0x45, 0x4C, 0x4F, 0x4F, 0x50, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_ENABLE_MESSAGELOOP => "SDL_WINDOWS_ENABLE_MESSAGELOOP"u8;
 
         [NativeTypeName("#define SDL_HINT_WINDOWS_FORCE_MUTEX_CRITICAL_SECTIONS \"SDL_WINDOWS_FORCE_MUTEX_CRITICAL_SECTIONS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_FORCE_MUTEX_CRITICAL_SECTIONS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x53, 0x5F, 0x46, 0x4F, 0x52, 0x43, 0x45, 0x5F, 0x4D, 0x55, 0x54, 0x45, 0x58, 0x5F, 0x43, 0x52, 0x49, 0x54, 0x49, 0x43, 0x41, 0x4C, 0x5F, 0x53, 0x45, 0x43, 0x54, 0x49, 0x4F, 0x4E, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_FORCE_MUTEX_CRITICAL_SECTIONS => "SDL_WINDOWS_FORCE_MUTEX_CRITICAL_SECTIONS"u8;
 
         [NativeTypeName("#define SDL_HINT_WINDOWS_FORCE_SEMAPHORE_KERNEL \"SDL_WINDOWS_FORCE_SEMAPHORE_KERNEL\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_FORCE_SEMAPHORE_KERNEL => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x53, 0x5F, 0x46, 0x4F, 0x52, 0x43, 0x45, 0x5F, 0x53, 0x45, 0x4D, 0x41, 0x50, 0x48, 0x4F, 0x52, 0x45, 0x5F, 0x4B, 0x45, 0x52, 0x4E, 0x45, 0x4C, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_FORCE_SEMAPHORE_KERNEL => "SDL_WINDOWS_FORCE_SEMAPHORE_KERNEL"u8;
 
         [NativeTypeName("#define SDL_HINT_WINDOWS_INTRESOURCE_ICON \"SDL_WINDOWS_INTRESOURCE_ICON\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_INTRESOURCE_ICON => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x53, 0x5F, 0x49, 0x4E, 0x54, 0x52, 0x45, 0x53, 0x4F, 0x55, 0x52, 0x43, 0x45, 0x5F, 0x49, 0x43, 0x4F, 0x4E, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_INTRESOURCE_ICON => "SDL_WINDOWS_INTRESOURCE_ICON"u8;
 
         [NativeTypeName("#define SDL_HINT_WINDOWS_INTRESOURCE_ICON_SMALL \"SDL_WINDOWS_INTRESOURCE_ICON_SMALL\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_INTRESOURCE_ICON_SMALL => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x53, 0x5F, 0x49, 0x4E, 0x54, 0x52, 0x45, 0x53, 0x4F, 0x55, 0x52, 0x43, 0x45, 0x5F, 0x49, 0x43, 0x4F, 0x4E, 0x5F, 0x53, 0x4D, 0x41, 0x4C, 0x4C, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_INTRESOURCE_ICON_SMALL => "SDL_WINDOWS_INTRESOURCE_ICON_SMALL"u8;
 
         [NativeTypeName("#define SDL_HINT_WINDOWS_NO_CLOSE_ON_ALT_F4 \"SDL_WINDOWS_NO_CLOSE_ON_ALT_F4\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_NO_CLOSE_ON_ALT_F4 => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x53, 0x5F, 0x4E, 0x4F, 0x5F, 0x43, 0x4C, 0x4F, 0x53, 0x45, 0x5F, 0x4F, 0x4E, 0x5F, 0x41, 0x4C, 0x54, 0x5F, 0x46, 0x34, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_NO_CLOSE_ON_ALT_F4 => "SDL_WINDOWS_NO_CLOSE_ON_ALT_F4"u8;
 
         [NativeTypeName("#define SDL_HINT_WINDOWS_USE_D3D9EX \"SDL_WINDOWS_USE_D3D9EX\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_USE_D3D9EX => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x53, 0x5F, 0x55, 0x53, 0x45, 0x5F, 0x44, 0x33, 0x44, 0x39, 0x45, 0x58, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_USE_D3D9EX => "SDL_WINDOWS_USE_D3D9EX"u8;
 
         [NativeTypeName("#define SDL_HINT_WINDOWS_DPI_AWARENESS \"SDL_WINDOWS_DPI_AWARENESS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_DPI_AWARENESS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x53, 0x5F, 0x44, 0x50, 0x49, 0x5F, 0x41, 0x57, 0x41, 0x52, 0x45, 0x4E, 0x45, 0x53, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_DPI_AWARENESS => "SDL_WINDOWS_DPI_AWARENESS"u8;
 
         [NativeTypeName("#define SDL_HINT_WINDOWS_DPI_SCALING \"SDL_WINDOWS_DPI_SCALING\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_DPI_SCALING => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x53, 0x5F, 0x44, 0x50, 0x49, 0x5F, 0x53, 0x43, 0x41, 0x4C, 0x49, 0x4E, 0x47, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINDOWS_DPI_SCALING => "SDL_WINDOWS_DPI_SCALING"u8;
 
         [NativeTypeName("#define SDL_HINT_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN \"SDL_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x5F, 0x46, 0x52, 0x41, 0x4D, 0x45, 0x5F, 0x55, 0x53, 0x41, 0x42, 0x4C, 0x45, 0x5F, 0x57, 0x48, 0x49, 0x4C, 0x45, 0x5F, 0x43, 0x55, 0x52, 0x53, 0x4F, 0x52, 0x5F, 0x48, 0x49, 0x44, 0x44, 0x45, 0x4E, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN => "SDL_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN"u8;
 
         [NativeTypeName("#define SDL_HINT_WINDOW_NO_ACTIVATION_WHEN_SHOWN \"SDL_WINDOW_NO_ACTIVATION_WHEN_SHOWN\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINDOW_NO_ACTIVATION_WHEN_SHOWN => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x5F, 0x4E, 0x4F, 0x5F, 0x41, 0x43, 0x54, 0x49, 0x56, 0x41, 0x54, 0x49, 0x4F, 0x4E, 0x5F, 0x57, 0x48, 0x45, 0x4E, 0x5F, 0x53, 0x48, 0x4F, 0x57, 0x4E, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINDOW_NO_ACTIVATION_WHEN_SHOWN => "SDL_WINDOW_NO_ACTIVATION_WHEN_SHOWN"u8;
 
         [NativeTypeName("#define SDL_HINT_WINRT_HANDLE_BACK_BUTTON \"SDL_WINRT_HANDLE_BACK_BUTTON\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINRT_HANDLE_BACK_BUTTON => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x52, 0x54, 0x5F, 0x48, 0x41, 0x4E, 0x44, 0x4C, 0x45, 0x5F, 0x42, 0x41, 0x43, 0x4B, 0x5F, 0x42, 0x55, 0x54, 0x54, 0x4F, 0x4E, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINRT_HANDLE_BACK_BUTTON => "SDL_WINRT_HANDLE_BACK_BUTTON"u8;
 
         [NativeTypeName("#define SDL_HINT_WINRT_PRIVACY_POLICY_LABEL \"SDL_WINRT_PRIVACY_POLICY_LABEL\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINRT_PRIVACY_POLICY_LABEL => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x52, 0x54, 0x5F, 0x50, 0x52, 0x49, 0x56, 0x41, 0x43, 0x59, 0x5F, 0x50, 0x4F, 0x4C, 0x49, 0x43, 0x59, 0x5F, 0x4C, 0x41, 0x42, 0x45, 0x4C, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINRT_PRIVACY_POLICY_LABEL => "SDL_WINRT_PRIVACY_POLICY_LABEL"u8;
 
         [NativeTypeName("#define SDL_HINT_WINRT_PRIVACY_POLICY_URL \"SDL_WINRT_PRIVACY_POLICY_URL\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_WINRT_PRIVACY_POLICY_URL => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x57, 0x49, 0x4E, 0x52, 0x54, 0x5F, 0x50, 0x52, 0x49, 0x56, 0x41, 0x43, 0x59, 0x5F, 0x50, 0x4F, 0x4C, 0x49, 0x43, 0x59, 0x5F, 0x55, 0x52, 0x4C, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_WINRT_PRIVACY_POLICY_URL => "SDL_WINRT_PRIVACY_POLICY_URL"u8;
 
         [NativeTypeName("#define SDL_HINT_X11_FORCE_OVERRIDE_REDIRECT \"SDL_X11_FORCE_OVERRIDE_REDIRECT\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_X11_FORCE_OVERRIDE_REDIRECT => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x58, 0x31, 0x31, 0x5F, 0x46, 0x4F, 0x52, 0x43, 0x45, 0x5F, 0x4F, 0x56, 0x45, 0x52, 0x52, 0x49, 0x44, 0x45, 0x5F, 0x52, 0x45, 0x44, 0x49, 0x52, 0x45, 0x43, 0x54, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_X11_FORCE_OVERRIDE_REDIRECT => "SDL_X11_FORCE_OVERRIDE_REDIRECT"u8;
 
         [NativeTypeName("#define SDL_HINT_XINPUT_ENABLED \"SDL_XINPUT_ENABLED\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_XINPUT_ENABLED => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x58, 0x49, 0x4E, 0x50, 0x55, 0x54, 0x5F, 0x45, 0x4E, 0x41, 0x42, 0x4C, 0x45, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_XINPUT_ENABLED => "SDL_XINPUT_ENABLED"u8;
 
         [NativeTypeName("#define SDL_HINT_DIRECTINPUT_ENABLED \"SDL_DIRECTINPUT_ENABLED\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_DIRECTINPUT_ENABLED => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x44, 0x49, 0x52, 0x45, 0x43, 0x54, 0x49, 0x4E, 0x50, 0x55, 0x54, 0x5F, 0x45, 0x4E, 0x41, 0x42, 0x4C, 0x45, 0x44, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_DIRECTINPUT_ENABLED => "SDL_DIRECTINPUT_ENABLED"u8;
 
         [NativeTypeName("#define SDL_HINT_XINPUT_USE_OLD_JOYSTICK_MAPPING \"SDL_XINPUT_USE_OLD_JOYSTICK_MAPPING\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_XINPUT_USE_OLD_JOYSTICK_MAPPING => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x58, 0x49, 0x4E, 0x50, 0x55, 0x54, 0x5F, 0x55, 0x53, 0x45, 0x5F, 0x4F, 0x4C, 0x44, 0x5F, 0x4A, 0x4F, 0x59, 0x53, 0x54, 0x49, 0x43, 0x4B, 0x5F, 0x4D, 0x41, 0x50, 0x50, 0x49, 0x4E, 0x47, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_XINPUT_USE_OLD_JOYSTICK_MAPPING => "SDL_XINPUT_USE_OLD_JOYSTICK_MAPPING"u8;
 
         [NativeTypeName("#define SDL_HINT_AUDIO_INCLUDE_MONITORS \"SDL_AUDIO_INCLUDE_MONITORS\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_AUDIO_INCLUDE_MONITORS => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x55, 0x44, 0x49, 0x4F, 0x5F, 0x49, 0x4E, 0x43, 0x4C, 0x55, 0x44, 0x45, 0x5F, 0x4D, 0x4F, 0x4E, 0x49, 0x54, 0x4F, 0x52, 0x53, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_AUDIO_INCLUDE_MONITORS => "SDL_AUDIO_INCLUDE_MONITORS"u8;
 
         [NativeTypeName("#define SDL_HINT_X11_WINDOW_TYPE \"SDL_X11_WINDOW_TYPE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_X11_WINDOW_TYPE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x58, 0x31, 0x31, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x5F, 0x54, 0x59, 0x50, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_X11_WINDOW_TYPE => "SDL_X11_WINDOW_TYPE"u8;
 
         [NativeTypeName("#define SDL_HINT_QUIT_ON_LAST_WINDOW_CLOSE \"SDL_QUIT_ON_LAST_WINDOW_CLOSE\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_QUIT_ON_LAST_WINDOW_CLOSE => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x51, 0x55, 0x49, 0x54, 0x5F, 0x4F, 0x4E, 0x5F, 0x4C, 0x41, 0x53, 0x54, 0x5F, 0x57, 0x49, 0x4E, 0x44, 0x4F, 0x57, 0x5F, 0x43, 0x4C, 0x4F, 0x53, 0x45, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_QUIT_ON_LAST_WINDOW_CLOSE => "SDL_QUIT_ON_LAST_WINDOW_CLOSE"u8;
 
         [NativeTypeName("#define SDL_HINT_VIDEODRIVER \"SDL_VIDEODRIVER\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_VIDEODRIVER => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x56, 0x49, 0x44, 0x45, 0x4F, 0x44, 0x52, 0x49, 0x56, 0x45, 0x52, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_VIDEODRIVER => "SDL_VIDEODRIVER"u8;
 
         [NativeTypeName("#define SDL_HINT_AUDIODRIVER \"SDL_AUDIODRIVER\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_AUDIODRIVER => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x41, 0x55, 0x44, 0x49, 0x4F, 0x44, 0x52, 0x49, 0x56, 0x45, 0x52, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_AUDIODRIVER => "SDL_AUDIODRIVER"u8;
 
         [NativeTypeName("#define SDL_HINT_KMSDRM_DEVICE_INDEX \"SDL_KMSDRM_DEVICE_INDEX\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_KMSDRM_DEVICE_INDEX => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x4B, 0x4D, 0x53, 0x44, 0x52, 0x4D, 0x5F, 0x44, 0x45, 0x56, 0x49, 0x43, 0x45, 0x5F, 0x49, 0x4E, 0x44, 0x45, 0x58, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_KMSDRM_DEVICE_INDEX => "SDL_KMSDRM_DEVICE_INDEX"u8;
 
         [NativeTypeName("#define SDL_HINT_TRACKPAD_IS_TOUCH_ONLY \"SDL_TRACKPAD_IS_TOUCH_ONLY\"")]
-        public static ReadOnlySpan<byte> SDL_HINT_TRACKPAD_IS_TOUCH_ONLY => new byte[] { 0x53, 0x44, 0x4C, 0x5F, 0x54, 0x52, 0x41, 0x43, 0x4B, 0x50, 0x41, 0x44, 0x5F, 0x49, 0x53, 0x5F, 0x54, 0x4F, 0x55, 0x43, 0x48, 0x5F, 0x4F, 0x4E, 0x4C, 0x59, 0x00 };
+        public static ReadOnlySpan<byte> SDL_HINT_TRACKPAD_IS_TOUCH_ONLY => "SDL_TRACKPAD_IS_TOUCH_ONLY"u8;
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LockJoysticks", ExactSpelling = true)]
         public static extern void LockJoysticks();
@@ -1644,20 +1644,20 @@ namespace SDL2Sharp.Interop
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RWread", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern UIntPtr RWread(SDL_RWops* context, void* ptr, [NativeTypeName("size_t")] UIntPtr size, [NativeTypeName("size_t")] UIntPtr maxnum);
+        public static extern nuint RWread(SDL_RWops* context, void* ptr, [NativeTypeName("size_t")] nuint size, [NativeTypeName("size_t")] nuint maxnum);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RWwrite", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern UIntPtr RWwrite(SDL_RWops* context, [NativeTypeName("const void *")] void* ptr, [NativeTypeName("size_t")] UIntPtr size, [NativeTypeName("size_t")] UIntPtr num);
+        public static extern nuint RWwrite(SDL_RWops* context, [NativeTypeName("const void *")] void* ptr, [NativeTypeName("size_t")] nuint size, [NativeTypeName("size_t")] nuint num);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_RWclose", ExactSpelling = true)]
         public static extern int RWclose(SDL_RWops* context);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LoadFile_RW", ExactSpelling = true)]
-        public static extern void* LoadFile_RW(SDL_RWops* src, [NativeTypeName("size_t *")] UIntPtr* datasize, int freesrc);
+        public static extern void* LoadFile_RW(SDL_RWops* src, [NativeTypeName("size_t *")] nuint* datasize, int freesrc);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_LoadFile", ExactSpelling = true)]
-        public static extern void* LoadFile([NativeTypeName("const char *")] sbyte* file, [NativeTypeName("size_t *")] UIntPtr* datasize);
+        public static extern void* LoadFile([NativeTypeName("const char *")] sbyte* file, [NativeTypeName("size_t *")] nuint* datasize);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_ReadU8", ExactSpelling = true)]
         [return: NativeTypeName("Uint8")]
@@ -1689,31 +1689,31 @@ namespace SDL2Sharp.Interop
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WriteU8", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern UIntPtr WriteU8(SDL_RWops* dst, [NativeTypeName("Uint8")] byte value);
+        public static extern nuint WriteU8(SDL_RWops* dst, [NativeTypeName("Uint8")] byte value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WriteLE16", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern UIntPtr WriteLE16(SDL_RWops* dst, [NativeTypeName("Uint16")] ushort value);
+        public static extern nuint WriteLE16(SDL_RWops* dst, [NativeTypeName("Uint16")] ushort value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WriteBE16", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern UIntPtr WriteBE16(SDL_RWops* dst, [NativeTypeName("Uint16")] ushort value);
+        public static extern nuint WriteBE16(SDL_RWops* dst, [NativeTypeName("Uint16")] ushort value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WriteLE32", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern UIntPtr WriteLE32(SDL_RWops* dst, [NativeTypeName("Uint32")] uint value);
+        public static extern nuint WriteLE32(SDL_RWops* dst, [NativeTypeName("Uint32")] uint value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WriteBE32", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern UIntPtr WriteBE32(SDL_RWops* dst, [NativeTypeName("Uint32")] uint value);
+        public static extern nuint WriteBE32(SDL_RWops* dst, [NativeTypeName("Uint32")] uint value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WriteLE64", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern UIntPtr WriteLE64(SDL_RWops* dst, [NativeTypeName("Uint64")] ulong value);
+        public static extern nuint WriteLE64(SDL_RWops* dst, [NativeTypeName("Uint64")] ulong value);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_WriteBE64", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern UIntPtr WriteBE64(SDL_RWops* dst, [NativeTypeName("Uint64")] ulong value);
+        public static extern nuint WriteBE64(SDL_RWops* dst, [NativeTypeName("Uint64")] ulong value);
 
         [NativeTypeName("#define SDL_RWOPS_UNKNOWN 0U")]
         public const uint SDL_RWOPS_UNKNOWN = 0U;
@@ -1743,25 +1743,25 @@ namespace SDL2Sharp.Interop
         public const int RW_SEEK_END = 2;
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_malloc", ExactSpelling = true)]
-        public static extern void* malloc([NativeTypeName("size_t")] UIntPtr size);
+        public static extern void* malloc([NativeTypeName("size_t")] nuint size);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_calloc", ExactSpelling = true)]
-        public static extern void* calloc([NativeTypeName("size_t")] UIntPtr nmemb, [NativeTypeName("size_t")] UIntPtr size);
+        public static extern void* calloc([NativeTypeName("size_t")] nuint nmemb, [NativeTypeName("size_t")] nuint size);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_realloc", ExactSpelling = true)]
-        public static extern void* realloc(void* mem, [NativeTypeName("size_t")] UIntPtr size);
+        public static extern void* realloc(void* mem, [NativeTypeName("size_t")] nuint size);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_free", ExactSpelling = true)]
         public static extern void free(void* mem);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetOriginalMemoryFunctions", ExactSpelling = true)]
-        public static extern void GetOriginalMemoryFunctions([NativeTypeName("SDL_malloc_func *")] IntPtr* malloc_func, [NativeTypeName("SDL_calloc_func *")] IntPtr* calloc_func, [NativeTypeName("SDL_realloc_func *")] IntPtr* realloc_func, [NativeTypeName("SDL_free_func *")] IntPtr* free_func);
+        public static extern void GetOriginalMemoryFunctions([NativeTypeName("SDL_malloc_func *")] delegate* unmanaged[Cdecl]<nuint, void*>* malloc_func, [NativeTypeName("SDL_calloc_func *")] delegate* unmanaged[Cdecl]<nuint, nuint, void*>* calloc_func, [NativeTypeName("SDL_realloc_func *")] delegate* unmanaged[Cdecl]<void*, nuint, void*>* realloc_func, [NativeTypeName("SDL_free_func *")] delegate* unmanaged[Cdecl]<void*, void>* free_func);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetMemoryFunctions", ExactSpelling = true)]
-        public static extern void GetMemoryFunctions([NativeTypeName("SDL_malloc_func *")] IntPtr* malloc_func, [NativeTypeName("SDL_calloc_func *")] IntPtr* calloc_func, [NativeTypeName("SDL_realloc_func *")] IntPtr* realloc_func, [NativeTypeName("SDL_free_func *")] IntPtr* free_func);
+        public static extern void GetMemoryFunctions([NativeTypeName("SDL_malloc_func *")] delegate* unmanaged[Cdecl]<nuint, void*>* malloc_func, [NativeTypeName("SDL_calloc_func *")] delegate* unmanaged[Cdecl]<nuint, nuint, void*>* calloc_func, [NativeTypeName("SDL_realloc_func *")] delegate* unmanaged[Cdecl]<void*, nuint, void*>* realloc_func, [NativeTypeName("SDL_free_func *")] delegate* unmanaged[Cdecl]<void*, void>* free_func);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetMemoryFunctions", ExactSpelling = true)]
-        public static extern int SetMemoryFunctions([NativeTypeName("SDL_malloc_func")] IntPtr malloc_func, [NativeTypeName("SDL_calloc_func")] IntPtr calloc_func, [NativeTypeName("SDL_realloc_func")] IntPtr realloc_func, [NativeTypeName("SDL_free_func")] IntPtr free_func);
+        public static extern int SetMemoryFunctions([NativeTypeName("SDL_malloc_func")] delegate* unmanaged[Cdecl]<nuint, void*> malloc_func, [NativeTypeName("SDL_calloc_func")] delegate* unmanaged[Cdecl]<nuint, nuint, void*> calloc_func, [NativeTypeName("SDL_realloc_func")] delegate* unmanaged[Cdecl]<void*, nuint, void*> realloc_func, [NativeTypeName("SDL_free_func")] delegate* unmanaged[Cdecl]<void*, void> free_func);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetNumAllocations", ExactSpelling = true)]
         public static extern int GetNumAllocations();
@@ -1779,11 +1779,11 @@ namespace SDL2Sharp.Interop
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_iconv", ExactSpelling = true)]
         [return: NativeTypeName("size_t")]
-        public static extern UIntPtr iconv([NativeTypeName("SDL_iconv_t")] _SDL_iconv_t* cd, [NativeTypeName("const char **")] sbyte** inbuf, [NativeTypeName("size_t *")] UIntPtr* inbytesleft, [NativeTypeName("char **")] sbyte** outbuf, [NativeTypeName("size_t *")] UIntPtr* outbytesleft);
+        public static extern nuint iconv([NativeTypeName("SDL_iconv_t")] _SDL_iconv_t* cd, [NativeTypeName("const char **")] sbyte** inbuf, [NativeTypeName("size_t *")] nuint* inbytesleft, [NativeTypeName("char **")] sbyte** outbuf, [NativeTypeName("size_t *")] nuint* outbytesleft);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_iconv_string", ExactSpelling = true)]
         [return: NativeTypeName("char *")]
-        public static extern sbyte* iconv_string([NativeTypeName("const char *")] sbyte* tocode, [NativeTypeName("const char *")] sbyte* fromcode, [NativeTypeName("const char *")] sbyte* inbuf, [NativeTypeName("size_t")] UIntPtr inbytesleft);
+        public static extern sbyte* iconv_string([NativeTypeName("const char *")] sbyte* tocode, [NativeTypeName("const char *")] sbyte* fromcode, [NativeTypeName("const char *")] sbyte* inbuf, [NativeTypeName("size_t")] nuint inbytesleft);
 
         [NativeTypeName("#define SDL_SIZE_MAX SIZE_MAX")]
         public const ulong SDL_SIZE_MAX = 0xffffffffffffffffUL;
@@ -1840,43 +1840,43 @@ namespace SDL2Sharp.Interop
         public const float SDL_FLT_EPSILON = 1.1920928955078125e-07F;
 
         [NativeTypeName("#define SDL_PRIs64 \"I64d\"")]
-        public static ReadOnlySpan<byte> SDL_PRIs64 => new byte[] { 0x49, 0x36, 0x34, 0x64, 0x00 };
+        public static ReadOnlySpan<byte> SDL_PRIs64 => "I64d"u8;
 
         [NativeTypeName("#define SDL_PRIu64 \"I64u\"")]
-        public static ReadOnlySpan<byte> SDL_PRIu64 => new byte[] { 0x49, 0x36, 0x34, 0x75, 0x00 };
+        public static ReadOnlySpan<byte> SDL_PRIu64 => "I64u"u8;
 
         [NativeTypeName("#define SDL_PRIx64 \"I64x\"")]
-        public static ReadOnlySpan<byte> SDL_PRIx64 => new byte[] { 0x49, 0x36, 0x34, 0x78, 0x00 };
+        public static ReadOnlySpan<byte> SDL_PRIx64 => "I64x"u8;
 
         [NativeTypeName("#define SDL_PRIX64 \"I64X\"")]
-        public static ReadOnlySpan<byte> SDL_PRIX64 => new byte[] { 0x49, 0x36, 0x34, 0x58, 0x00 };
+        public static ReadOnlySpan<byte> SDL_PRIX64 => "I64X"u8;
 
         [NativeTypeName("#define SDL_PRIs32 \"d\"")]
-        public static ReadOnlySpan<byte> SDL_PRIs32 => new byte[] { 0x64, 0x00 };
+        public static ReadOnlySpan<byte> SDL_PRIs32 => "d"u8;
 
         [NativeTypeName("#define SDL_PRIu32 \"u\"")]
-        public static ReadOnlySpan<byte> SDL_PRIu32 => new byte[] { 0x75, 0x00 };
+        public static ReadOnlySpan<byte> SDL_PRIu32 => "u"u8;
 
         [NativeTypeName("#define SDL_PRIx32 \"x\"")]
-        public static ReadOnlySpan<byte> SDL_PRIx32 => new byte[] { 0x78, 0x00 };
+        public static ReadOnlySpan<byte> SDL_PRIx32 => "x"u8;
 
         [NativeTypeName("#define SDL_PRIX32 \"X\"")]
-        public static ReadOnlySpan<byte> SDL_PRIX32 => new byte[] { 0x58, 0x00 };
+        public static ReadOnlySpan<byte> SDL_PRIX32 => "X"u8;
 
         [NativeTypeName("#define M_PI 3.14159265358979323846264338327950288")]
         public const double M_PI = 3.14159265358979323846264338327950288;
 
         [NativeTypeName("#define SDL_ICONV_ERROR (size_t)-1")]
-        public static readonly UIntPtr SDL_ICONV_ERROR = unchecked((nuint)(-1));
+        public static readonly nuint SDL_ICONV_ERROR = unchecked((nuint)(-1));
 
         [NativeTypeName("#define SDL_ICONV_E2BIG (size_t)-2")]
-        public static readonly UIntPtr SDL_ICONV_E2BIG = unchecked((nuint)(-2));
+        public static readonly nuint SDL_ICONV_E2BIG = unchecked((nuint)(-2));
 
         [NativeTypeName("#define SDL_ICONV_EILSEQ (size_t)-3")]
-        public static readonly UIntPtr SDL_ICONV_EILSEQ = unchecked((nuint)(-3));
+        public static readonly nuint SDL_ICONV_EILSEQ = unchecked((nuint)(-3));
 
         [NativeTypeName("#define SDL_ICONV_EINVAL (size_t)-4")]
-        public static readonly UIntPtr SDL_ICONV_EINVAL = unchecked((nuint)(-4));
+        public static readonly nuint SDL_ICONV_EINVAL = unchecked((nuint)(-4));
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CreateRGBSurface", ExactSpelling = true)]
         public static extern SDL_Surface* CreateRGBSurface([NativeTypeName("Uint32")] uint flags, int width, int height, int depth, [NativeTypeName("Uint32")] uint Rmask, [NativeTypeName("Uint32")] uint Gmask, [NativeTypeName("Uint32")] uint Bmask, [NativeTypeName("Uint32")] uint Amask);
@@ -2011,7 +2011,7 @@ namespace SDL2Sharp.Interop
         public const int SDL_SIMD_ALIGNED = 0x00000008;
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetWindowsMessageHook", ExactSpelling = true)]
-        public static extern void SetWindowsMessageHook([NativeTypeName("SDL_WindowsMessageHook")] IntPtr callback, void* userdata);
+        public static extern void SetWindowsMessageHook([NativeTypeName("SDL_WindowsMessageHook")] delegate* unmanaged[Cdecl]<void*, void*, uint, ulong, long, void> callback, void* userdata);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Direct3D9GetAdapterIndex", ExactSpelling = true)]
         public static extern int Direct3D9GetAdapterIndex(int displayIndex);
@@ -2138,7 +2138,7 @@ namespace SDL2Sharp.Interop
         public static extern int GetWindowDisplayMode(SDL_Window* window, SDL_DisplayMode* mode);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetWindowICCProfile", ExactSpelling = true)]
-        public static extern void* GetWindowICCProfile(SDL_Window* window, [NativeTypeName("size_t *")] UIntPtr* size);
+        public static extern void* GetWindowICCProfile(SDL_Window* window, [NativeTypeName("size_t *")] nuint* size);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetWindowPixelFormat", ExactSpelling = true)]
         [return: NativeTypeName("Uint32")]
@@ -2305,7 +2305,7 @@ namespace SDL2Sharp.Interop
         public static extern int GetWindowGammaRamp(SDL_Window* window, [NativeTypeName("Uint16 *")] ushort* red, [NativeTypeName("Uint16 *")] ushort* green, [NativeTypeName("Uint16 *")] ushort* blue);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetWindowHitTest", ExactSpelling = true)]
-        public static extern int SetWindowHitTest(SDL_Window* window, [NativeTypeName("SDL_HitTest")] IntPtr callback, void* callback_data);
+        public static extern int SetWindowHitTest(SDL_Window* window, [NativeTypeName("SDL_HitTest")] delegate* unmanaged[Cdecl]<SDL_Window*, SDL_Point*, void*, SDL_HitTestResult> callback, void* callback_data);
 
         [DllImport("SDL2", CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_FlashWindow", ExactSpelling = true)]
         public static extern int FlashWindow(SDL_Window* window, SDL_FlashOperation operation);

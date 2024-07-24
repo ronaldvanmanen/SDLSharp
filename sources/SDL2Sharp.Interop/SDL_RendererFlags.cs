@@ -1,4 +1,4 @@
-﻿// SDL2Sharp
+// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,12 +18,9 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
-
 namespace SDL2Sharp.Interop
 {
     [NativeTypeName("int")]
-    [Flags]
     public enum SDL_RendererFlags : uint
     {
         SDL_RENDERER_SOFTWARE = 0x00000001,

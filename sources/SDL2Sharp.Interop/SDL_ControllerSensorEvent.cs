@@ -18,9 +18,11 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System.Runtime.CompilerServices;
+
 namespace SDL2Sharp.Interop
 {
-    public unsafe partial struct SDL_ControllerSensorEvent
+    public partial struct SDL_ControllerSensorEvent
     {
         [NativeTypeName("Uint32")]
         public uint type;
@@ -35,9 +37,15 @@ namespace SDL2Sharp.Interop
         public int sensor;
 
         [NativeTypeName("float[3]")]
-        public fixed float data[3];
+        public _data_e__FixedBuffer data;
 
         [NativeTypeName("Uint64")]
         public ulong timestamp_us;
+
+        [InlineArray(3)]
+        public partial struct _data_e__FixedBuffer
+        {
+            public float e0;
+        }
     }
 }
