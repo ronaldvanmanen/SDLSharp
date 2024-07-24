@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <TargetFramework>net8.0</TargetFramework>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Description>Provides type safe wrappers for SDL2 bindings written in C#.</Description>
     <PackageTags>SDL2</PackageTags>
