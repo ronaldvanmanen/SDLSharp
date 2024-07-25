@@ -100,15 +100,15 @@ namespace SDL2Sharp.Video
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
             void* pixels;
             int pitchInBytes;
-            Error.ThrowOnFailure(
-                SDL.LockTexture(_texture, &rect, &pixels, &pitchInBytes)
+            Error.ThrowLastErrorIfNegative(
+                SDL.LockTexture(_texture.Handle, &rect, &pixels, &pitchInBytes)
             );
 
             var bytesPerPixel = Marshal.SizeOf<TPackedPixel>();
             var pitch = pitchInBytes / bytesPerPixel;
             var image = new PackedImage<TPackedPixel>(pixels, width, height, pitch);
             callback.Invoke(image);
-            SDL.UnlockTexture(_texture);
+            SDL.UnlockTexture(_texture.Handle);
         }
 
         public void WithLock(LockToSurfaceCallback callback)
@@ -127,12 +127,12 @@ namespace SDL2Sharp.Video
 
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
             SDL_Surface* surfaceHandle;
-            Error.ThrowOnFailure(
-                SDL.LockTextureToSurface(_texture, &rect, &surfaceHandle)
+            Error.ThrowLastErrorIfNegative(
+                SDL.LockTextureToSurface(_texture.Handle, &rect, &surfaceHandle)
             );
             var surface = new Surface<TPackedPixel>(surfaceHandle, false);
             callback.Invoke(surface);
-            SDL.UnlockTexture(_texture);
+            SDL.UnlockTexture(_texture.Handle);
         }
 
         public void Update(PackedMemoryImage<TPackedPixel> image)
@@ -165,8 +165,8 @@ namespace SDL2Sharp.Video
 
         private void Update(SDL_Rect* rect, void* pixels, int pitch)
         {
-            Error.ThrowOnFailure(
-                SDL.UpdateTexture(_texture, rect, pixels, pitch)
+            Error.ThrowLastErrorIfNegative(
+                SDL.UpdateTexture(_texture.Handle, rect, pixels, pitch)
             );
         }
 

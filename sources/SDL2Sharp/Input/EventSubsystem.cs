@@ -39,7 +39,7 @@ namespace SDL2Sharp.Input
 
         public EventSubsystem()
         {
-            Error.ThrowOnFailure(
+            Error.ThrowLastErrorIfNegative(
                 SDL.InitSubSystem(InitSubsystemFlags)
             );
 
@@ -79,7 +79,7 @@ namespace SDL2Sharp.Input
         {
             var eventHandle = @event.Handle;
             var result = SDL.PushEvent(&@eventHandle);
-            Error.ThrowOnFailure(result);
+            Error.ThrowLastErrorIfNegative(result);
         }
 
 

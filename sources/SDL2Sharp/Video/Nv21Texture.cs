@@ -89,13 +89,13 @@ namespace SDL2Sharp.Video
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
             void* pixels;
             int pitch;
-            Error.ThrowOnFailure(
-                SDL.LockTexture(_texture, &rect, &pixels, &pitch)
+            Error.ThrowLastErrorIfNegative(
+                SDL.LockTexture(_texture.Handle, &rect, &pixels, &pitch)
             );
 
             var image = new Nv21Image(pixels, width, height, pitch);
             callback.Invoke(image);
-            SDL.UnlockTexture(_texture);
+            SDL.UnlockTexture(_texture.Handle);
         }
 
         public void Update(Nv21Image image)
@@ -104,7 +104,9 @@ namespace SDL2Sharp.Video
             var yPitch = image.Y.Width * Marshal.SizeOf<Y8>();
             var uvPlane = (byte*)Unsafe.AsPointer(ref image.VU.DangerousGetReference());
             var uvPitch = image.VU.Width * Marshal.SizeOf<VU88>();
-            SDL.UpdateNVTexture(_texture, null, yPlane, yPitch, uvPlane, uvPitch);
+            Error.ThrowLastErrorIfNegative(
+                SDL.UpdateNVTexture(_texture.Handle, null, yPlane, yPitch, uvPlane, uvPitch)
+            );
         }
 
         public void Update(Nv21MemoryImage image)
@@ -113,23 +115,19 @@ namespace SDL2Sharp.Video
             var yPitch = image.Y.Width * Marshal.SizeOf<Y8>();
             var uvPlane = (byte*)Unsafe.AsPointer(ref image.VU.DangerousGetReference());
             var uvPitch = image.VU.Width * Marshal.SizeOf<VU88>();
-            SDL.UpdateNVTexture(_texture, null, yPlane, yPitch, uvPlane, uvPitch);
+            Error.ThrowLastErrorIfNegative(
+                SDL.UpdateNVTexture(_texture.Handle, null, yPlane, yPitch, uvPlane, uvPitch)
+            );
         }
 
         private void ThrowWhenDisposed()
         {
-            if (_texture is null)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
+            ObjectDisposedException.ThrowIf(_texture is null, this);
         }
 
         public static implicit operator Texture(Nv21Texture texture)
         {
-            if (texture is null)
-            {
-                throw new ArgumentNullException(nameof(texture));
-            }
+            ArgumentNullException.ThrowIfNull(texture);
 
             return texture._texture;
         }

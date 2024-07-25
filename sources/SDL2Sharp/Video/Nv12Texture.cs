@@ -84,18 +84,20 @@ namespace SDL2Sharp.Video
 
         public void WithLock(int x, int y, int width, int height, LockCallback callback)
         {
+            ArgumentNullException.ThrowIfNull(callback);
+
             ThrowWhenDisposed();
 
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
             void* pixels;
             int pitch;
-            Error.ThrowOnFailure(
-                SDL.LockTexture(_texture, &rect, &pixels, &pitch)
+            Error.ThrowLastErrorIfNegative(
+                SDL.LockTexture(_texture.Handle, &rect, &pixels, &pitch)
             );
 
             var image = new Nv12Image(pixels, width, height, pitch);
             callback.Invoke(image);
-            SDL.UnlockTexture(_texture);
+            SDL.UnlockTexture(_texture.Handle);
         }
 
         public void Update(Nv12Image image)
@@ -104,32 +106,32 @@ namespace SDL2Sharp.Video
             var yPitch = image.Y.Width * Marshal.SizeOf<Y8>();
             var uvPlane = (byte*)Unsafe.AsPointer(ref image.UV.DangerousGetReference());
             var uvPitch = image.UV.Width * Marshal.SizeOf<UV88>();
-            SDL.UpdateNVTexture(_texture, null, yPlane, yPitch, uvPlane, uvPitch);
+            Error.ThrowLastErrorIfNegative(
+                SDL.UpdateNVTexture(_texture.Handle, null, yPlane, yPitch, uvPlane, uvPitch)
+            );
         }
 
         public void Update(Nv12MemoryImage image)
         {
+            ArgumentNullException.ThrowIfNull(image);
+
             var yPlane = (byte*)Unsafe.AsPointer(ref image.Y.DangerousGetReference());
             var yPitch = image.Y.Width * Marshal.SizeOf<Y8>();
             var uvPlane = (byte*)Unsafe.AsPointer(ref image.UV.DangerousGetReference());
             var uvPitch = image.UV.Width * Marshal.SizeOf<UV88>();
-            SDL.UpdateNVTexture(_texture, null, yPlane, yPitch, uvPlane, uvPitch);
+            Error.ThrowLastErrorIfNegative(
+                SDL.UpdateNVTexture(_texture.Handle, null, yPlane, yPitch, uvPlane, uvPitch)
+            );
         }
 
         private void ThrowWhenDisposed()
         {
-            if (_texture is null)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
+            ObjectDisposedException.ThrowIf(_texture is null, this);
         }
 
         public static implicit operator Texture(Nv12Texture texture)
         {
-            if (texture is null)
-            {
-                throw new ArgumentNullException(nameof(texture));
-            }
+            ArgumentNullException.ThrowIfNull(texture);
 
             return texture._texture;
         }

@@ -151,7 +151,7 @@ namespace SDL2Sharp.Audio
             _deviceID = SDL.OpenAudioDevice(null, 0, &desiredSpec, &obtainedSpec, (int)allowedChanges);
             if (_deviceID == 0)
             {
-                error = new Error(new string(SDL.GetError()));
+                error = Error.GetLastError();
                 return false;
             }
             else
@@ -217,7 +217,7 @@ namespace SDL2Sharp.Audio
             ThrowIfClosed();
             fixed (void* data = &buffer[0])
             {
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.QueueAudio(_deviceID, data, (uint)buffer.Length)
                 );
             }

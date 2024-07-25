@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -27,7 +27,9 @@ namespace SDL2Sharp
     {
         public MainSystem()
         {
-            SDL.Init(0);
+            Error.ThrowLastErrorIfNegative(
+                SDL.Init(0)
+            );
         }
 
         public void Dispose()

@@ -29,12 +29,14 @@ namespace SDL2Sharp.Video
 
         private SDL_Texture* _handle;
 
+        internal SDL_Texture* Handle => _handle;
+
         public PixelFormat Format
         {
             get
             {
                 uint format;
-                Error.ThrowOnFailure(SDL.QueryTexture(_handle, &format, null, null, null));
+                Error.ThrowLastErrorIfNegative(SDL.QueryTexture(_handle, &format, null, null, null));
                 return (PixelFormat)format;
             }
         }
@@ -44,7 +46,7 @@ namespace SDL2Sharp.Video
             get
             {
                 int access;
-                Error.ThrowOnFailure(SDL.QueryTexture(_handle, null, &access, null, null));
+                Error.ThrowLastErrorIfNegative(SDL.QueryTexture(_handle, null, &access, null, null));
                 return (TextureAccess)access;
             }
         }
@@ -54,7 +56,7 @@ namespace SDL2Sharp.Video
             get
             {
                 int width;
-                Error.ThrowOnFailure(SDL.QueryTexture(_handle, null, null, &width, null));
+                Error.ThrowLastErrorIfNegative(SDL.QueryTexture(_handle, null, null, &width, null));
                 return width;
             }
         }
@@ -64,7 +66,7 @@ namespace SDL2Sharp.Video
             get
             {
                 int height;
-                Error.ThrowOnFailure(SDL.QueryTexture(_handle, null, null, null, &height));
+                Error.ThrowLastErrorIfNegative(SDL.QueryTexture(_handle, null, null, null, &height));
                 return height;
             }
         }
@@ -74,7 +76,7 @@ namespace SDL2Sharp.Video
             get
             {
                 int width, height;
-                Error.ThrowOnFailure(SDL.QueryTexture(_handle, null, null, &width, &height));
+                Error.ThrowLastErrorIfNegative(SDL.QueryTexture(_handle, null, null, &width, &height));
                 return new Size(width, height);
             }
         }
@@ -84,14 +86,14 @@ namespace SDL2Sharp.Video
             get
             {
                 SDL_BlendMode blendMode;
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.GetTextureBlendMode(_handle, &blendMode)
                 );
                 return (BlendMode)blendMode;
             }
             set
             {
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.SetTextureBlendMode(_handle, (SDL_BlendMode)value)
                 );
             }
@@ -101,10 +103,7 @@ namespace SDL2Sharp.Video
 
         internal Texture(SDL_Texture* texture)
         {
-            if (texture is null)
-            {
-                throw new ArgumentNullException(nameof(texture));
-            }
+            ArgumentNullException.ThrowIfNull(texture);
 
             _handle = texture;
         }
@@ -143,7 +142,7 @@ namespace SDL2Sharp.Video
 
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
             SDL_Surface* surfaceHandle;
-            Error.ThrowOnFailure(
+            Error.ThrowLastErrorIfNegative(
                 SDL.LockTextureToSurface(_handle, &rect, &surfaceHandle)
             );
             var surface = new Surface(surfaceHandle, false);
@@ -153,20 +152,7 @@ namespace SDL2Sharp.Video
 
         private void ThrowWhenDisposed()
         {
-            if (_handle is null)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
-        }
-
-        public static implicit operator SDL_Texture*(Texture texture)
-        {
-            if (texture is null)
-            {
-                throw new ArgumentNullException(nameof(texture));
-            }
-
-            return texture._handle;
+            ObjectDisposedException.ThrowIf(_handle is null, this);
         }
     }
 }

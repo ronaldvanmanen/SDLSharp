@@ -44,7 +44,9 @@ namespace SDL2Sharp.Video
 
         public VideoSubsystem()
         {
-            SDL.InitSubSystem(InitSubsystemFlags);
+            Error.ThrowLastErrorIfNegative(
+                SDL.InitSubSystem(InitSubsystemFlags)
+            );
         }
 
         public void Dispose()

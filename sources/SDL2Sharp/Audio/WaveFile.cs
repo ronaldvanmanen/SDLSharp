@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -52,7 +52,7 @@ namespace SDL2Sharp.Audio
         {
             using var unmanagedFilename = new MarshaledString(filename);
             using var unmanagedMode = new MarshaledString("rb");
-            var fileStream = Error.ReturnOrThrowOnFailure(
+            var fileStream = Error.ThrowLastErrorIfNull(
                 SDL.RWFromFile(unmanagedFilename, unmanagedMode)
             );
 
@@ -60,7 +60,7 @@ namespace SDL2Sharp.Audio
             fixed (byte** waveBuffer = &_waveBuffer)
             fixed (uint* waveLength = &_waveLength)
             {
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNull(
                     SDL.LoadWAV_RW(fileStream, 1, waveSpec, waveBuffer, waveLength)
                 );
             }

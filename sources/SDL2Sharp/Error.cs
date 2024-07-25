@@ -19,7 +19,6 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using System.Runtime.Serialization;
 using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
@@ -32,54 +31,50 @@ namespace SDL2Sharp
         : base(message)
         { }
 
-        public Error(SerializationInfo info, StreamingContext context)
-        : base(info, context)
-        { }
-
         public Error(string message, Exception innerException)
         : base(message, innerException)
         { }
 
-        internal static unsafe void ThrowOnFailure(void* pointer)
+        public static unsafe Error GetLastError()
         {
-            if (pointer is null)
+            return new Error(new string(SDL.GetError()));
+        }
+
+        public static void ThrowLastError()
+        {
+            throw GetLastError();
+        }
+
+        public static void ThrowLastErrorIf(bool condition)
+        {
+            if (condition)
             {
-                throw new Error(new string(SDL.GetError()));
+                ThrowLastError();
             }
         }
 
-        internal static unsafe void ThrowOnFailure(int returnCode)
+        public static unsafe void* ThrowLastErrorIfNull(void* pointer)
         {
-            if (returnCode < 0)
-            {
-                throw new Error(new string(SDL.GetError()));
-            }
-        }
+            ThrowLastErrorIf(pointer is null);
 
-        internal static unsafe void ThrowOnFailure(uint returnCode)
-        {
-            if (returnCode == 0)
-            {
-                throw new Error(new string(SDL.GetError()));
-            }
-        }
-
-        internal static unsafe uint ReturnOrThrowOnFailure(uint returnCode)
-        {
-            if (returnCode == 0)
-            {
-                throw new Error(new string(SDL.GetError()));
-            }
-            return returnCode;
-        }
-
-        internal static unsafe T* ReturnOrThrowOnFailure<T>(T* pointer) where T : unmanaged
-        {
-            if (pointer is null)
-            {
-                throw new Error(new string(SDL.GetError()));
-            }
             return pointer;
+        }
+
+        public static unsafe T* ThrowLastErrorIfNull<T>(T* pointer) where T : unmanaged
+        {
+            ThrowLastErrorIf(pointer is null);
+
+            return pointer;
+        }
+
+        public static void ThrowLastErrorIfNegative(int returnCode)
+        {
+            ThrowLastErrorIf(returnCode < 0);
+        }
+
+        public static void ThrowLastErrorIfZero(uint returnCode)
+        {
+            ThrowLastErrorIf(returnCode == 0);
         }
     }
 }

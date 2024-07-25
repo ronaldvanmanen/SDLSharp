@@ -27,10 +27,7 @@ namespace SDL2Sharp
     {
         public static void SafeJoin(this Thread thread)
         {
-            if (thread is null)
-            {
-                throw new ArgumentNullException(nameof(thread));
-            }
+            ArgumentNullException.ThrowIfNull(thread);
 
             if (thread.ThreadState != ThreadState.Unstarted)
             {

@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -30,11 +30,13 @@ namespace SDL2Sharp.Fonts
     {
         private _TTF_Font* _handle;
 
+        internal _TTF_Font* Handle => _handle;
+
         internal Font(string path, int pointSize)
         {
             using var marshaledPath = new MarshaledString(path);
             var handle = TTF.OpenFont(marshaledPath, pointSize);
-            FontError.ThrowOnFailure(handle);
+            FontError.ThrowLastErrorIfNull(handle);
             _handle = handle;
         }
 
@@ -59,6 +61,7 @@ namespace SDL2Sharp.Fonts
         public Surface RenderSolid(string text, Color color)
         {
             ThrowWhenDisposed();
+
             using var marshaledText = new MarshaledString(text);
             var surfaceHandle = TTF.RenderText_Solid(_handle, marshaledText, color);
             return new Surface(surfaceHandle);
@@ -67,27 +70,15 @@ namespace SDL2Sharp.Fonts
         public Surface<Argb8888> RenderBlended(string text, Color color)
         {
             ThrowWhenDisposed();
+
             using var marshaledText = new MarshaledString(text);
             var surfaceHandle = TTF.RenderText_Blended(_handle, marshaledText, color);
             return new Surface<Argb8888>(surfaceHandle);
         }
 
-        public static implicit operator _TTF_Font*(Font font)
-        {
-            if (font is null)
-            {
-                throw new ArgumentNullException(nameof(font));
-            }
-
-            return font._handle;
-        }
-
         private void ThrowWhenDisposed()
         {
-            if (_handle is null)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
+            ObjectDisposedException.ThrowIf(_handle is null, this);
         }
     }
 }

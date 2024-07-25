@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -26,11 +26,6 @@ namespace SDL2Sharp.Audio
     {
         public static unsafe short ToInt16(this ReadOnlySpan<byte> bytes, int sampleOffset, bool isLittleEndian)
         {
-            if (bytes == null)
-            {
-                throw new ArgumentNullException(nameof(bytes));
-            }
-
             if (sampleOffset < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(sampleOffset), sampleOffset, "startIndex cannot be less than zero");
@@ -65,11 +60,6 @@ namespace SDL2Sharp.Audio
 
         public static unsafe int ToInt32(this ReadOnlySpan<byte> bytes, int sampleOffset, bool isLittleEndian)
         {
-            if (bytes == null)
-            {
-                throw new ArgumentNullException(nameof(bytes));
-            }
-
             if (sampleOffset < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(sampleOffset), sampleOffset, "startIndex cannot be less than zero");

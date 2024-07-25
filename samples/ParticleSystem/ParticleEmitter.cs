@@ -73,10 +73,7 @@ internal sealed class ParticleEmitter
 
     public void Render(Renderer renderer)
     {
-        if (renderer is null)
-        {
-            throw new ArgumentNullException(nameof(renderer));
-        }
+        ArgumentNullException.ThrowIfNull(renderer);
 
         foreach (var particle in Particles)
         {

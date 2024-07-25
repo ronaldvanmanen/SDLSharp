@@ -124,10 +124,7 @@ internal sealed class Camera
 
     public PackedMemoryImage<Argb8888> TakeSnapshot(World world)
     {
-        if (world is null)
-        {
-            throw new ArgumentNullException(nameof(world));
-        }
+        ArgumentNullException.ThrowIfNull(world);
 
         var rotationMatrix = Matrix4x4.CreateFromQuaternion(Quaternion.Inverse(_orientation));
         var translationMatrix = Matrix4x4.CreateTranslation(-_position);

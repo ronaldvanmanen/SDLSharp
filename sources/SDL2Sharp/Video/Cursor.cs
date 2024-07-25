@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -31,14 +31,14 @@ namespace SDL2Sharp.Video
         public static bool Show()
         {
             var result = SDL.ShowCursor(SDL.SDL_ENABLE);
-            Error.ThrowOnFailure(result);
+            Error.ThrowLastErrorIfNegative(result);
             return result == SDL.SDL_ENABLE;
         }
 
         public static bool Hide()
         {
             var result = SDL.ShowCursor(SDL.SDL_DISABLE);
-            Error.ThrowOnFailure(result);
+            Error.ThrowLastErrorIfNegative(result);
             return result == SDL.SDL_DISABLE;
         }
     }

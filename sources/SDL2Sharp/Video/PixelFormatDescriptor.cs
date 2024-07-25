@@ -29,6 +29,8 @@ namespace SDL2Sharp.Video
 
         private readonly bool _ownsHandle;
 
+        internal SDL_PixelFormat* Handle => _handle;
+
         public PixelFormat Format => (PixelFormat)_handle->format;
 
         public byte BitsPerPixel => _handle->BitsPerPixel;
@@ -61,17 +63,13 @@ namespace SDL2Sharp.Video
 
         internal PixelFormatDescriptor(SDL_PixelFormat* handle, bool ownsHandle)
         {
-            if (handle == null)
-            {
-                throw new ArgumentNullException(nameof(handle));
-            }
-
+            ArgumentNullException.ThrowIfNull(handle);
             _handle = handle;
             _ownsHandle = ownsHandle;
         }
 
         public PixelFormatDescriptor(PixelFormat pixelFormat)
-        : this(Error.ReturnOrThrowOnFailure(SDL.AllocFormat((uint)pixelFormat)), true)
+        : this(Error.ThrowLastErrorIfNull(SDL.AllocFormat((uint)pixelFormat)), true)
         { }
 
         ~PixelFormatDescriptor()
@@ -113,16 +111,6 @@ namespace SDL2Sharp.Video
             byte r, g, b, a;
             SDL.GetRGBA(value, _handle, &r, &g, &b, &a);
             return (r, g, b, a);
-        }
-
-        public static implicit operator SDL_PixelFormat*(PixelFormatDescriptor pixelFormat)
-        {
-            if (pixelFormat is null)
-            {
-                throw new ArgumentNullException(nameof(pixelFormat));
-            }
-
-            return pixelFormat._handle;
         }
     }
 }

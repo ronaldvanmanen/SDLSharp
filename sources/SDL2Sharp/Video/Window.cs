@@ -160,7 +160,7 @@ namespace SDL2Sharp.Video
                 ThrowWhenDisposed();
 
                 int borderTop, borderLeft, borderBottom, borderRight;
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.GetWindowBordersSize(_handle, &borderTop, &borderLeft, &borderBottom, &borderRight)
                 );
                 int windowWidth, windowHeight;
@@ -178,7 +178,7 @@ namespace SDL2Sharp.Video
                 ThrowWhenDisposed();
 
                 var pixelFormat = SDL.GetWindowPixelFormat(_handle);
-                Error.ThrowOnFailure(pixelFormat);
+                Error.ThrowLastErrorIfZero(pixelFormat);
                 return (PixelFormat)pixelFormat;
             }
         }
@@ -190,7 +190,7 @@ namespace SDL2Sharp.Video
                 ThrowWhenDisposed();
 
                 var surfaceHandle = SDL.GetWindowSurface(_handle);
-                Error.ThrowOnFailure(surfaceHandle);
+                Error.ThrowLastErrorIfNull(surfaceHandle);
                 return new Surface(surfaceHandle, false);
             }
         }
@@ -240,7 +240,7 @@ namespace SDL2Sharp.Video
                 ThrowWhenDisposed();
 
                 var flags = value ? SDL_WindowFlags.SDL_WINDOW_FULLSCREEN : 0;
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.SetWindowFullscreen(_handle, (uint)flags)
                 );
             }
@@ -259,7 +259,7 @@ namespace SDL2Sharp.Video
                 ThrowWhenDisposed();
 
                 var flags = value ? SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.SetWindowFullscreen(_handle, (uint)flags)
                 );
             }
@@ -294,13 +294,13 @@ namespace SDL2Sharp.Video
         private Window(string title, int x, int y, int width, int height, uint flags)
         {
             using var marshaledTitle = new MarshaledString(title);
-            _handle = Error.ReturnOrThrowOnFailure(
+            _handle = Error.ThrowLastErrorIfNull(
                 SDL.CreateWindow(marshaledTitle, x, y, width, height, flags)
             );
 
             if (!IsBordered)
             {
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.SetWindowHitTest(_handle, &HitTestCallback, null)
                 );
             }
@@ -319,13 +319,8 @@ namespace SDL2Sharp.Video
 
         private void Dispose(bool _)
         {
-            if (_handle is null)
-            {
-                return;
-            }
-
+            if (_handle is null) return;
             SDL.DestroyWindow(_handle);
-
             _handle = null;
         }
 
@@ -419,7 +414,7 @@ namespace SDL2Sharp.Video
         {
             ThrowWhenDisposed();
 
-            Error.ThrowOnFailure(
+            Error.ThrowLastErrorIfNegative(
                 SDL.UpdateWindowSurface(_handle)
             );
         }

@@ -39,7 +39,7 @@ namespace SDL2Sharp.Video
                 ThrowWhenDisposed();
 
                 var rendererInfo = new SDL_RendererInfo();
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.GetRendererInfo(_handle, &rendererInfo)
                 );
                 return new RendererInfo(rendererInfo);
@@ -53,7 +53,7 @@ namespace SDL2Sharp.Video
                 ThrowWhenDisposed();
 
                 int width, height;
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.GetRendererOutputSize(_handle, &width, &height)
                 );
                 return new Size(width, height);
@@ -67,7 +67,7 @@ namespace SDL2Sharp.Video
                 ThrowWhenDisposed();
 
                 int width;
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.GetRendererOutputSize(_handle, &width, null)
                 );
                 return width;
@@ -81,7 +81,7 @@ namespace SDL2Sharp.Video
                 ThrowWhenDisposed();
 
                 int height;
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.GetRendererOutputSize(_handle, null, &height)
                 );
                 return height;
@@ -95,7 +95,7 @@ namespace SDL2Sharp.Video
                 ThrowWhenDisposed();
 
                 byte r, g, b, a;
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.GetRenderDrawColor(_handle, &r, &g, &b, &a)
                 );
                 return new Color(r, g, b, a);
@@ -104,7 +104,7 @@ namespace SDL2Sharp.Video
             {
                 ThrowWhenDisposed();
 
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.SetRenderDrawColor(_handle, value.R, value.G, value.B, value.A)
                 );
             }
@@ -117,7 +117,7 @@ namespace SDL2Sharp.Video
                 ThrowWhenDisposed();
 
                 SDL_BlendMode blendMode;
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.GetRenderDrawBlendMode(_handle, &blendMode)
                 );
                 return (BlendMode)blendMode;
@@ -126,7 +126,7 @@ namespace SDL2Sharp.Video
             {
                 ThrowWhenDisposed();
 
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.SetRenderDrawBlendMode(_handle, (SDL_BlendMode)value)
                 );
             }
@@ -146,7 +146,7 @@ namespace SDL2Sharp.Video
             {
                 ThrowWhenDisposed();
 
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.RenderSetLogicalSize(_handle, value.Width, value.Height)
                 );
             }
@@ -167,7 +167,7 @@ namespace SDL2Sharp.Video
             {
                 ThrowWhenDisposed();
 
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.RenderSetScale(_handle, value.X, value.Y)
                 );
             }
@@ -188,7 +188,7 @@ namespace SDL2Sharp.Video
                 ThrowWhenDisposed();
 
                 var rect = new SDL_Rect { x = value.X, y = value.Y, w = value.Width, h = value.Height };
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.RenderSetViewport(_handle, &rect)
                 );
             }
@@ -208,14 +208,14 @@ namespace SDL2Sharp.Video
 
                 if (value is null)
                 {
-                    Error.ThrowOnFailure(
+                    Error.ThrowLastErrorIfNegative(
                         SDL.SetRenderTarget(_handle, null)
                     );
                 }
                 else
                 {
-                    Error.ThrowOnFailure(
-                        SDL.SetRenderTarget(_handle, value)
+                    Error.ThrowLastErrorIfNegative(
+                        SDL.SetRenderTarget(_handle, value.Handle)
                     );
                 }
 
@@ -225,10 +225,7 @@ namespace SDL2Sharp.Video
 
         internal Renderer(SDL_Renderer* renderer)
         {
-            if (renderer is null)
-            {
-                throw new ArgumentNullException(nameof(renderer));
-            }
+            ArgumentNullException.ThrowIfNull(renderer);
 
             _handle = renderer;
         }
@@ -261,7 +258,7 @@ namespace SDL2Sharp.Video
             ThrowWhenDisposed();
 
             var texture = SDL.CreateTexture(_handle, (uint)pixelFormat, (int)access, width, height);
-            Error.ThrowOnFailure(texture);
+            Error.ThrowLastErrorIfNull(texture);
             return new Texture(texture);
         }
 
@@ -269,8 +266,8 @@ namespace SDL2Sharp.Video
         {
             ThrowWhenDisposed();
 
-            var texture = SDL.CreateTextureFromSurface(_handle, surface);
-            Error.ThrowOnFailure(texture);
+            var texture = SDL.CreateTextureFromSurface(_handle, surface.Handle);
+            Error.ThrowLastErrorIfNull(texture);
             return new Texture(texture);
         }
 
@@ -278,7 +275,7 @@ namespace SDL2Sharp.Video
         {
             ThrowWhenDisposed();
 
-            Error.ThrowOnFailure(
+            Error.ThrowLastErrorIfNegative(
                 SDL.RenderClear(_handle)
             );
         }
@@ -287,8 +284,8 @@ namespace SDL2Sharp.Video
         {
             ThrowWhenDisposed();
 
-            Error.ThrowOnFailure(
-                SDL.RenderCopy(_handle, texture, null, null)
+            Error.ThrowLastErrorIfNegative(
+                SDL.RenderCopy(_handle, texture.Handle, null, null)
             );
         }
 
@@ -304,8 +301,8 @@ namespace SDL2Sharp.Video
                 h = destination.Height
             };
 
-            Error.ThrowOnFailure(
-                SDL.RenderCopy(_handle, texture, null, &dest)
+            Error.ThrowLastErrorIfNegative(
+                SDL.RenderCopy(_handle, texture.Handle, null, &dest)
             );
         }
 
@@ -329,8 +326,8 @@ namespace SDL2Sharp.Video
                 h = destination.Height
             };
 
-            Error.ThrowOnFailure(
-                SDL.RenderCopy(_handle, texture, &src, &dest)
+            Error.ThrowLastErrorIfNegative(
+                SDL.RenderCopy(_handle, texture.Handle, &src, &dest)
             );
         }
 
@@ -338,7 +335,7 @@ namespace SDL2Sharp.Video
         {
             ThrowWhenDisposed();
 
-            Error.ThrowOnFailure(
+            Error.ThrowLastErrorIfNegative(
                 SDL.RenderDrawLine(_handle, x1, y1, x2, y2)
             );
         }
@@ -349,7 +346,7 @@ namespace SDL2Sharp.Video
 
             fixed (Point* point = &points[0])
             {
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.RenderDrawLines(_handle, (SDL_Point*)point, points.Length)
                 );
             }
@@ -359,7 +356,7 @@ namespace SDL2Sharp.Video
         {
             ThrowWhenDisposed();
 
-            Error.ThrowOnFailure(
+            Error.ThrowLastErrorIfNegative(
                 SDL.RenderDrawLineF(_handle, x1, y1, x2, y2)
             );
         }
@@ -368,7 +365,7 @@ namespace SDL2Sharp.Video
         {
             ThrowWhenDisposed();
 
-            Error.ThrowOnFailure(
+            Error.ThrowLastErrorIfNegative(
                 SDL.RenderDrawPoint(_handle, x, y)
             );
         }
@@ -377,7 +374,7 @@ namespace SDL2Sharp.Video
         {
             ThrowWhenDisposed();
 
-            Error.ThrowOnFailure(
+            Error.ThrowLastErrorIfNegative(
                 SDL.RenderDrawPointF(_handle, x, y)
             );
         }
@@ -388,7 +385,7 @@ namespace SDL2Sharp.Video
 
             fixed (Point* point = &points[0])
             {
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.RenderDrawPoints(_handle, (SDL_Point*)point, points.Length)
                 );
             }
@@ -399,7 +396,7 @@ namespace SDL2Sharp.Video
             ThrowWhenDisposed();
 
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
-            Error.ThrowOnFailure(
+            Error.ThrowLastErrorIfNegative(
                 SDL.RenderFillRect(_handle, &rect)
             );
         }
@@ -436,7 +433,7 @@ namespace SDL2Sharp.Video
             var image = new PackedMemoryImage<TPackedPixel>(rectangle.Width, rectangle.Height);
             var pixels = Unsafe.AsPointer(ref image.DangerousGetReference());
             var pitch = rectangle.Width * Marshal.SizeOf<TPackedPixel>();
-            Error.ThrowOnFailure(
+            Error.ThrowLastErrorIfNegative(
                 SDL.RenderReadPixels(_handle,
                     &rect,
                     format,

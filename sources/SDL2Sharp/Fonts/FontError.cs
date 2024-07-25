@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -19,7 +19,6 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using System.Runtime.Serialization;
 using SDL2Sharp.Interop;
 
 namespace SDL2Sharp.Fonts
@@ -32,54 +31,52 @@ namespace SDL2Sharp.Fonts
         : base(message)
         { }
 
-        public FontError(SerializationInfo info, StreamingContext context)
-        : base(info, context)
-        { }
-
         public FontError(string message, Exception innerException)
         : base(message, innerException)
         { }
 
-        internal static unsafe void ThrowOnFailure(void* pointer)
+        public static unsafe FontError GetLastError()
         {
-            if (pointer is null)
+            return new FontError(new string(TTF.GetError()));
+        }
+
+        public static void ThrowLastError()
+        {
+            throw GetLastError();
+        }
+
+        public static void ThrowLastErrorIf(bool condition)
+        {
+            if (condition)
             {
-                throw new FontError(new string(TTF.GetError()));
+                ThrowLastError();
             }
         }
 
-        internal static unsafe void ThrowOnFailure(int returnCode)
+        public static unsafe void* ThrowLastErrorIfNull(void* pointer)
         {
-            if (returnCode < 0)
-            {
-                throw new Error(new string(TTF.GetError()));
-            }
+            ThrowLastErrorIf(pointer is null);
+
+            return pointer;
         }
 
-        internal static unsafe void ThrowOnFailure(uint returnCode)
+        public static void ThrowLastErrorIfNegative(int returnCode)
+        {
+            ThrowLastErrorIf(returnCode < 0);
+        }
+
+        public static void ThrowLastErrorIfZero(uint returnCode)
+        {
+            ThrowLastErrorIf(returnCode == 0);
+        }
+
+        internal static uint ReturnOrThrowOnFailure(uint returnCode)
         {
             if (returnCode == 0)
             {
-                throw new Error(new string(TTF.GetError()));
-            }
-        }
-
-        internal static unsafe uint ReturnOrThrowOnFailure(uint returnCode)
-        {
-            if (returnCode == 0)
-            {
-                throw new Error(new string(TTF.GetError()));
+                ThrowLastError();
             }
             return returnCode;
-        }
-
-        internal static unsafe T* ReturnOrThrowOnFailure<T>(T* pointer) where T : unmanaged
-        {
-            if (pointer is null)
-            {
-                throw new Error(new string(TTF.GetError()));
-            }
-            return pointer;
         }
     }
 }

@@ -76,11 +76,7 @@ namespace SDL2Sharp.Video
         public static Texture CreateTextureFromBitmap(this Renderer renderer, string filename)
         {
             ArgumentNullException.ThrowIfNull(renderer);
-
-            if (string.IsNullOrWhiteSpace(filename))
-            {
-                throw new ArgumentException($"'{nameof(filename)}' cannot be null or whitespace.", nameof(filename));
-            }
+            ArgumentException.ThrowIfNullOrWhiteSpace(filename, nameof(filename));
 
             using var surface = Surface.LoadBitmap(filename);
             var texture = renderer.CreateTextureFromSurface(surface);
@@ -333,6 +329,7 @@ namespace SDL2Sharp.Video
         public static void DrawTextBlended(this Renderer renderer, int x, int y, Font font, string text)
         {
             ArgumentNullException.ThrowIfNull(renderer);
+            ArgumentNullException.ThrowIfNull(font);
             ArgumentNullException.ThrowIfNull(text);
 
             using var surface = font.RenderBlended(text, renderer.DrawColor);
@@ -344,6 +341,7 @@ namespace SDL2Sharp.Video
         public static void DrawTextBlendedCentered(this Renderer renderer, Font font, string text)
         {
             ArgumentNullException.ThrowIfNull(renderer);
+            ArgumentNullException.ThrowIfNull(font);
             ArgumentNullException.ThrowIfNull(text);
 
             using var surface = font.RenderBlended(text, renderer.DrawColor);

@@ -31,6 +31,8 @@ namespace SDL2Sharp.Video
 
         private readonly bool _freeHandle;
 
+        internal SDL_Surface* Handle => _handle;
+
         public PixelFormatDescriptor Format => new(_handle->format, false);
 
         public int Width => _handle->w;
@@ -46,9 +48,9 @@ namespace SDL2Sharp.Video
             using var file = new MarshaledString(filename);
             using var mode = new MarshaledString("rb");
             var source = SDL.RWFromFile(file, mode);
-            Error.ThrowOnFailure(source);
+            Error.ThrowLastErrorIfNull(source);
             var bitmap = SDL.LoadBMP_RW(source, 1);
-            Error.ThrowOnFailure(bitmap);
+            Error.ThrowLastErrorIfNull(bitmap);
             return new Surface(bitmap);
         }
 
@@ -68,19 +70,19 @@ namespace SDL2Sharp.Video
         }
 
         public Surface(int width, int height, PixelFormat format)
-        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurfaceWithFormat(0, width, height, 0, (uint)format)))
+        : this(Error.ThrowLastErrorIfNull(SDL.CreateRGBSurfaceWithFormat(0, width, height, 0, (uint)format)))
         { }
 
         public Surface(int width, int height, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
-        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurface(0, width, height, 0, redMask, greenMask, blueMask, alphaMask)))
+        : this(Error.ThrowLastErrorIfNull(SDL.CreateRGBSurface(0, width, height, 0, redMask, greenMask, blueMask, alphaMask)))
         { }
 
         public Surface(void* pixels, int width, int height, int pitch, PixelFormat format)
-        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurfaceWithFormatFrom(pixels, width, height, 0, pitch, (uint)format)))
+        : this(Error.ThrowLastErrorIfNull(SDL.CreateRGBSurfaceWithFormatFrom(pixels, width, height, 0, pitch, (uint)format)))
         { }
 
         public Surface(void* pixels, int width, int height, int pitch, uint redMask, uint greenMask, uint blueMask, uint alphaMask)
-        : this(Error.ReturnOrThrowOnFailure(SDL.CreateRGBSurfaceFrom(pixels, width, height, 0, pitch, redMask, greenMask, blueMask, alphaMask)))
+        : this(Error.ThrowLastErrorIfNull(SDL.CreateRGBSurfaceFrom(pixels, width, height, 0, pitch, redMask, greenMask, blueMask, alphaMask)))
         { }
 
         ~Surface()
@@ -113,12 +115,9 @@ namespace SDL2Sharp.Video
         {
             ThrowWhenDisposed();
 
-            if (surface is null)
-            {
-                throw new ArgumentNullException(nameof(surface));
-            }
+            ArgumentNullException.ThrowIfNull(surface);
 
-            Error.ThrowOnFailure(
+            Error.ThrowLastErrorIfNegative(
                 SDL.Blit(_handle, null, surface._handle, null)
             );
         }
@@ -134,7 +133,7 @@ namespace SDL2Sharp.Video
         {
             ThrowWhenDisposed();
 
-            Error.ThrowOnFailure(
+            Error.ThrowLastErrorIfNegative(
                 SDL.FillRect(_handle, null, color)
             );
         }
@@ -147,7 +146,7 @@ namespace SDL2Sharp.Video
             var mustLock = MustLock;
             if (mustLock)
             {
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.LockSurface(_handle)
                 );
             }
@@ -167,20 +166,7 @@ namespace SDL2Sharp.Video
 
         private void ThrowWhenDisposed()
         {
-            if (_handle is null)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
-        }
-
-        public static implicit operator SDL_Surface*(Surface surface)
-        {
-            if (surface is null)
-            {
-                throw new ArgumentNullException(nameof(surface));
-            }
-
-            return surface._handle;
+            ObjectDisposedException.ThrowIf(_handle is null, this);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace SDL2Sharp.Video
             get
             {
                 return new string(
-                    Error.ReturnOrThrowOnFailure(
+                    Error.ThrowLastErrorIfNull(
                         SDL.GetDisplayName(_displayIndex)
                     )
                 );
@@ -44,7 +44,7 @@ namespace SDL2Sharp.Video
             get
             {
                 var rect = new SDL_Rect();
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.GetDisplayBounds(_displayIndex, &rect)
                 );
                 return new Rectangle(rect.x, rect.y, rect.w, rect.h);
@@ -56,7 +56,7 @@ namespace SDL2Sharp.Video
             get
             {
                 var displayMode = new SDL_DisplayMode();
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.GetCurrentDisplayMode(_displayIndex, &displayMode)
                 );
                 return new DisplayMode(
@@ -72,7 +72,7 @@ namespace SDL2Sharp.Video
             get
             {
                 var displayMode = new SDL_DisplayMode();
-                Error.ThrowOnFailure(
+                Error.ThrowLastErrorIfNegative(
                     SDL.GetDesktopDisplayMode(_displayIndex, &displayMode)
                 );
                 return new DisplayMode(
@@ -92,7 +92,7 @@ namespace SDL2Sharp.Video
                 for (var modeIndex = 0; modeIndex < modeCount; modeIndex++)
                 {
                     var displayMode = new SDL_DisplayMode();
-                    Error.ThrowOnFailure(
+                    Error.ThrowLastErrorIfNegative(
                         SDL.GetDisplayMode(_displayIndex, modeIndex, &displayMode)
                     );
                     modes.Add(new DisplayMode(

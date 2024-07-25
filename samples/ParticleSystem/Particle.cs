@@ -65,10 +65,7 @@ internal sealed class Particle
 
     public void Render(Renderer renderer)
     {
-        if (renderer is null)
-        {
-            throw new ArgumentNullException(nameof(renderer));
-        }
+        ArgumentNullException.ThrowIfNull(renderer);
 
         renderer.DrawColor = Color;
         renderer.BlendMode = BlendMode.Blend;

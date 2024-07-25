@@ -89,13 +89,13 @@ namespace SDL2Sharp.Video
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
             void* pixels;
             int pitch;
-            Error.ThrowOnFailure(
-                SDL.LockTexture(_texture, &rect, &pixels, &pitch)
+            Error.ThrowLastErrorIfNegative(
+                SDL.LockTexture(_texture.Handle, &rect, &pixels, &pitch)
             );
 
             var image = new YuvImage<TYuvPixelFormat>(pixels, width, height, pitch);
             callback.Invoke(image);
-            SDL.UnlockTexture(_texture);
+            SDL.UnlockTexture(_texture.Handle);
         }
 
         public void Update(YuvImage<TYuvPixelFormat> image)
@@ -106,23 +106,19 @@ namespace SDL2Sharp.Video
             var uPitch = image.U.Width * Marshal.SizeOf<U8>();
             var vPlane = (byte*)Unsafe.AsPointer(ref image.V.DangerousGetReference());
             var vPitch = image.V.Width * Marshal.SizeOf<V8>();
-            SDL.UpdateYUVTexture(_texture, null, yPlane, yPitch, uPlane, uPitch, vPlane, vPitch);
+            Error.ThrowLastErrorIfNegative(
+                SDL.UpdateYUVTexture(_texture.Handle, null, yPlane, yPitch, uPlane, uPitch, vPlane, vPitch)
+            );
         }
 
         private void ThrowWhenDisposed()
         {
-            if (_texture is null)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
+            ObjectDisposedException.ThrowIf(_texture is null, this);
         }
 
         public static implicit operator Texture(YuvTexture<TYuvPixelFormat> texture)
         {
-            if (texture is null)
-            {
-                throw new ArgumentNullException(nameof(texture));
-            }
+            ArgumentNullException.ThrowIfNull(texture);
 
             return texture._texture;
         }
