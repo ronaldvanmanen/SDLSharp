@@ -18,72 +18,37 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System.Runtime.CompilerServices;
+
 namespace SDL2Sharp.Video.Colors
 {
-    public readonly struct Iyuv : IYuvPixel
+    public readonly struct Iyuv : IYuvFormat
     {
-        public static PixelFormat Format => PixelFormat.IYUV;
+        public static PixelFormat PixelFormat => PixelFormat.IYUV;
 
-        public static int GetYPlaneWidth(int imageWidth)
+        public static unsafe ImagePlane<Y8> CreateYPlane(void* pixels, int imageWidth, int imageHeight, int imagePitch)
         {
-            return imageWidth;
+            return new ImagePlane<Y8>(pixels, imageWidth, imageHeight, imagePitch);
         }
 
-        public static int GetYPlaneHeight(int imageHeight)
+        public static unsafe ImagePlane<U8> CreateUPlane(void* pixels, int imageWidth, int imageHeight, int imagePitch)
         {
-            return imageHeight;
+            var uPlaneWidth = imageWidth / 2;
+            var uPlaneHeight = imageHeight / 2;
+            var uPlanePitch = imagePitch / 2;
+            var uPlaneOffset = imageHeight * imagePitch;
+            var uPlanePixels = Unsafe.Add<U8>(pixels, uPlaneOffset);
+            return new ImagePlane<U8>(uPlanePixels, uPlaneWidth, uPlaneHeight, uPlanePitch);
         }
 
-        public static int GetYPlanePitch(int imagePitch)
+        public static unsafe ImagePlane<V8> CreateVPlane(void* pixels, int imageWidth, int imageHeight, int imagePitch)
         {
-            return imagePitch;
-        }
-
-        public static int GetYPlaneOffset(int imageWidth, int imageHeight, int imagePitch)
-        {
-            return 0;
-        }
-
-        public static int GetUPlaneWidth(int imageWidth)
-        {
-            return GetYPlaneWidth(imageWidth) / 2;
-        }
-
-        public static int GetUPlaneHeight(int imageHeight)
-        {
-            return GetYPlaneHeight(imageHeight) / 2;
-        }
-
-        public static int GetUPlanePitch(int imagePitch)
-        {
-            return GetYPlanePitch(imagePitch) / 2;
-        }
-
-        public static int GetUPlaneOffset(int imageWidth, int imageHeight, int imagePitch)
-        {
-            return GetYPlaneOffset(imageWidth, imageHeight, imagePitch)
-                 + GetYPlaneHeight(imageHeight) * GetYPlanePitch(imagePitch);
-        }
-
-        public static int GetVPlaneWidth(int imageWidth)
-        {
-            return GetUPlaneHeight(imageWidth);
-        }
-
-        public static int GetVPlaneHeight(int imageHeight)
-        {
-            return GetUPlaneHeight(imageHeight);
-        }
-
-        public static int GetVPlanePitch(int imagePitch)
-        {
-            return GetUPlaneHeight(imagePitch);
-        }
-
-        public static int GetVPlaneOffset(int imageWidth, int imageHeight, int imagePitch)
-        {
-            return GetUPlaneOffset(imageWidth, imageHeight, imagePitch)
-                 + GetUPlaneHeight(imageHeight) * GetUPlanePitch(imagePitch);
+            var vPlaneWidth = imageWidth / 2;
+            var vPlaneHeight = imageHeight / 2;
+            var vPlanePitch = imagePitch / 2;
+            var vPlaneOffset = imageHeight * imagePitch + imageHeight * imagePitch / 4;
+            var vPlanePixels = Unsafe.Add<V8>(pixels, vPlaneOffset);
+            return new ImagePlane<V8>(vPlanePixels, vPlaneWidth, vPlaneHeight, vPlanePitch);
         }
     }
 }

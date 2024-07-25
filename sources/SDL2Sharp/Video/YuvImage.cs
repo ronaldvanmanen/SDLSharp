@@ -24,7 +24,7 @@ using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
-    public readonly ref struct YuvImage<TYuvPixelFormat> where TYuvPixelFormat : IYuvPixel, new()
+    public readonly ref struct YuvImage<TYuvFormat> where TYuvFormat : IYuvFormat, new()
     {
         private readonly ImagePlane<Y8> _yPlane;
 
@@ -76,26 +76,9 @@ namespace SDL2Sharp.Video
                     "pitch cannot be less than zero");
             }
 
-            var yPlaneHeight = TYuvPixelFormat.GetYPlaneHeight(height);
-            var yPlaneWidth = TYuvPixelFormat.GetYPlaneWidth(width);
-            var yPlanePitch = TYuvPixelFormat.GetYPlanePitch(pitch);
-            var yPlaneOffset = TYuvPixelFormat.GetYPlaneOffset(width, height, pitch);
-            var yPlanePixels = Unsafe.Add<Y8>(pixels, yPlaneOffset);
-            _yPlane = new ImagePlane<Y8>(yPlanePixels, yPlaneWidth, yPlaneHeight, yPlanePitch);
-
-            var uPlaneHeight = TYuvPixelFormat.GetUPlaneHeight(height);
-            var uPlaneWidth = TYuvPixelFormat.GetUPlaneWidth(width);
-            var uPlanePitch = TYuvPixelFormat.GetUPlanePitch(pitch);
-            var uPlaneOffset = TYuvPixelFormat.GetUPlaneOffset(width, height, pitch);
-            var uPlanePixels = Unsafe.Add<U8>(pixels, uPlaneOffset);
-            _uPlane = new ImagePlane<U8>(uPlanePixels, uPlaneWidth, uPlaneHeight, uPlanePitch);
-
-            var vPlaneHeight = TYuvPixelFormat.GetVPlaneHeight(height);
-            var vPlaneWidth = TYuvPixelFormat.GetVPlaneWidth(width);
-            var vPlanePitch = TYuvPixelFormat.GetVPlanePitch(pitch);
-            var vPlaneOffset = TYuvPixelFormat.GetVPlaneOffset(width, height, pitch);
-            var vPlanePixels = Unsafe.Add<V8>(pixels, vPlaneOffset);
-            _vPlane = new ImagePlane<V8>(vPlanePixels, vPlaneWidth, vPlaneHeight, vPlanePitch);
+            _yPlane = TYuvFormat.CreateYPlane(pixels, width, height, pitch);
+            _uPlane = TYuvFormat.CreateUPlane(pixels, width, height, pitch);
+            _vPlane = TYuvFormat.CreateVPlane(pixels, width, height, pitch);
         }
     }
 }

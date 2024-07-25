@@ -19,16 +19,13 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using SDL2Sharp.Interop;
-using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
-    public sealed unsafe partial class Nv21Texture : IDisposable
+    public unsafe sealed class NvTexture<TUVPixel> : IDisposable where TUVPixel : struct
     {
-        public delegate void LockCallback(Nv21Image pixels);
+        public delegate void LockCallback(NvImage<TUVPixel> pixels);
 
         private Texture _texture;
 
@@ -49,12 +46,12 @@ namespace SDL2Sharp.Video
 
         public bool IsValid => _texture.IsValid;
 
-        internal Nv21Texture(Texture texture)
+        internal NvTexture(Texture texture)
         {
             _texture = texture ?? throw new ArgumentNullException(nameof(texture));
         }
 
-        ~Nv21Texture()
+        ~NvTexture()
         {
             Dispose(false);
         }
@@ -84,6 +81,8 @@ namespace SDL2Sharp.Video
 
         public void WithLock(int x, int y, int width, int height, LockCallback callback)
         {
+            ArgumentNullException.ThrowIfNull(callback);
+
             ThrowWhenDisposed();
 
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
@@ -93,30 +92,29 @@ namespace SDL2Sharp.Video
                 SDL.LockTexture(_texture.Handle, &rect, &pixels, &pitch)
             );
 
-            var image = new Nv21Image(pixels, width, height, pitch);
+            var image = new NvImage<TUVPixel>(pixels, width, height, pitch);
             callback.Invoke(image);
             SDL.UnlockTexture(_texture.Handle);
         }
 
-        public void Update(Nv21Image image)
+        public void Update(NvImage<TUVPixel> image)
         {
-            var yPlane = (byte*)Unsafe.AsPointer(ref image.Y.DangerousGetReference());
-            var yPitch = image.Y.Width * Marshal.SizeOf<Y8>();
-            var uvPlane = (byte*)Unsafe.AsPointer(ref image.VU.DangerousGetReference());
-            var uvPitch = image.VU.Width * Marshal.SizeOf<VU88>();
             Error.ThrowLastErrorIfNegative(
-                SDL.UpdateNVTexture(_texture.Handle, null, yPlane, yPitch, uvPlane, uvPitch)
+                SDL.UpdateNVTexture(_texture.Handle, null,
+                    (byte*)image.Y, image.Y.Pitch,
+                    (byte*)image.UV, image.UV.Pitch)
             );
         }
 
-        public void Update(Nv21MemoryImage image)
+        public void Update(NvMemoryImage<TUVPixel> image)
         {
-            var yPlane = (byte*)Unsafe.AsPointer(ref image.Y.DangerousGetReference());
-            var yPitch = image.Y.Width * Marshal.SizeOf<Y8>();
-            var uvPlane = (byte*)Unsafe.AsPointer(ref image.VU.DangerousGetReference());
-            var uvPitch = image.VU.Width * Marshal.SizeOf<VU88>();
+            ArgumentNullException.ThrowIfNull(image);
+
             Error.ThrowLastErrorIfNegative(
-                SDL.UpdateNVTexture(_texture.Handle, null, yPlane, yPitch, uvPlane, uvPitch)
+                SDL.UpdateNVTexture(_texture.Handle, null,
+                    (byte*)image.Y, image.Y.Pitch,
+                    (byte*)image.UV, image.UV.Pitch
+                )
             );
         }
 
@@ -125,7 +123,7 @@ namespace SDL2Sharp.Video
             ObjectDisposedException.ThrowIf(_texture is null, this);
         }
 
-        public static implicit operator Texture(Nv21Texture texture)
+        public static implicit operator Texture(NvTexture<TUVPixel> texture)
         {
             ArgumentNullException.ThrowIfNull(texture);
 

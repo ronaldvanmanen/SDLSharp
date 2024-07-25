@@ -45,6 +45,12 @@ namespace SDL2Sharp.Video
             get => _plane.Size;
         }
 
+        public int Pitch
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _plane.Pitch;
+        }
+
         public ref TPackedPixel this[int x, int y]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -74,6 +80,11 @@ namespace SDL2Sharp.Video
         public void Fill(TPackedPixel value)
         {
             _plane.Fill(value);
+        }
+
+        public static unsafe explicit operator void*(PackedImage<TPackedPixel> image)
+        {
+            return (void*)image;
         }
     }
 }

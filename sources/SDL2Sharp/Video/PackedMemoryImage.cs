@@ -19,12 +19,13 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace SDL2Sharp.Video
 {
-    public sealed class PackedMemoryImage<TColor> where TColor : struct
+    public sealed class PackedMemoryImage<TPackedPixel> where TPackedPixel : struct
     {
-        private readonly ImageMemoryPlane<TColor> _plane;
+        private readonly ImageMemoryPlane<TPackedPixel> _plane;
 
         public int Width => _plane.Width;
 
@@ -32,7 +33,9 @@ namespace SDL2Sharp.Video
 
         public Size Size => _plane.Size;
 
-        public TColor this[int x, int y]
+        public int Pitch => _plane.Pitch;
+
+        public TPackedPixel this[int x, int y]
         {
             get
             {
@@ -49,24 +52,29 @@ namespace SDL2Sharp.Video
         { }
 
         public PackedMemoryImage(int width, int height)
-        : this(new ImageMemoryPlane<TColor>(width, height))
+        : this(new ImageMemoryPlane<TPackedPixel>(width, height))
         { }
 
-        private PackedMemoryImage(ImageMemoryPlane<TColor> plane)
+        private PackedMemoryImage(ImageMemoryPlane<TPackedPixel> plane)
         {
             _plane = plane ?? throw new ArgumentNullException(nameof(plane));
         }
 
-        public PackedMemoryImage<TColor> Crop(int top, int left, int bottom, int right)
+        public PackedMemoryImage<TPackedPixel> Crop(int top, int left, int bottom, int right)
         {
             var croppedPlane = _plane.Crop(top, left, bottom, right);
-            var croppedImage = new PackedMemoryImage<TColor>(croppedPlane);
+            var croppedImage = new PackedMemoryImage<TPackedPixel>(croppedPlane);
             return croppedImage;
         }
 
-        public ref TColor DangerousGetReference()
+        public ref TPackedPixel DangerousGetReference()
         {
             return ref _plane.DangerousGetReference();
+        }
+
+        public static unsafe explicit operator void*(PackedMemoryImage<TPackedPixel> image)
+        {
+            return Unsafe.AsPointer(ref image.DangerousGetReference());
         }
     }
 }

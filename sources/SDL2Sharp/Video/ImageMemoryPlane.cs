@@ -19,6 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
+using System.Runtime.InteropServices;
 using Microsoft.Toolkit.HighPerformance;
 
 namespace SDL2Sharp.Video
@@ -36,6 +37,8 @@ namespace SDL2Sharp.Video
         public int Height => _height;
 
         public Size Size => new(_width, _height);
+
+        public int Pitch => _width * Marshal.SizeOf<TPackedPixel>();
 
         public TPackedPixel this[int x, int y]
         {
@@ -140,6 +143,11 @@ namespace SDL2Sharp.Video
         public ref TPackedPixel DangerousGetReference()
         {
             return ref _pixels.DangerousGetReference();
+        }
+
+        public static unsafe explicit operator void*(ImageMemoryPlane<TPackedPixel> imagePlane)
+        {
+            return (void*)imagePlane;
         }
     }
 }

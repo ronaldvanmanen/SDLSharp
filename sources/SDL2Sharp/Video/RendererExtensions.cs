@@ -45,22 +45,22 @@ namespace SDL2Sharp.Video
             return new PackedTexture<TPackedPixel>(texture);
         }
 
-        public static YuvTexture<TYuvPixelFormat> CreateYuvTexture<TYuvPixelFormat>(this Renderer renderer, TextureAccess access, Size size)
-            where TYuvPixelFormat : IYuvPixel, new()
+        public static YuvTexture<TYuvFormat> CreateYuvTexture<TYuvFormat>(this Renderer renderer, TextureAccess access, Size size)
+            where TYuvFormat : IYuvFormat, new()
         {
             ArgumentNullException.ThrowIfNull(renderer);
 
-            return renderer.CreateYuvTexture<TYuvPixelFormat>(access, size.Width, size.Height);
+            return renderer.CreateYuvTexture<TYuvFormat>(access, size.Width, size.Height);
         }
 
-        public static YuvTexture<TYuvPixelFormat> CreateYuvTexture<TYuvPixelFormat>(this Renderer renderer, TextureAccess access, int width, int height)
-            where TYuvPixelFormat : IYuvPixel, new()
+        public static YuvTexture<TYuvFormat> CreateYuvTexture<TYuvFormat>(this Renderer renderer, TextureAccess access, int width, int height)
+            where TYuvFormat : IYuvFormat, new()
         {
             ArgumentNullException.ThrowIfNull(renderer);
 
-            var pixelFormat = TYuvPixelFormat.Format;
+            var pixelFormat = TYuvFormat.PixelFormat;
             var texture = renderer.CreateTexture(pixelFormat, access, width, height);
-            return new YuvTexture<TYuvPixelFormat>(texture);
+            return new YuvTexture<TYuvFormat>(texture);
         }
 
         public static PackedTexture<TPackedPixel> CreateTextureFromSurface<TPackedPixel>(this Renderer renderer, Surface<TPackedPixel> surface)

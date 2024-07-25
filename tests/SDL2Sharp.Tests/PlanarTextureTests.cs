@@ -24,16 +24,22 @@ using Xunit;
 
 namespace SDL2Sharp.Tests
 {
-    public sealed class PlanarTextureTests
+    public static class PlanarTextureTests
     {
         [Fact]
-        public void WriteAndReadYV12()
+        public static void WriteAndReadYV12() => WriteAndRead<Yv12>();
+
+        [Fact]
+        public static void WriteAndReadIYUV() => WriteAndRead<Iyuv>();
+
+        private static void WriteAndRead<TYuvFormat>()
+            where TYuvFormat : struct, IYuvFormat
         {
             using var mainSystem = new MainSystem();
             using var videoSystem = new VideoSubsystem();
             using var window = videoSystem.CreateWindow("PlanarTextureTests", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
-            using var texture = renderer.CreateYuvTexture<Yv12>(TextureAccess.Streaming, renderer.OutputSize);
+            using var texture = renderer.CreateYuvTexture<TYuvFormat>(TextureAccess.Streaming, renderer.OutputSize);
 
             var y = new Y8(255);
             var u = new U8(128);

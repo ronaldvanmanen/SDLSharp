@@ -19,16 +19,14 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using SDL2Sharp.Interop;
 using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
-    public sealed unsafe partial class YuvTexture<TYuvPixelFormat> : IDisposable where TYuvPixelFormat : IYuvPixel, new()
+    public sealed unsafe partial class YuvTexture<TYuvFormat> : IDisposable where TYuvFormat : IYuvFormat, new()
     {
-        public delegate void LockCallback(YuvImage<TYuvPixelFormat> pixels);
+        public delegate void LockCallback(YuvImage<TYuvFormat> pixels);
 
         private Texture _texture;
 
@@ -93,21 +91,30 @@ namespace SDL2Sharp.Video
                 SDL.LockTexture(_texture.Handle, &rect, &pixels, &pitch)
             );
 
-            var image = new YuvImage<TYuvPixelFormat>(pixels, width, height, pitch);
+            var image = new YuvImage<TYuvFormat>(pixels, width, height, pitch);
             callback.Invoke(image);
             SDL.UnlockTexture(_texture.Handle);
         }
 
-        public void Update(YuvImage<TYuvPixelFormat> image)
+        public void Update(YuvImage<TYuvFormat> image)
         {
-            var yPlane = (byte*)Unsafe.AsPointer(ref image.Y.DangerousGetReference());
-            var yPitch = image.Y.Width * Marshal.SizeOf<Y8>();
-            var uPlane = (byte*)Unsafe.AsPointer(ref image.U.DangerousGetReference());
-            var uPitch = image.U.Width * Marshal.SizeOf<U8>();
-            var vPlane = (byte*)Unsafe.AsPointer(ref image.V.DangerousGetReference());
-            var vPitch = image.V.Width * Marshal.SizeOf<V8>();
             Error.ThrowLastErrorIfNegative(
-                SDL.UpdateYUVTexture(_texture.Handle, null, yPlane, yPitch, uPlane, uPitch, vPlane, vPitch)
+                SDL.UpdateYUVTexture(_texture.Handle, null,
+                    (byte*)image.Y, image.Y.Pitch,
+                    (byte*)image.U, image.U.Pitch,
+                    (byte*)image.V, image.V.Pitch
+                )
+            );
+        }
+
+        public void Update(YuvMemoryImage image)
+        {
+            Error.ThrowLastErrorIfNegative(
+                SDL.UpdateYUVTexture(_texture.Handle, null,
+                    (byte*)image.Y, image.Y.Pitch,
+                    (byte*)image.U, image.U.Pitch,
+                    (byte*)image.V, image.V.Pitch
+                )
             );
         }
 
@@ -116,7 +123,7 @@ namespace SDL2Sharp.Video
             ObjectDisposedException.ThrowIf(_texture is null, this);
         }
 
-        public static implicit operator Texture(YuvTexture<TYuvPixelFormat> texture)
+        public static implicit operator Texture(YuvTexture<TYuvFormat> texture)
         {
             ArgumentNullException.ThrowIfNull(texture);
 

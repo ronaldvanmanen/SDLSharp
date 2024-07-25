@@ -40,22 +40,22 @@ namespace SDL2Sharp.Video
             return new YuvTexture<Iyuv>(texture);
         }
 
-        public static Nv12Texture AsNV12(this Texture texture)
+        public static NvTexture<UV88> AsNV12(this Texture texture)
         {
             if (texture.Format != PixelFormat.NV12)
             {
                 throw new ArgumentException("Texture is not in NV12 color format.", nameof(texture));
             }
-            return new Nv12Texture(texture);
+            return new NvTexture<UV88>(texture);
         }
 
-        public static Nv21Texture AsNV21(this Texture texture)
+        public static NvTexture<VU88> AsNV21(this Texture texture)
         {
             if (texture.Format != PixelFormat.NV21)
             {
                 throw new ArgumentException("Texture is not in NV21 color format.", nameof(texture));
             }
-            return new Nv21Texture(texture);
+            return new NvTexture<VU88>(texture);
         }
 
         public static YuvTexture<Yv12> AsYV12(this Texture texture)

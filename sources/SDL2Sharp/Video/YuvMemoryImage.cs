@@ -24,38 +24,34 @@ using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
-    public readonly ref struct Nv12Image
+    public sealed class YuvMemoryImage
     {
-        private readonly ImagePlane<Y8> _yPlane;
+        private readonly ImageMemoryPlane<Y8> _yPlane;
 
-        private readonly ImagePlane<UV88> _uvPlane;
+        private readonly ImageMemoryPlane<U8> _uPlane;
 
-        public ImagePlane<Y8> Y => _yPlane;
+        private readonly ImageMemoryPlane<V8> _vPlane;
 
-        public ImagePlane<UV88> UV => _uvPlane;
+        public ImageMemoryPlane<Y8> Y => _yPlane;
 
-        public readonly int Width
+        public ImageMemoryPlane<U8> U => _uPlane;
+
+        public ImageMemoryPlane<V8> V => _vPlane;
+
+        public int Width
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _yPlane.Width;
         }
 
-        public readonly int Height
+        public int Height
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _yPlane.Height;
         }
 
-        public unsafe Nv12Image(void* pixels, int width, int height, int pitch)
+        public YuvMemoryImage(int width, int height)
         {
-            if (height < 0)
-            {
-                throw new ArgumentOutOfRangeException(
-                    nameof(height),
-                    height,
-                    "height cannot be less than zero");
-            }
-
             if (width < 0)
             {
                 throw new ArgumentOutOfRangeException(
@@ -64,17 +60,17 @@ namespace SDL2Sharp.Video
                     "height cannot be less than zero");
             }
 
-            if (pitch < 0)
+            if (height < 0)
             {
                 throw new ArgumentOutOfRangeException(
-                    nameof(pitch),
-                    pitch,
-                    "pitch cannot be less than zero");
+                    nameof(height),
+                    height,
+                    "height cannot be less than zero");
             }
 
-            _yPlane = new ImagePlane<Y8>(pixels, width, height, pitch);
-            var uPlanePixels = Unsafe.Add<Y8>(pixels, height * pitch);
-            _uvPlane = new ImagePlane<UV88>(uPlanePixels, width / 2, height / 2, pitch / 2);
+            _yPlane = new ImageMemoryPlane<Y8>(width, height);
+            _uPlane = new ImageMemoryPlane<U8>(width / 2, height / 2);
+            _vPlane = new ImageMemoryPlane<V8>(width / 2, height / 2);
         }
     }
 }

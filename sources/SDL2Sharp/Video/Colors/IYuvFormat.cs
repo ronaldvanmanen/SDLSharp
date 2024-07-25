@@ -20,32 +20,14 @@
 
 namespace SDL2Sharp.Video.Colors
 {
-    public interface IYuvPixel
+    public interface IYuvFormat
     {
-        static abstract PixelFormat Format { get; }
+        static abstract PixelFormat PixelFormat { get; }
 
-        static abstract int GetYPlaneWidth(int imageWidth);
+        static unsafe abstract ImagePlane<Y8> CreateYPlane(void* pixels, int imageWidth, int imageHeight, int imagePitch);
 
-        static abstract int GetYPlaneHeight(int imageHeight);
+        static unsafe abstract ImagePlane<U8> CreateUPlane(void* pixels, int imageWidth, int imageHeight, int imagePitch);
 
-        static abstract int GetYPlanePitch(int imagePitch);
-
-        static abstract int GetYPlaneOffset(int imageWidth, int imageHeight, int imagePitch);
-
-        static abstract int GetUPlaneWidth(int imageWidth);
-
-        static abstract int GetUPlaneHeight(int imageHeight);
-
-        static abstract int GetUPlanePitch(int imagePitch);
-
-        static abstract int GetUPlaneOffset(int imageWidth, int imageHeight, int imagePitch);
-
-        static abstract int GetVPlaneWidth(int imageWidth);
-
-        static abstract int GetVPlaneHeight(int imageHeight);
-
-        static abstract int GetVPlanePitch(int imagePitch);
-
-        static abstract int GetVPlaneOffset(int imageWidth, int imageHeight, int imagePitch);
+        static unsafe abstract ImagePlane<V8> CreateVPlane(void* pixels, int imageWidth, int imageHeight, int imagePitch);
     }
 }

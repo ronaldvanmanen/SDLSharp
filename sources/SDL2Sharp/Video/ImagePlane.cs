@@ -25,9 +25,9 @@ using System.Runtime.InteropServices;
 
 namespace SDL2Sharp.Video
 {
-    public readonly ref struct ImagePlane<TPackedPixel> where TPackedPixel : struct
+    public unsafe readonly ref struct ImagePlane<TPackedPixel> where TPackedPixel : struct
     {
-        private readonly Span<TPackedPixel> _pixels;
+        private readonly void* _pixels;
 
         private readonly int _width;
 
@@ -51,6 +51,12 @@ namespace SDL2Sharp.Video
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => new(_width, _height);
+        }
+
+        public readonly int Pitch
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _pitch;
         }
 
         public ref TPackedPixel this[int x, int y]
@@ -94,7 +100,7 @@ namespace SDL2Sharp.Video
             }
         }
 
-        public unsafe ImagePlane(void* pixels, int width, int height, int pitch)
+        public ImagePlane(void* pixels, int width, int height, int pitch)
         {
             if (height < 0)
             {
@@ -120,7 +126,7 @@ namespace SDL2Sharp.Video
                     "pitch cannot be less than zero");
             }
 
-            _pixels = new Span<TPackedPixel>(pixels, height * pitch);
+            _pixels = pixels;
             _height = height;
             _width = width;
             _pitch = pitch;
@@ -130,24 +136,33 @@ namespace SDL2Sharp.Video
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ref TPackedPixel DangerousGetReference()
         {
-            ref var r0 = ref MemoryMarshal.GetReference(_pixels);
-            const int index = 0;
-            return ref Unsafe.Add(ref r0, index);
+            return ref Unsafe.AsRef<TPackedPixel>(_pixels);
         }
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ref TPackedPixel DangerousGetReferenceAt(int x, int y)
         {
-            ref var r0 = ref MemoryMarshal.GetReference(_pixels);
-            var index = y * _pitch + x;
-            return ref Unsafe.Add(ref r0, index);
+            ref var r0 = ref Unsafe.AsRef<TPackedPixel>(_pixels);
+            var index = y * _pitch + x * Marshal.SizeOf<TPackedPixel>();
+            return ref Unsafe.AddByteOffset(ref r0, index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly void Fill(TPackedPixel value)
         {
-            _pixels.Fill(value);
+            for (var y = 0; y < _height; y++)
+            {
+                for (var x = 0; x < _width; x++)
+                {
+                    this[x, y] = value;
+                }
+            }
+        }
+
+        public static explicit operator void*(ImagePlane<TPackedPixel> imagePlane)
+        {
+            return imagePlane._pixels;
         }
     }
 }

@@ -93,7 +93,7 @@ namespace SDL2Sharp.Tests
                 planarTexture.WithLock(pixels =>
                 {
                     pixels.Y.Fill(y);
-                    pixels.VU.Fill(vu);
+                    pixels.UV.Fill(vu);
                 });
                 renderer.Copy(texture);
                 renderer.Present();
