@@ -18,18 +18,27 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-namespace SDL2Sharp.Video
+using System;
+
+namespace SDL2Sharp.Input
 {
-    public readonly record struct Point
+    public readonly ref struct KeyboardState
     {
-        public Point(int x, int y)
+        private readonly ReadOnlySpan<byte> _keyStates;
+
+        public KeyboardState(Span<byte> keyStates)
         {
-            X = x;
-            Y = y;
+            _keyStates = keyStates;
         }
 
-        public readonly int X { get; }
+        public bool IsPressed(Scancode scanCode)
+        {
+            return _keyStates[(int)scanCode] == 1;
+        }
 
-        public readonly int Y { get; }
+        public bool IsReleased(Scancode scanCode)
+        {
+            return _keyStates[(int)scanCode] == 0;
+        }
     }
 }

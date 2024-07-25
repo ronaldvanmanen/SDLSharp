@@ -38,7 +38,7 @@ namespace SDL2Sharp.Internals
             }
             else
             {
-                var valueBytes = (input.Length != 0) ? Encoding.UTF8.GetBytes(input) : Array.Empty<byte>();
+                var valueBytes = (input.Length != 0) ? Encoding.UTF8.GetBytes(input) : [];
                 length = valueBytes.Length;
                 value = Marshal.AllocHGlobal(length + 1);
                 Marshal.Copy(valueBytes, 0, value, length);
@@ -49,7 +49,7 @@ namespace SDL2Sharp.Internals
             Value = (sbyte*)value;
         }
 
-        public ReadOnlySpan<byte> AsSpan() => new(Value, Length);
+        public readonly ReadOnlySpan<byte> AsSpan() => new(Value, Length);
 
         public int Length { get; private set; }
 
@@ -67,7 +67,7 @@ namespace SDL2Sharp.Internals
 
         public static implicit operator sbyte*(in MarshaledString value) => value.Value;
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             var span = new ReadOnlySpan<byte>(Value, Length);
             return span.AsString();

@@ -27,9 +27,9 @@ internal sealed class World
 {
     public Rgb96f Ambient { get; set; }
 
-    public ICollection<IObject> Objects { get; } = new List<IObject>();
+    public ICollection<IObject> Objects { get; } = [];
 
-    public ICollection<PointLight> Lights { get; } = new List<PointLight>();
+    public ICollection<PointLight> Lights { get; } = [];
 
     public Rgb96f Trace(Ray ray, int level, float weight)
     {

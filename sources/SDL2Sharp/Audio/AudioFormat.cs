@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -24,6 +24,7 @@ namespace SDL2Sharp.Audio
 {
     public enum AudioFormat : ushort
     {
+#pragma warning disable CA1069 // Enums values should not be duplicated
         U8 = SDL.AUDIO_U8,
         S8 = SDL.AUDIO_S8,
         U16LSB = SDL.AUDIO_U16LSB,
@@ -42,5 +43,6 @@ namespace SDL2Sharp.Audio
         S16SYS = SDL.AUDIO_S16SYS,
         S32SYS = SDL.AUDIO_S32SYS,
         F32SYS = SDL.AUDIO_F32SYS
+#pragma warning restore CA1069 // Enums values should not be duplicated
     }
 }

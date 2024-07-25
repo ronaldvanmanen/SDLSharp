@@ -23,10 +23,6 @@ using System.Linq;
 
 internal static class RayExtensions
 {
-    private static readonly Comparer<Intersection> _distanceComparer =
-        Comparer<Intersection>.Create(
-            (a, b) => a.Distance.CompareTo(b.Distance));
-
     public static Intersection? Intersect(this Ray ray, IEnumerable<IObject> objects)
     {
         return objects

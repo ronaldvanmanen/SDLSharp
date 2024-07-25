@@ -24,6 +24,7 @@ namespace SDL2Sharp.Video
 {
     public enum PixelFormat : uint
     {
+#pragma warning disable CA1069 // Enums values should not be duplicated
         Unknown = SDL_PIXELFORMAT_UNKNOWN,
         Index1LSB = SDL_PIXELFORMAT_INDEX1LSB,
         Index1MSB = SDL_PIXELFORMAT_INDEX1MSB,
@@ -74,5 +75,6 @@ namespace SDL2Sharp.Video
         NV12 = SDL_PIXELFORMAT_NV12,
         NV21 = SDL_PIXELFORMAT_NV21,
         ExternalOES = SDL_PIXELFORMAT_EXTERNAL_OES,
+#pragma warning restore CA1069 // Enums values should not be duplicated
     }
 }

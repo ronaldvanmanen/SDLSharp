@@ -79,6 +79,7 @@ namespace SDL2Sharp.Video
 
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
             Dispose(true);
         }
 

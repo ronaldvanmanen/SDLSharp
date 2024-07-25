@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,17 +18,17 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using SDL2Sharp.Interop;
+using static SDL2Sharp.Interop.SDL_BlendMode;
 
 namespace SDL2Sharp.Video
 {
     public enum BlendMode
     {
-        None = SDL_BlendMode.SDL_BLENDMODE_NONE,
-        Blend = SDL_BlendMode.SDL_BLENDMODE_BLEND,
-        Add = SDL_BlendMode.SDL_BLENDMODE_ADD,
-        Mod = SDL_BlendMode.SDL_BLENDMODE_MOD,
-        Mul = SDL_BlendMode.SDL_BLENDMODE_MUL,
-        Invalid = SDL_BlendMode.SDL_BLENDMODE_INVALID,
+        None = SDL_BLENDMODE_NONE,
+        Blend = SDL_BLENDMODE_BLEND,
+        Add = SDL_BLENDMODE_ADD,
+        Mod = SDL_BLENDMODE_MOD,
+        Mul = SDL_BLENDMODE_MUL,
+        Invalid = SDL_BLENDMODE_INVALID,
     }
 }

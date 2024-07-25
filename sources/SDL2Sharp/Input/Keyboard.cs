@@ -23,9 +23,9 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp.Input
 {
-    public static unsafe class Keyboard
+    public static class Keyboard
     {
-        public static KeyboardState State
+        public unsafe static KeyboardState State
         {
             get
             {
@@ -33,26 +33,6 @@ namespace SDL2Sharp.Input
                 byte* keyStates = SDL.GetKeyboardState(&keyCount);
                 return new KeyboardState(new Span<byte>(keyStates, keyCount));
             }
-        }
-    }
-
-    public readonly ref struct KeyboardState
-    {
-        private readonly ReadOnlySpan<byte> _keyStates;
-
-        public KeyboardState(Span<byte> keyStates)
-        {
-            _keyStates = keyStates;
-        }
-
-        public bool IsPressed(Scancode scanCode)
-        {
-            return _keyStates[(int)scanCode] == 1;
-        }
-
-        public bool IsReleased(Scancode scanCode)
-        {
-            return _keyStates[(int)scanCode] == 0;
         }
     }
 }
