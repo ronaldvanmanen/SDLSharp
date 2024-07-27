@@ -95,14 +95,8 @@ partial interface IBuild : INukeBuild
 
     protected IReadOnlyCollection<string> GetTargetFrameworks()
     {
-        return GetTargetFrameworks(_ => true);
-    }
-
-    protected IReadOnlyCollection<string> GetTargetFrameworks(Func<Project, bool> predicate)
-    {
         var targetFrameworkRegex = GetTargetFrameworkRegex();
         return Solution.AllProjects
-            .Where(predicate)
             .SelectMany((project) => project.GetTargetFrameworks())
             .Distinct()
             .Order()

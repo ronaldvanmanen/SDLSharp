@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -22,10 +22,12 @@ namespace SDL2Sharp.Interop
 {
     public static unsafe partial class TTF
     {
+#if NET8_0_OR_GREATER
         [NativeTypeName("#define IMG_SetError SDL_SetError")]
         public static int SetError(sbyte* fmt) => SDL.SetError(fmt, __arglist());
 
         [NativeTypeName("#define IMG_GetError SDL_GetError")]
         public static sbyte* GetError() => SDL.GetError();
+#endif
     }
 }

@@ -18,7 +18,9 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+using System.Linq;
 using Nuke.Common;
+using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
@@ -31,17 +33,20 @@ interface ITest : IBuild
         .Produces(ArtifactsDirectory / "tst" / "*.*", ArtifactsDirectory / "log" / "*.*")
         .Executes(() =>
         {
-            foreach (var targetFramework in GetTargetFrameworks(project => project.Name.EndsWith(".Tests")))
+            foreach (var project in Solution.AllProjects.Where(e => e.Name.EndsWith(".Tests")))
             {
-                DotNetTest(settings => settings
-                    .SetProjectFile(Solution)
-                    .SetConfiguration(Configuration)
-                    .SetNoRestore(true)
-                    .SetNoBuild(true)
-                    .SetVerbosity(Verbosity.ToDotNetVerbosity())
-                    .SetFramework(targetFramework)
-                    .SetProcessArgumentConfigurator(_ => _.Add("-- RunConfiguration.DisableAppDomain=true"))
-                );
+                foreach (var targetFramework in project.GetTargetFrameworks())
+                {
+                    DotNetTest(settings => settings
+                        .SetProjectFile(project)
+                        .SetConfiguration(Configuration)
+                        .SetNoRestore(true)
+                        .SetNoBuild(true)
+                        .SetVerbosity(Verbosity.ToDotNetVerbosity())
+                        .SetFramework(targetFramework)
+                        .SetProcessArgumentConfigurator(_ => _.Add("-- RunConfiguration.DisableAppDomain=true"))
+                    );
+                }
             }
         });
 }

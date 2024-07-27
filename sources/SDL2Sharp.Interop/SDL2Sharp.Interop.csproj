@@ -1,11 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net8.0;net6.0;net461;netstandard2.0</TargetFrameworks>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Description>Provides SDL2 bindings written in C#.</Description>
     <PackageTags>SDL2</PackageTags>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="codegen\**\*.cs" />
+  </ItemGroup>
+
+  <Choose>
+    <When Condition="'$(Codegen)' == 'Latest'">
+      <ItemGroup>
+        <None Include="codegen\compatible\*.cs" />
+        <None Include="codegen\default\*.cs" />
+        <Compile Include="codegen\latest\*.cs" />
+      </ItemGroup>
+    </When>
+    <When Condition="'$(Codegen)' == 'Default'">
+      <ItemGroup>
+        <None Include="codegen\compatible\*.cs" />
+        <Compile Include="codegen\default\*.cs" />
+        <None Include="codegen\latest\*.cs" />
+      </ItemGroup>
+    </When>
+    <When Condition="'$(Codegen)' == 'Compatible'">
+      <ItemGroup>
+        <Compile Include="codegen\compatible\*.cs" />
+        <None Include="codegen\default\*.cs" />
+        <None Include="codegen\latest\*.cs" />
+      </ItemGroup>
+    </When>
+  </Choose>
+
+  <ItemGroup>
+    <None Include=".editorconfig" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="SDL2" Version="2.28.0" />

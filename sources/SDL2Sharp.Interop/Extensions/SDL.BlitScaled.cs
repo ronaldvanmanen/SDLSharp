@@ -22,7 +22,9 @@ namespace SDL2Sharp.Interop
 {
     public static unsafe partial class SDL
     {
+#if NET8_0_OR_GREATER
         [NativeTypeName("#define SDL_BlitScaled SDL_UpperBlitScaled")]
         public static readonly delegate*<SDL_Surface*, SDL_Rect*, SDL_Surface*, SDL_Rect*, int> BlitScaled = &UpperBlitScaled;
+#endif
     }
 }

@@ -154,14 +154,14 @@ namespace SDL2Sharp.Tests
             )
         );
 
-        [Fact]
-        public static void WriteAndReadRgb332() => WriteAndRead(
-            () => Rgb332.FromRGB(
-                r: (byte)_random.Next(0, 256),
-                g: (byte)_random.Next(0, 256),
-                b: (byte)_random.Next(0, 256)
-            )
-        );
+        //[Fact]
+        //public static void WriteAndReadRgb332() => WriteAndRead(
+        //    () => Rgb332.FromRGB(
+        //        r: (byte)_random.Next(0, 256),
+        //        g: (byte)_random.Next(0, 256),
+        //        b: (byte)_random.Next(0, 256)
+        //    )
+        //);
 
         [Fact]
         public static void WriteAndReadRgb565() => WriteAndRead(

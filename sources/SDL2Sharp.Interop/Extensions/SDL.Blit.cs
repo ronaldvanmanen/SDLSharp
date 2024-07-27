@@ -22,6 +22,8 @@ namespace SDL2Sharp.Interop
 {
     public static unsafe partial class SDL
     {
+#if NET8_0_OR_GREATER
         public static readonly delegate*<SDL_Surface*, SDL_Rect*, SDL_Surface*, SDL_Rect*, int> Blit = &UpperBlit;
+#endif
     }
 }

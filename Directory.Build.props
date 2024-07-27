@@ -70,5 +70,14 @@
   <PropertyGroup>
     <DefaultItemExcludes>$(DefaultItemExcludes);obj\**</DefaultItemExcludes>
   </PropertyGroup>
-  
+
+  <PropertyGroup>
+    <LatestCodegenFrameworks>net8.0</LatestCodegenFrameworks>
+    <DefaultCodegenFrameworks>net7.0;net6.0</DefaultCodegenFrameworks>
+    <CompatibleCodegenFrameworks>net481;net48;net472;net471;net47;net462;net461;netstandard2.0</CompatibleCodegenFrameworks>
+    <Codegen Condition="$(LatestCodegenFrameworks.Contains('$(TargetFramework)'))">Latest</Codegen>
+    <Codegen Condition="$(DefaultCodegenFrameworks.Contains('$(TargetFramework)'))">Default</Codegen>
+    <Codegen Condition="$(CompatibleCodegenFrameworks.Contains('$(TargetFramework)'))">Compatible</Codegen>
+  </PropertyGroup>
+
 </Project>
