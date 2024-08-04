@@ -1,0 +1,8 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = false
+
+# Treat code files as generated code
+[*.cs]
+generated_code = true
