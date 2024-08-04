@@ -25,7 +25,7 @@ namespace SDL2Sharp.Input
 {
     public static class Keyboard
     {
-        public unsafe static KeyboardState State
+        public static unsafe KeyboardState State
         {
             get
             {

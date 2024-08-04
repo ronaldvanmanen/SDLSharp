@@ -23,7 +23,7 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp.Video
 {
-    public unsafe sealed class Display
+    public sealed unsafe class Display
     {
         private readonly int _displayIndex;
 

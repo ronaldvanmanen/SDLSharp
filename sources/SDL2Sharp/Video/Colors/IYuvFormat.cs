@@ -24,10 +24,10 @@ namespace SDL2Sharp.Video.Colors
     {
         static abstract PixelFormat PixelFormat { get; }
 
-        static unsafe abstract ImagePlane<Y8> CreateYPlane(void* pixels, int imageWidth, int imageHeight, int imagePitch);
+        static abstract unsafe ImagePlane<Y8> CreateYPlane(void* pixels, int imageWidth, int imageHeight, int imagePitch);
 
-        static unsafe abstract ImagePlane<U8> CreateUPlane(void* pixels, int imageWidth, int imageHeight, int imagePitch);
+        static abstract unsafe ImagePlane<U8> CreateUPlane(void* pixels, int imageWidth, int imageHeight, int imagePitch);
 
-        static unsafe abstract ImagePlane<V8> CreateVPlane(void* pixels, int imageWidth, int imageHeight, int imagePitch);
+        static abstract unsafe ImagePlane<V8> CreateVPlane(void* pixels, int imageWidth, int imageHeight, int imagePitch);
     }
 }

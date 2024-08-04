@@ -25,7 +25,7 @@ using System.Runtime.InteropServices;
 
 namespace SDL2Sharp.Video
 {
-    public unsafe readonly ref struct ImagePlane<TPackedPixel> where TPackedPixel : struct
+    public readonly unsafe ref struct ImagePlane<TPackedPixel> where TPackedPixel : struct
     {
         private readonly void* _pixels;
 

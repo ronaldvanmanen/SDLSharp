@@ -23,7 +23,7 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp.Video
 {
-    public unsafe sealed class NvTexture<TUVPixel> : IDisposable where TUVPixel : struct
+    public sealed unsafe class NvTexture<TUVPixel> : IDisposable where TUVPixel : struct
     {
         public delegate void LockCallback(NvImage<TUVPixel> pixels);
 
