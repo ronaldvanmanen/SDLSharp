@@ -16,7 +16,7 @@ charset = utf-8-bom
 
 # XML project files
 [*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
-indent_size = 4
+indent_size = 2
 
 # XML config files
 [*.{props,targets,ruleset,config,nuspec,resx,vsixmanifest,vsct}]
@@ -99,7 +99,7 @@ dotnet_naming_style.constant_style.capitalization = pascal_case
 # Static fields are camelCase and start with _
 dotnet_naming_rule.static_fields_should_be_camel_case.severity = suggestion
 dotnet_naming_rule.static_fields_should_be_camel_case.symbols = static_fields
-dotnet_naming_rule.static_fields_should_be_camel_case.style = static_field_style
+dotnet_naming_rule.static_fields_should_be_camel_case.style = instance_field_style
 
 dotnet_naming_symbols.static_fields.applicable_kinds = field
 dotnet_naming_symbols.static_fields.required_modifiers = static
@@ -330,3 +330,5 @@ dotnet_diagnostic.CA1822.severity = suggestion
 [*.cs]
 dotnet_diagnostic.CA1401.severity = silent
 dotnet_diagnostic.SYSLIB1054.severity = silent
+csharp_style_prefer_top_level_statements = true:silent
+csharp_style_prefer_primary_constructors = true:suggestion
