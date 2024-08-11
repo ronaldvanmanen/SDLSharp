@@ -24,7 +24,7 @@ using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
-    public sealed unsafe partial class YuvTexture<TYuvFormat> : IDisposable where TYuvFormat : IYuvFormat, new()
+    public sealed unsafe partial class YuvTexture<TYuvFormat> : IDisposable where TYuvFormat : IYuvFormat
     {
         public delegate void LockCallback(YuvImage<TYuvFormat> pixels);
 

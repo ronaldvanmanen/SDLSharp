@@ -24,7 +24,7 @@ using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
-    public readonly ref struct YuvImage<TYuvFormat> where TYuvFormat : IYuvFormat, new()
+    public readonly ref struct YuvImage<TYuvFormat> where TYuvFormat : IYuvFormat
     {
         private readonly ImagePlane<Y8> _yPlane;
 

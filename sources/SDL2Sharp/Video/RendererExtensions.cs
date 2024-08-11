@@ -54,7 +54,7 @@ namespace SDL2Sharp.Video
         }
 
         public static YuvTexture<TYuvFormat> CreateYuvTexture<TYuvFormat>(this Renderer renderer, TextureAccess access, int width, int height)
-            where TYuvFormat : IYuvFormat, new()
+            where TYuvFormat : IYuvFormat
         {
             ArgumentNullException.ThrowIfNull(renderer);
 
