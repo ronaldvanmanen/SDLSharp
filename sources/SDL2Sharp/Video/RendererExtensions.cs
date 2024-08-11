@@ -63,6 +63,38 @@ namespace SDL2Sharp.Video
             return new YuvTexture<TYuvFormat>(texture);
         }
 
+        public static Nv12Texture CreateNv12Texture(this Renderer renderer, TextureAccess access, Size size)
+        {
+            ArgumentNullException.ThrowIfNull(renderer);
+
+            return renderer.CreateNv12Texture(access, size.Width, size.Height);
+        }
+
+        public static Nv12Texture CreateNv12Texture(this Renderer renderer, TextureAccess access, int width, int height)
+        {
+            ArgumentNullException.ThrowIfNull(renderer);
+
+            var pixelFormat = PixelFormat.NV12;
+            var texture = renderer.CreateTexture(pixelFormat, access, width, height);
+            return new Nv12Texture(texture);
+        }
+
+        public static Nv21Texture CreateNv21Texture(this Renderer renderer, TextureAccess access, Size size)
+        {
+            ArgumentNullException.ThrowIfNull(renderer);
+
+            return renderer.CreateNv21Texture(access, size.Width, size.Height);
+        }
+
+        public static Nv21Texture CreateNv21Texture(this Renderer renderer, TextureAccess access, int width, int height)
+        {
+            ArgumentNullException.ThrowIfNull(renderer);
+
+            var pixelFormat = PixelFormat.NV21;
+            var texture = renderer.CreateTexture(pixelFormat, access, width, height);
+            return new Nv21Texture(texture);
+        }
+
         public static PackedTexture<TPackedPixel> CreateTextureFromSurface<TPackedPixel>(this Renderer renderer, Surface<TPackedPixel> surface)
             where TPackedPixel : struct, IPackedPixel<TPackedPixel>
         {

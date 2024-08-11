@@ -24,38 +24,30 @@ using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
-    public sealed class NvMemoryImage<TUVPixel> where TUVPixel : struct
+    public readonly ref struct Nv12Image
     {
-        private readonly ImageMemoryPlane<Y8> _yPlane;
+        private readonly ImagePlane<Y8> _yPlane;
 
-        private readonly ImageMemoryPlane<TUVPixel> _uvPlane;
+        private readonly ImagePlane<UV88> _uvPlane;
 
-        public ImageMemoryPlane<Y8> Y => _yPlane;
+        public ImagePlane<Y8> Y => _yPlane;
 
-        public ImageMemoryPlane<TUVPixel> UV => _uvPlane;
+        public ImagePlane<UV88> UV => _uvPlane;
 
-        public int Width
+        public readonly int Width
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _yPlane.Width;
         }
 
-        public int Height
+        public readonly int Height
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _yPlane.Height;
         }
 
-        public NvMemoryImage(int width, int height)
+        public unsafe Nv12Image(void* pixels, int width, int height, int pitch)
         {
-            if (width < 0)
-            {
-                throw new ArgumentOutOfRangeException(
-                    nameof(width),
-                    width,
-                    "height cannot be less than zero");
-            }
-
             if (height < 0)
             {
                 throw new ArgumentOutOfRangeException(
@@ -64,8 +56,25 @@ namespace SDL2Sharp.Video
                     "height cannot be less than zero");
             }
 
-            _yPlane = new ImageMemoryPlane<Y8>(width, height);
-            _uvPlane = new ImageMemoryPlane<TUVPixel>(width / 2, height / 2);
+            if (width < 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(width),
+                    width,
+                    "height cannot be less than zero");
+            }
+
+            if (pitch < 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(pitch),
+                    pitch,
+                    "pitch cannot be less than zero");
+            }
+
+            _yPlane = new ImagePlane<Y8>(pixels, width, height, pitch);
+            var uvPlanePixels = Unsafe.Add<Y8>(pixels, height * pitch);
+            _uvPlane = new ImagePlane<UV88>(uvPlanePixels, width / 2, height / 2, pitch / 2);
         }
     }
 }

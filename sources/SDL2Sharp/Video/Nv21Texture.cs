@@ -23,9 +23,9 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp.Video
 {
-    public sealed unsafe class NvTexture<TUVPixel> : IDisposable where TUVPixel : struct
+    public sealed unsafe class Nv21Texture : IDisposable
     {
-        public delegate void LockCallback(NvImage<TUVPixel> pixels);
+        public delegate void LockCallback(Nv21Image pixels);
 
         private Texture _texture;
 
@@ -46,12 +46,12 @@ namespace SDL2Sharp.Video
 
         public bool IsValid => _texture.IsValid;
 
-        internal NvTexture(Texture texture)
+        internal Nv21Texture(Texture texture)
         {
             _texture = texture ?? throw new ArgumentNullException(nameof(texture));
         }
 
-        ~NvTexture()
+        ~Nv21Texture()
         {
             Dispose(false);
         }
@@ -92,12 +92,12 @@ namespace SDL2Sharp.Video
                 SDL.LockTexture(_texture.Handle, &rect, &pixels, &pitch)
             );
 
-            var image = new NvImage<TUVPixel>(pixels, width, height, pitch);
+            var image = new Nv21Image(pixels, width, height, pitch);
             callback.Invoke(image);
             SDL.UnlockTexture(_texture.Handle);
         }
 
-        public void Update(NvImage<TUVPixel> image)
+        public void Update(Nv21Image image)
         {
             Error.ThrowLastErrorIfNegative(
                 SDL.UpdateNVTexture(_texture.Handle, null,
@@ -106,7 +106,7 @@ namespace SDL2Sharp.Video
             );
         }
 
-        public void Update(NvMemoryImage<TUVPixel> image)
+        public void Update(Nv21MemoryImage image)
         {
             ArgumentNullException.ThrowIfNull(image);
 
@@ -123,7 +123,7 @@ namespace SDL2Sharp.Video
             ObjectDisposedException.ThrowIf(_texture is null, this);
         }
 
-        public static implicit operator Texture(NvTexture<TUVPixel> texture)
+        public static implicit operator Texture(Nv21Texture texture)
         {
             ArgumentNullException.ThrowIfNull(texture);
 

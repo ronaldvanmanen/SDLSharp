@@ -1,4 +1,4 @@
-﻿// SDL2Sharp
+// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -24,15 +24,15 @@ using SDL2Sharp.Video.Colors;
 
 namespace SDL2Sharp.Video
 {
-    public readonly ref struct NvImage<TUvPixel> where TUvPixel : struct
+    public readonly ref struct Nv21Image
     {
         private readonly ImagePlane<Y8> _yPlane;
 
-        private readonly ImagePlane<TUvPixel> _uvPlane;
+        private readonly ImagePlane<VU88> _uvPlane;
 
         public ImagePlane<Y8> Y => _yPlane;
 
-        public ImagePlane<TUvPixel> UV => _uvPlane;
+        public ImagePlane<VU88> UV => _uvPlane;
 
         public readonly int Width
         {
@@ -46,7 +46,7 @@ namespace SDL2Sharp.Video
             get => _yPlane.Height;
         }
 
-        public unsafe NvImage(void* pixels, int width, int height, int pitch)
+        public unsafe Nv21Image(void* pixels, int width, int height, int pitch)
         {
             if (height < 0)
             {
@@ -74,7 +74,7 @@ namespace SDL2Sharp.Video
 
             _yPlane = new ImagePlane<Y8>(pixels, width, height, pitch);
             var uvPlanePixels = Unsafe.Add<Y8>(pixels, height * pitch);
-            _uvPlane = new ImagePlane<TUvPixel>(uvPlanePixels, width / 2, height / 2, pitch / 2);
+            _uvPlane = new ImagePlane<VU88>(uvPlanePixels, width / 2, height / 2, pitch / 2);
         }
     }
 }
