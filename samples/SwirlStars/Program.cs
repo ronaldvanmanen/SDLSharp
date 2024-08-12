@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using SDL2Sharp;
 using SDL2Sharp.Video;
 using SDL2Sharp.Fonts;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 using SDL2Sharp.Input;
 
 internal static class Program
@@ -150,7 +150,7 @@ internal static class Program
             x: 0f,
             y: 0f,
             z: -(.5f + 4.5f * _randomizer.NextSingle()));
-        star.Color = new Rgb96f(
+        star.Color = new RGB96f(
             r: _randomizer.NextSingle(),
             g: _randomizer.NextSingle(),
             b: _randomizer.NextSingle()

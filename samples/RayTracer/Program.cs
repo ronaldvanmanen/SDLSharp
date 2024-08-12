@@ -25,7 +25,7 @@ using SDL2Sharp;
 using SDL2Sharp.Input;
 using SDL2Sharp.Fonts;
 using SDL2Sharp.Video;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 
 internal static class Program
 {
@@ -38,12 +38,12 @@ internal static class Program
 
         using var window = videoSubystem.CreateWindow("Ray Tracer", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
         using var renderer = window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
-        using var screenTexture = renderer.CreatePackedTexture<Argb8888>(TextureAccess.Streaming, renderer.OutputSize);
+        using var screenTexture = renderer.CreatePackedTexture<ARGB8888>(TextureAccess.Streaming, renderer.OutputSize);
         using var lazyFont = fontSubsystem.OpenFont("lazy.ttf", 28);
 
         var world = new World
         {
-            Ambient = new Rgb96f(0.55f, 0.44f, 0.47f),
+            Ambient = new RGB96f(0.55f, 0.44f, 0.47f),
             Objects =
             {
                 // Backdrop Plane
@@ -51,63 +51,63 @@ internal static class Program
                 {
                     Position = new Vector3(0f, 0f, 0f),
                     Normal = new Vector3(0f, 1f, 0f),
-                    DiffuseColor = new Rgb96f(.5f, .5f, .5f)
+                    DiffuseColor = new RGB96f(.5f, .5f, .5f)
                 },
                 // Large center orange Sphere
                 new Sphere
                 {
                     Position = new Vector3(0f, 5.25f, 0f),
                     Radius = 10.5f / 2f,
-                    DiffuseColor = new Rgb96f(0.89f, 0.48f, 0.42f)
+                    DiffuseColor = new RGB96f(0.89f, 0.48f, 0.42f)
                 },
                 // Small center yellow Sphere
                 new Sphere
                 {
                     Position = new Vector3(-3.5f, 1.6f, -6.7f),
                     Radius = 3.2f / 2f,
-                    DiffuseColor = new Rgb96f(0.95f, 0.93f, 0.31f)
+                    DiffuseColor = new RGB96f(0.95f, 0.93f, 0.31f)
                 },
                 // Large back right pink Sphere
                 new Sphere
                 {
                     Position = new Vector3(14f, 7f, 6.5f),
                     Radius = 14f / 2f,
-                    DiffuseColor = new Rgb96f(1f, 0.44f, 0.64f)
+                    DiffuseColor = new RGB96f(1f, 0.44f, 0.64f)
                 },
                 // Small front right orange Sphere
                 new Sphere
                 {
                     Position = new Vector3(8.2f, 3.5f, -6.5f),
                     Radius = 7f / 2f,
-                    DiffuseColor = new Rgb96f(0.89f, 0.48f, 0.42f)
+                    DiffuseColor = new RGB96f(0.89f, 0.48f, 0.42f)
                 },
                 // Large back left pink Sphere
                 new Sphere
                 {
                     Position = new Vector3(-16.6f, 6.5f, 0f),
                     Radius = 13f / 2f,
-                    DiffuseColor = new Rgb96f(1f, 0.44f, 0.64f)
+                    DiffuseColor = new RGB96f(1f, 0.44f, 0.64f)
                 },
                 // Medium front back left pink Sphere
                 new Sphere
                 {
                     Position = new Vector3(-9.5f, 3f, -6f),
                     Radius = 6f / 2f,
-                    DiffuseColor = new Rgb96f(1f, 0.44f, 0.64f)
+                    DiffuseColor = new RGB96f(1f, 0.44f, 0.64f)
                 },
                 // Back left yellow Sphere
                 new Sphere
                 {
                     Position = new Vector3(-15f, 3f, 12f),
                     Radius = 6f / 2f,
-                    DiffuseColor = new Rgb96f(0.95f, 0.93f, 0.31f)
+                    DiffuseColor = new RGB96f(0.95f, 0.93f, 0.31f)
                 },
                 // Far Back right blue Sphere
                 new Sphere
                 {
                     Position = new Vector3(40f, 10f, 175f),
                     Radius = 20f / 2f,
-                    DiffuseColor = new Rgb96f(0.18f, 0.31f, 0.68f)
+                    DiffuseColor = new RGB96f(0.18f, 0.31f, 0.68f)
                 },
             },
             Lights =
@@ -115,7 +115,7 @@ internal static class Program
                 new PointLight
                 {
                     Position = new Vector3(-300f, 350f, 10f),
-                    Color = new Rgb96f(0.70f, 0.689f, 0.6885f)
+                    Color = new RGB96f(0.70f, 0.689f, 0.6885f)
                 },
             },
         };

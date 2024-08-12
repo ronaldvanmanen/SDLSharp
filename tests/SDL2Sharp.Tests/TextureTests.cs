@@ -20,7 +20,7 @@
 
 using System;
 using SDL2Sharp.Video;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 using Xunit;
 
 namespace SDL2Sharp.Tests
@@ -33,8 +33,8 @@ namespace SDL2Sharp.Tests
             WithRenderer(renderer =>
             {
                 using var texture = renderer.CreateTexture(PixelFormat.ARGB8888, TextureAccess.Streaming, renderer.OutputSize);
-                using var packedTexture = texture.AsPacked<Argb8888>();
-                var color = new Argb8888(255, 255, 255, 255);
+                using var packedTexture = texture.AsPacked<ARGB8888>();
+                var color = new ARGB8888(255, 255, 255, 255);
                 packedTexture.WithLock(pixels => pixels.Fill(color));
                 renderer.Copy(texture);
                 renderer.Present();

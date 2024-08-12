@@ -20,7 +20,7 @@
 
 using System;
 using SDL2Sharp.Video;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 using Xunit;
 
 namespace SDL2Sharp.Tests
@@ -32,7 +32,7 @@ namespace SDL2Sharp.Tests
         [Fact]
         public static void WriteAndReadAbgr1555() => WriteAndRead
         (
-            () => Abgr1555.FromRGBA(
+            () => ABGR1555.FromRGBA(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
                 b: (byte)_random.Next(0, 256),
@@ -43,7 +43,7 @@ namespace SDL2Sharp.Tests
         [Fact]
         public static void WriteAndReadAbgr4444() => WriteAndRead
         (
-            () => Abgr4444.FromRGBA(
+            () => ABGR4444.FromRGBA(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
                 b: (byte)_random.Next(0, 256),
@@ -54,7 +54,7 @@ namespace SDL2Sharp.Tests
         [Fact]
         public static void WriteAndReadAbgr8888() => WriteAndRead
         (
-            () => Abgr8888.FromRGBA(
+            () => ABGR8888.FromRGBA(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
                 b: (byte)_random.Next(0, 256),
@@ -65,7 +65,7 @@ namespace SDL2Sharp.Tests
         [Fact]
         public static void WriteAndReadArgb1555() => WriteAndRead
         (
-            () => Argb1555.FromRGBA(
+            () => ARGB1555.FromRGBA(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
                 b: (byte)_random.Next(0, 256),
@@ -76,7 +76,7 @@ namespace SDL2Sharp.Tests
         [Fact]
         public static void WriteAndReadArgb2101010() => WriteAndRead
         (
-            () => Argb2101010.FromRGBA(
+            () => ARGB2101010.FromRGBA(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
                 b: (byte)_random.Next(0, 256),
@@ -87,7 +87,7 @@ namespace SDL2Sharp.Tests
         [Fact]
         public static void WriteAndReadArgb4444() => WriteAndRead
         (
-            () => Argb4444.FromRGBA(
+            () => ARGB4444.FromRGBA(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
                 b: (byte)_random.Next(0, 256),
@@ -97,7 +97,7 @@ namespace SDL2Sharp.Tests
 
         [Fact]
         public static void WriteAndReadArgb8888() => WriteAndRead(
-            () => Argb8888.FromRGBA(
+            () => ARGB8888.FromRGBA(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
                 b: (byte)_random.Next(0, 256),
@@ -107,7 +107,7 @@ namespace SDL2Sharp.Tests
 
         [Fact]
         public static void WriteAndReadRgba8888() => WriteAndRead(
-            () => new Rgba8888(
+            () => new RGBA8888(
                 a: (byte)_random.Next(0, 256),
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
@@ -117,7 +117,7 @@ namespace SDL2Sharp.Tests
 
         [Fact]
         public static void WriteAndReadBgr565() => WriteAndRead(
-            () => Bgr565.FromRGB(
+            () => BGR565.FromRGB(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
                 b: (byte)_random.Next(0, 256)
@@ -126,7 +126,7 @@ namespace SDL2Sharp.Tests
 
         [Fact]
         public static void WriteAndReadBgra4444() => WriteAndRead(
-            () => Bgra4444.FromRGBA(
+            () => BGRA4444.FromRGBA(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
                 b: (byte)_random.Next(0, 256),
@@ -136,7 +136,7 @@ namespace SDL2Sharp.Tests
 
         [Fact]
         public static void WriteAndReadBgra5551() => WriteAndRead(
-            () => Bgra4444.FromRGBA(
+            () => BGRA4444.FromRGBA(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
                 b: (byte)_random.Next(0, 256),
@@ -146,7 +146,7 @@ namespace SDL2Sharp.Tests
 
         [Fact]
         public static void WriteAndReadBgra8888() => WriteAndRead(
-            () => new Bgra8888(
+            () => new BGRA8888(
                 b: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
                 r: (byte)_random.Next(0, 256),
@@ -165,7 +165,7 @@ namespace SDL2Sharp.Tests
 
         [Fact]
         public static void WriteAndReadRgb565() => WriteAndRead(
-            () => Rgb565.FromRGB(
+            () => RGB565.FromRGB(
                 r: (byte)_random.Next(0, 256),
                 g: (byte)_random.Next(0, 256),
                 b: (byte)_random.Next(0, 256)

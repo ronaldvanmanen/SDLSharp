@@ -20,7 +20,7 @@
 
 using System;
 using SDL2Sharp.Video;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
 
@@ -67,13 +67,13 @@ namespace SDL2Sharp.Fonts
             return new Surface(surfaceHandle);
         }
 
-        public Surface<Argb8888> RenderBlended(string text, Color color)
+        public Surface<ARGB8888> RenderBlended(string text, Color color)
         {
             ThrowWhenDisposed();
 
             using var marshaledText = new MarshaledString(text);
             var surfaceHandle = TTF.RenderText_Blended(_handle, marshaledText, color);
-            return new Surface<Argb8888>(surfaceHandle);
+            return new Surface<ARGB8888>(surfaceHandle);
         }
 
         private void ThrowWhenDisposed()

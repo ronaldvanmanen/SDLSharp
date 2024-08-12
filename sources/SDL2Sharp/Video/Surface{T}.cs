@@ -21,7 +21,7 @@
 using System;
 using System.Collections.Generic;
 using SDL2Sharp.Interop;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 
 namespace SDL2Sharp.Video
 {

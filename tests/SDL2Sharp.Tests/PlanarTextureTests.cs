@@ -19,7 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using SDL2Sharp.Video;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 using Xunit;
 
 namespace SDL2Sharp.Tests
@@ -27,19 +27,19 @@ namespace SDL2Sharp.Tests
     public static class PlanarTextureTests
     {
         [Fact]
-        public static void WriteAndReadYV12() => WriteAndRead<Yv12>();
+        public static void WriteAndReadYV12() => WriteAndRead<YV12>();
 
         [Fact]
-        public static void WriteAndReadIYUV() => WriteAndRead<Iyuv>();
+        public static void WriteAndReadIYUV() => WriteAndRead<IYUV>();
 
-        private static void WriteAndRead<TYuvFormat>()
-            where TYuvFormat : struct, IYuvFormat
+        private static void WriteAndRead<TYUVFormat>()
+            where TYUVFormat : struct, IYUVFormat
         {
             using var mainSystem = new MainSystem();
             using var videoSystem = new VideoSubsystem();
             using var window = videoSystem.CreateWindow("PlanarTextureTests", 640, 480, WindowFlags.Hidden);
             using var renderer = window.CreateRenderer();
-            using var texture = renderer.CreateYuvTexture<TYuvFormat>(TextureAccess.Streaming, renderer.OutputSize);
+            using var texture = renderer.CreateYUVTexture<TYUVFormat>(TextureAccess.Streaming, renderer.OutputSize);
 
             var y = new Y8(255);
             var u = new U8(128);

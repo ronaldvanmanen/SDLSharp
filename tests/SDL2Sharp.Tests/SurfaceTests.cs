@@ -19,7 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using SDL2Sharp.Video;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 using Xunit;
 
 namespace SDL2Sharp.Tests
@@ -29,16 +29,16 @@ namespace SDL2Sharp.Tests
         [Fact]
         public void CreateSurface()
         {
-            var color = new Argb8888(255, 255, 255, 255);
+            var color = new ARGB8888(255, 255, 255, 255);
             using var surface = new Surface(512, 512, PixelFormat.ARGB8888);
-            surface.WithLock<Argb8888>(pixels => pixels.Fill(color));
+            surface.WithLock<ARGB8888>(pixels => pixels.Fill(color));
         }
 
         [Fact]
         public void CreateSurfaceOfArgb8888()
         {
-            var color = new Argb8888(255, 255, 255, 255);
-            using var surface = new Surface<Argb8888>(512, 512);
+            var color = new ARGB8888(255, 255, 255, 255);
+            using var surface = new Surface<ARGB8888>(512, 512);
             surface.WithLock(pixels => pixels.Fill(color));
         }
     }

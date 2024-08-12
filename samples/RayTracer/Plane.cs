@@ -19,7 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Numerics;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 
 internal sealed class Plane : IObject
 {
@@ -27,7 +27,7 @@ internal sealed class Plane : IObject
 
     public float DiffuseCoefficient { get; set; } = 1f;
 
-    public Rgb96f DiffuseColor { get; set; } = Rgb96f.Black;
+    public RGB96f DiffuseColor { get; set; } = RGB96f.Black;
 
     public Vector3 Position { get; set; } = new Vector3(0f, 0f, 0f);
 

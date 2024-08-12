@@ -19,7 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Numerics;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 
 internal interface IObject
 {
@@ -27,7 +27,7 @@ internal interface IObject
 
     float DiffuseCoefficient { get; set; }
 
-    Rgb96f DiffuseColor { get; set; }
+    RGB96f DiffuseColor { get; set; }
 
     Intersection? Intersect(Ray ray);
 

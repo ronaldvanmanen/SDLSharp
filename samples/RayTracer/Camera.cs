@@ -22,7 +22,7 @@ using System;
 using System.Numerics;
 using System.Threading.Tasks;
 using SDL2Sharp.Video;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 
 internal sealed class Camera
 {
@@ -40,7 +40,7 @@ internal sealed class Camera
 
     public float FocalLength { get; private set; }
 
-    public PackedMemoryImage<Argb8888> Snapshot { get; }
+    public PackedMemoryImage<ARGB8888> Snapshot { get; }
 
     public Camera()
     {
@@ -49,7 +49,7 @@ internal sealed class Camera
         Frustum = new Frustum(-4f / 3f, 4f / 3f, -1f, +1f, float.Epsilon, float.PositiveInfinity);
         FieldOfView = 90f;
         FocalLength = (float)(Resolution.Width / Resolution.Height / MathF.Tan(FieldOfView * MathF.PI / 180f / 2f));
-        Snapshot = new PackedMemoryImage<Argb8888>(Resolution.Width, Resolution.Height);
+        Snapshot = new PackedMemoryImage<ARGB8888>(Resolution.Width, Resolution.Height);
     }
 
     public void LookAt(Vector3 position, Vector3 target, Vector3 up)
@@ -122,7 +122,7 @@ internal sealed class Camera
         _orientation *= rotation;
     }
 
-    public PackedMemoryImage<Argb8888> TakeSnapshot(World world)
+    public PackedMemoryImage<ARGB8888> TakeSnapshot(World world)
     {
         ArgumentNullException.ThrowIfNull(world);
 

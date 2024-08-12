@@ -20,7 +20,7 @@
 
 using System;
 using System.Numerics;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 
 internal sealed class Sphere : IObject
 {
@@ -32,7 +32,7 @@ internal sealed class Sphere : IObject
 
     public float DiffuseCoefficient { get; set; } = 1f;
 
-    public Rgb96f DiffuseColor { get; set; } = Rgb96f.Black;
+    public RGB96f DiffuseColor { get; set; } = RGB96f.Black;
 
     public Vector3 NormalAt(Vector3 point)
     {

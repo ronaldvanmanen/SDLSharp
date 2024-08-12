@@ -18,7 +18,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 using Xunit;
 
 namespace SDL2Sharp.Tests.Colors
@@ -29,7 +29,7 @@ namespace SDL2Sharp.Tests.Colors
         public static void SelfEquality()
         {
 #pragma warning disable CS1718 // Comparison made to same variable
-            var color = Argb2101010.FromRGBA(r: 63, g: 127, b: 191, a: 255);
+            var color = ARGB2101010.FromRGBA(r: 63, g: 127, b: 191, a: 255);
             Assert.True(color == color);
             Assert.False(color != color);
 #pragma warning restore CS1718 // Comparison made to same variable
@@ -38,8 +38,8 @@ namespace SDL2Sharp.Tests.Colors
         [Fact]
         public static void Equality()
         {
-            var a = Argb2101010.FromRGBA(r: 63, g: 127, b: 191, a: 255);
-            var b = Argb2101010.FromRGBA(r: 63, g: 127, b: 191, a: 255);
+            var a = ARGB2101010.FromRGBA(r: 63, g: 127, b: 191, a: 255);
+            var b = ARGB2101010.FromRGBA(r: 63, g: 127, b: 191, a: 255);
             Assert.True(a == b);
             Assert.False(a != b);
         }

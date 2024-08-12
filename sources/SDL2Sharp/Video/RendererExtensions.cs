@@ -20,7 +20,7 @@
 
 using System;
 using SDL2Sharp.Fonts;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 using static System.Math;
 
 namespace SDL2Sharp.Video
@@ -45,54 +45,54 @@ namespace SDL2Sharp.Video
             return new PackedTexture<TPackedPixel>(texture);
         }
 
-        public static YuvTexture<TYuvFormat> CreateYuvTexture<TYuvFormat>(this Renderer renderer, TextureAccess access, Size size)
-            where TYuvFormat : IYuvFormat, new()
+        public static YUVTexture<TYUVFormat> CreateYUVTexture<TYUVFormat>(this Renderer renderer, TextureAccess access, Size size)
+            where TYUVFormat : IYUVFormat, new()
         {
             ArgumentNullException.ThrowIfNull(renderer);
 
-            return renderer.CreateYuvTexture<TYuvFormat>(access, size.Width, size.Height);
+            return renderer.CreateYUVTexture<TYUVFormat>(access, size.Width, size.Height);
         }
 
-        public static YuvTexture<TYuvFormat> CreateYuvTexture<TYuvFormat>(this Renderer renderer, TextureAccess access, int width, int height)
-            where TYuvFormat : IYuvFormat
+        public static YUVTexture<TYUVFormat> CreateYUVTexture<TYUVFormat>(this Renderer renderer, TextureAccess access, int width, int height)
+            where TYUVFormat : IYUVFormat
         {
             ArgumentNullException.ThrowIfNull(renderer);
 
-            var pixelFormat = TYuvFormat.PixelFormat;
+            var pixelFormat = TYUVFormat.PixelFormat;
             var texture = renderer.CreateTexture(pixelFormat, access, width, height);
-            return new YuvTexture<TYuvFormat>(texture);
+            return new YUVTexture<TYUVFormat>(texture);
         }
 
-        public static Nv12Texture CreateNv12Texture(this Renderer renderer, TextureAccess access, Size size)
+        public static NV12Texture CreateNV12Texture(this Renderer renderer, TextureAccess access, Size size)
         {
             ArgumentNullException.ThrowIfNull(renderer);
 
-            return renderer.CreateNv12Texture(access, size.Width, size.Height);
+            return renderer.CreateNV12Texture(access, size.Width, size.Height);
         }
 
-        public static Nv12Texture CreateNv12Texture(this Renderer renderer, TextureAccess access, int width, int height)
+        public static NV12Texture CreateNV12Texture(this Renderer renderer, TextureAccess access, int width, int height)
         {
             ArgumentNullException.ThrowIfNull(renderer);
 
             var pixelFormat = PixelFormat.NV12;
             var texture = renderer.CreateTexture(pixelFormat, access, width, height);
-            return new Nv12Texture(texture);
+            return new NV12Texture(texture);
         }
 
-        public static Nv21Texture CreateNv21Texture(this Renderer renderer, TextureAccess access, Size size)
+        public static NV21Texture CreateNV21Texture(this Renderer renderer, TextureAccess access, Size size)
         {
             ArgumentNullException.ThrowIfNull(renderer);
 
-            return renderer.CreateNv21Texture(access, size.Width, size.Height);
+            return renderer.CreateNV21Texture(access, size.Width, size.Height);
         }
 
-        public static Nv21Texture CreateNv21Texture(this Renderer renderer, TextureAccess access, int width, int height)
+        public static NV21Texture CreateNV21Texture(this Renderer renderer, TextureAccess access, int width, int height)
         {
             ArgumentNullException.ThrowIfNull(renderer);
 
             var pixelFormat = PixelFormat.NV21;
             var texture = renderer.CreateTexture(pixelFormat, access, width, height);
-            return new Nv21Texture(texture);
+            return new NV21Texture(texture);
         }
 
         public static PackedTexture<TPackedPixel> CreateTextureFromSurface<TPackedPixel>(this Renderer renderer, Surface<TPackedPixel> surface)

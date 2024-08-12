@@ -21,29 +21,29 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 
 internal sealed class World
 {
-    public Rgb96f Ambient { get; set; }
+    public RGB96f Ambient { get; set; }
 
     public ICollection<IObject> Objects { get; } = [];
 
     public ICollection<PointLight> Lights { get; } = [];
 
-    public Rgb96f Trace(Ray ray, int level, float weight)
+    public RGB96f Trace(Ray ray, int level, float weight)
     {
         var nearestIntersection = ray.Intersect(Objects);
         if (nearestIntersection is not null)
         {
             return Shade(nearestIntersection, level, weight);
         }
-        return Rgb96f.Black;
+        return RGB96f.Black;
     }
 
-    private Rgb96f Shade(Intersection intersection, int level, float weight)
+    private RGB96f Shade(Intersection intersection, int level, float weight)
     {
-        var color = Rgb96f.Black;
+        var color = RGB96f.Black;
         var @object = intersection.Object;
         var surfaceNormal = intersection.Normal;
         var surfacePoint = intersection.Point;

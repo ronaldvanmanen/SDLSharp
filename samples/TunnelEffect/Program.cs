@@ -24,7 +24,7 @@ using SDL2Sharp;
 using SDL2Sharp.Input;
 using SDL2Sharp.Fonts;
 using SDL2Sharp.Video;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 using static System.Math;
 using static SDL2Sharp.Math;
 
@@ -39,11 +39,11 @@ internal static class Program
 
         using var window = videoSubystem.CreateWindow("Tunnel Effect", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
         using var renderer = window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
-        using var screenTexture = renderer.CreatePackedTexture<Argb8888>(TextureAccess.Streaming, renderer.OutputSize);
+        using var screenTexture = renderer.CreatePackedTexture<ARGB8888>(TextureAccess.Streaming, renderer.OutputSize);
         using var lazyFont = fontSubsystem.OpenFont("lazy.ttf", 28);
 
         var screenSize = renderer.OutputSize;
-        var screenImage = new PackedMemoryImage<Argb8888>(renderer.OutputSize);
+        var screenImage = new PackedMemoryImage<ARGB8888>(renderer.OutputSize);
         var sourceImageSize = NextPowerOfTwo(Max(renderer.OutputWidth, renderer.OutputHeight));
         var sourceImage = GenerateXorImage(sourceImageSize);
         var transformTable = GenerateTransformTable(sourceImageSize);
@@ -135,19 +135,19 @@ internal static class Program
         }
     }
 
-    private static PackedMemoryImage<Argb8888> GenerateXorImage(int size)
+    private static PackedMemoryImage<ARGB8888> GenerateXorImage(int size)
     {
         return GenerateXorImage(size, size);
     }
 
-    private static PackedMemoryImage<Argb8888> GenerateXorImage(int width, int height)
+    private static PackedMemoryImage<ARGB8888> GenerateXorImage(int width, int height)
     {
-        var image = new PackedMemoryImage<Argb8888>(width, height);
+        var image = new PackedMemoryImage<ARGB8888>(width, height);
         for (var y = 0; y < height; y++)
         {
             for (var x = 0; x < width; x++)
             {
-                image[x, y] = new Argb8888(
+                image[x, y] = new ARGB8888(
                     a: 0xFF,
                     r: 0x00,
                     g: 0x00,

@@ -24,7 +24,7 @@ using SDL2Sharp;
 using SDL2Sharp.Input;
 using SDL2Sharp.Fonts;
 using SDL2Sharp.Video;
-using SDL2Sharp.Video.Colors;
+using SDL2Sharp.Video.PixelFormats;
 using static System.Math;
 using static SDL2Sharp.Math;
 
@@ -39,10 +39,10 @@ internal static class Program
 
         using var window = videoSubystem.CreateWindow("Plasma Fractal", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
         using var renderer = window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
-        using var screenTexture = renderer.CreatePackedTexture<Argb8888>(TextureAccess.Streaming, renderer.OutputSize);
+        using var screenTexture = renderer.CreatePackedTexture<ARGB8888>(TextureAccess.Streaming, renderer.OutputSize);
         using var lazyFont = fontSubsystem.OpenFont("lazy.ttf", 28);
 
-        var screenImage = new PackedMemoryImage<Argb8888>(renderer.OutputSize);
+        var screenImage = new PackedMemoryImage<ARGB8888>(renderer.OutputSize);
         var sourceImage = GenerateDiamondSquareImage(renderer.OutputSize);
         var palette = GeneratePalette();
         var reversePaletteRotation = false;
@@ -130,21 +130,21 @@ internal static class Program
 
     private static readonly Random _random = new();
 
-    private static Palette<Argb8888> GeneratePalette()
+    private static Palette<ARGB8888> GeneratePalette()
     {
-        var palette = new Palette<Argb8888>(256);
+        var palette = new Palette<ARGB8888>(256);
         for (var i = 0; i < 32; ++i)
         {
             var lo = (byte)(i * 255 / 31);
             var hi = (byte)(255 - lo);
-            palette[i] = new Argb8888(0xFF, lo, 0, 0);
-            palette[i + 32] = new Argb8888(0xFF, hi, 0, 0);
-            palette[i + 64] = new Argb8888(0xFF, 0, lo, 0);
-            palette[i + 96] = new Argb8888(0xFF, 0, hi, 0);
-            palette[i + 128] = new Argb8888(0xFF, 0, 0, lo);
-            palette[i + 160] = new Argb8888(0xFF, 0, 0, hi);
-            palette[i + 192] = new Argb8888(0xFF, lo, 0, lo);
-            palette[i + 224] = new Argb8888(0xFF, hi, 0, hi);
+            palette[i] = new ARGB8888(0xFF, lo, 0, 0);
+            palette[i + 32] = new ARGB8888(0xFF, hi, 0, 0);
+            palette[i + 64] = new ARGB8888(0xFF, 0, lo, 0);
+            palette[i + 96] = new ARGB8888(0xFF, 0, hi, 0);
+            palette[i + 128] = new ARGB8888(0xFF, 0, 0, lo);
+            palette[i + 160] = new ARGB8888(0xFF, 0, 0, hi);
+            palette[i + 192] = new ARGB8888(0xFF, lo, 0, lo);
+            palette[i + 224] = new ARGB8888(0xFF, hi, 0, hi);
         }
         return palette;
     }
