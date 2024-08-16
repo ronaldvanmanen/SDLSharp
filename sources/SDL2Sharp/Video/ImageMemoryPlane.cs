@@ -20,7 +20,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using Microsoft.Toolkit.HighPerformance;
+using CommunityToolkit.HighPerformance;
 
 namespace SDL2Sharp.Video
 {

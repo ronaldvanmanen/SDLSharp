@@ -21,7 +21,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Microsoft.Toolkit.HighPerformance;
+using CommunityToolkit.HighPerformance;
 using SDL2Sharp.Interop;
 using SDL2Sharp.Video.PixelFormats;
 
