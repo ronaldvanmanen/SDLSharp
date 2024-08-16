@@ -18,7 +18,6 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
 using SDL2Sharp.Video.PixelFormats;
 
 namespace SDL2Sharp.Video
@@ -33,37 +32,21 @@ namespace SDL2Sharp.Video
 
         public static YUVTexture<IYUV> AsIYUV(this Texture texture)
         {
-            if (texture.Format != PixelFormat.IYUV)
-            {
-                throw new ArgumentException("Texture is not in IYUV color format.", nameof(texture));
-            }
             return new YUVTexture<IYUV>(texture);
         }
 
         public static NV12Texture AsNV12(this Texture texture)
         {
-            if (texture.Format != PixelFormat.NV12)
-            {
-                throw new ArgumentException("Texture is not in NV12 color format.", nameof(texture));
-            }
             return new NV12Texture(texture);
         }
 
         public static NV21Texture AsNV21(this Texture texture)
         {
-            if (texture.Format != PixelFormat.NV21)
-            {
-                throw new ArgumentException("Texture is not in NV21 color format.", nameof(texture));
-            }
             return new NV21Texture(texture);
         }
 
         public static YUVTexture<YV12> AsYV12(this Texture texture)
         {
-            if (texture.Format != PixelFormat.YV12)
-            {
-                throw new ArgumentException("Texture is not in YV12 color format.", nameof(texture));
-            }
             return new YUVTexture<YV12>(texture);
         }
     }

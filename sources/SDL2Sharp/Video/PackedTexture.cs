@@ -57,12 +57,14 @@ namespace SDL2Sharp.Video
 
         internal PackedTexture(Texture texture)
         {
+            ArgumentNullException.ThrowIfNull(texture);
+
             if (!texture.Format.IsPacked())
             {
                 throw new ArgumentException("Texture is not in a packed color format.", nameof(texture));
             }
 
-            _texture = texture ?? throw new ArgumentNullException(nameof(texture));
+            _texture = texture;
         }
 
         ~PackedTexture()

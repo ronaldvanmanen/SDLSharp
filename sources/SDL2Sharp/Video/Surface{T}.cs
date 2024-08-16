@@ -38,7 +38,7 @@ namespace SDL2Sharp.Video
 
         public int Pitch => _surface.Pitch;
 
-        public IEnumerable<object>? Size { get; internal set; }
+        public Size Size => new(Width, Height);
 
         public Surface(int width, int height)
         : this(new Surface(width, height, TPackedPixel.Format))

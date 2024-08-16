@@ -49,7 +49,14 @@ namespace SDL2Sharp.Video
 
         internal YUVTexture(Texture texture)
         {
-            _texture = texture ?? throw new ArgumentNullException(nameof(texture));
+            ArgumentNullException.ThrowIfNull(texture);
+
+            if (texture.Format != TYUVFormat.PixelFormat)
+            {
+                throw new ArgumentException($"Texture is not in a {TYUVFormat.PixelFormat} format", nameof(texture));
+            }
+
+            _texture = texture;
         }
 
         ~YUVTexture()

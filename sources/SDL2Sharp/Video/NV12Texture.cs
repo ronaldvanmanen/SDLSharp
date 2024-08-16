@@ -1,4 +1,4 @@
-// SDL2Sharp
+﻿// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -48,7 +48,14 @@ namespace SDL2Sharp.Video
 
         internal NV12Texture(Texture texture)
         {
-            _texture = texture ?? throw new ArgumentNullException(nameof(texture));
+            ArgumentNullException.ThrowIfNull(texture);
+
+            if (texture.Format != PixelFormat.NV12)
+            {
+                throw new ArgumentException("Texture is not in a NV12 format", nameof(texture));
+            }
+
+            _texture = texture;
         }
 
         ~NV12Texture()

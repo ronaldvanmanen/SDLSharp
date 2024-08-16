@@ -39,6 +39,8 @@ namespace SDL2Sharp.Video
 
         public int Height => _handle->h;
 
+        public Size Size => new(Width, Height);
+
         public int Pitch => _handle->pitch;
 
         private bool MustLock => (_handle->flags & SDL.SDL_RLEACCEL) != 0;
