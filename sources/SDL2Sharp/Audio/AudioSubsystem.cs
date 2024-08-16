@@ -23,7 +23,7 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp.Audio
 {
-    public sealed class AudioSubsystem : IDisposable
+    public sealed class AudioSubsystem : IAudioSubsystem, IDisposable
     {
         private const uint InitSubsystemFlags = SDL.SDL_INIT_AUDIO;
 
@@ -41,37 +41,27 @@ namespace SDL2Sharp.Audio
             SDL.QuitSubSystem(InitSubsystemFlags);
         }
 
-#pragma warning disable CA1822 // Mark members as static
         public AudioDevice CreateDevice()
-#pragma warning restore CA1822 // Mark members as static
         {
             return new AudioDevice();
         }
 
-#pragma warning disable CA1822 // Mark members as static
         public AudioDevice OpenDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples)
-#pragma warning restore CA1822 // Mark members as static
         {
             return new AudioDevice(frequency, format, channels, samples);
         }
 
-#pragma warning disable CA1822 // Mark members as static
         public AudioDevice OpenDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback)
-#pragma warning restore CA1822 // Mark members as static
         {
             return new AudioDevice(frequency, format, channels, samples, callback);
         }
 
-#pragma warning disable CA1822 // Mark members as static
         public AudioDevice OpenDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, AudioDeviceAllowedChanges allowedChanges)
-#pragma warning restore CA1822 // Mark members as static
         {
             return new AudioDevice(frequency, format, channels, samples, callback, allowedChanges);
         }
 
-#pragma warning disable CA1822 // Mark members as static
         public WaveFile OpenWaveFile(string filename)
-#pragma warning restore CA1822 // Mark members as static
         {
             return new WaveFile(filename);
         }

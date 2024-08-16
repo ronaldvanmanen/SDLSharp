@@ -18,23 +18,20 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
-using SDL2Sharp.Interop;
+using System.Collections.Generic;
 
-namespace SDL2Sharp
+namespace SDL2Sharp.Video
 {
-    public sealed class MainSystem : IMainSystem, IDisposable
+    public interface IVideoSubsystem
     {
-        public MainSystem()
-        {
-            Error.ThrowLastErrorIfNegative(
-                SDL.Init(0)
-            );
-        }
+        IReadOnlyList<Display> Displays { get; }
 
-        public void Dispose()
-        {
-            SDL.Quit();
-        }
+        Window CreateWindow(string title, int width, int height);
+
+        Window CreateWindow(string title, int x, int y, int width, int height);
+
+        Window CreateWindow(string title, int x, int y, int width, int height, WindowFlags flags);
+
+        Window CreateWindow(string title, int width, int height, WindowFlags flags);
     }
 }

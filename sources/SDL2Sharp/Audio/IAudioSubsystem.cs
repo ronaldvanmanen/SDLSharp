@@ -18,23 +18,18 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
-using SDL2Sharp.Interop;
-
-namespace SDL2Sharp
+namespace SDL2Sharp.Audio
 {
-    public sealed class MainSystem : IMainSystem, IDisposable
+    public interface IAudioSubsystem
     {
-        public MainSystem()
-        {
-            Error.ThrowLastErrorIfNegative(
-                SDL.Init(0)
-            );
-        }
+        AudioDevice CreateDevice();
 
-        public void Dispose()
-        {
-            SDL.Quit();
-        }
+        AudioDevice OpenDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples);
+
+        AudioDevice OpenDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback);
+
+        AudioDevice OpenDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, AudioDeviceAllowedChanges allowedChanges);
+
+        WaveFile OpenWaveFile(string filename);
     }
 }

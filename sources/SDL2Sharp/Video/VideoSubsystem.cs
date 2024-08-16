@@ -24,7 +24,7 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp.Video
 {
-    public sealed class VideoSubsystem : IDisposable
+    public sealed class VideoSubsystem : IVideoSubsystem, IDisposable
     {
         private const uint InitSubsystemFlags = SDL.SDL_INIT_VIDEO;
 

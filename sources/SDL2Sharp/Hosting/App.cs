@@ -19,22 +19,38 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using SDL2Sharp.Interop;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace SDL2Sharp
+namespace SDL2Sharp.Hosting
 {
-    public sealed class MainSystem : IMainSystem, IDisposable
+    public sealed class App : IDisposable
     {
-        public MainSystem()
+        private readonly ServiceProvider _services;
+
+        private bool _disposed;
+
+        public IServiceProvider Services => _services;
+
+        internal App(ServiceProvider services)
         {
-            Error.ThrowLastErrorIfNegative(
-                SDL.Init(0)
-            );
+            _services = services ?? throw new ArgumentNullException(nameof(services));
         }
 
         public void Dispose()
         {
-            SDL.Quit();
+            if (_disposed)
+            {
+                return;
+            }
+
+            try
+            {
+                _services.Dispose();
+            }
+            finally
+            {
+                _disposed = true;
+            }
         }
     }
 }

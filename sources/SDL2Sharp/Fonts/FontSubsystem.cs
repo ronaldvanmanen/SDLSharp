@@ -23,7 +23,7 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp.Fonts
 {
-    public sealed class FontSubsystem : IDisposable
+    public sealed class FontSubsystem : IFontSubsystem, IDisposable
     {
         public FontSubsystem()
         {

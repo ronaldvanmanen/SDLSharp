@@ -26,7 +26,7 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp.Input
 {
-    public sealed unsafe class EventSubsystem : IDisposable
+    public sealed unsafe class EventSubsystem : IEventSubsystem, IDisposable
     {
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int EventWatchCallbackDelegate(void* userdata, SDL_Event* @event);
@@ -61,9 +61,7 @@ namespace SDL2Sharp.Input
             SDL.QuitSubSystem(InitSubsystemFlags);
         }
 
-#pragma warning disable CA1822 // Mark members as static
         public Event? PollEvent()
-#pragma warning restore CA1822 // Mark members as static
         {
             var @event = new SDL_Event();
             if (SDL.PollEvent(&@event) == 0)
@@ -73,9 +71,7 @@ namespace SDL2Sharp.Input
             return WrapEvent(@event);
         }
 
-#pragma warning disable CA1822 // Mark members as static
         public void PushEvent(Event @event)
-#pragma warning restore CA1822 // Mark members as static
         {
             var eventHandle = @event.Handle;
             var result = SDL.PushEvent(&@eventHandle);

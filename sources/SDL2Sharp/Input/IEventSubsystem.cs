@@ -19,22 +19,14 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using SDL2Sharp.Interop;
 
-namespace SDL2Sharp
+namespace SDL2Sharp.Input
 {
-    public sealed class MainSystem : IMainSystem, IDisposable
+    public interface IEventSubsystem
     {
-        public MainSystem()
-        {
-            Error.ThrowLastErrorIfNegative(
-                SDL.Init(0)
-            );
-        }
-
-        public void Dispose()
-        {
-            SDL.Quit();
-        }
+        void AddWatch(Action<Event> callback);
+        void DeleteWatch(Action<Event> callback);
+        Event? PollEvent();
+        void PushEvent(Event @event);
     }
 }

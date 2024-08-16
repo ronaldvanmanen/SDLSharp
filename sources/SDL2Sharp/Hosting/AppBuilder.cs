@@ -18,23 +18,19 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
-using SDL2Sharp.Interop;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace SDL2Sharp
+namespace SDL2Sharp.Hosting
 {
-    public sealed class MainSystem : IMainSystem, IDisposable
+    public sealed class AppBuilder
     {
-        public MainSystem()
-        {
-            Error.ThrowLastErrorIfNegative(
-                SDL.Init(0)
-            );
-        }
+        private readonly ServiceCollection _services = new();
 
-        public void Dispose()
+        public IServiceCollection Services => _services;
+
+        public App Build()
         {
-            SDL.Quit();
+            return new App(_services.BuildServiceProvider());
         }
     }
 }
