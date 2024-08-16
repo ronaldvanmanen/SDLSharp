@@ -19,7 +19,6 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using System.Runtime.InteropServices;
 using SDL2Sharp.Internals;
 using SDL2Sharp.Interop;
 
@@ -153,12 +152,12 @@ namespace SDL2Sharp.Video
                 );
             }
 
-            var bytesPerPixel = Marshal.SizeOf<TPackedPixel>();
-            var pitchInBytes = _handle->pitch;
-            var pitch = pitchInBytes / bytesPerPixel;
-            var pixels = new PackedImage<TPackedPixel>(_handle->pixels, _handle->h, _handle->w, pitch);
-
-            callback.Invoke(pixels);
+            callback.Invoke(
+                new PackedImage<TPackedPixel>(
+                    _handle->pixels,
+                    _handle->w,
+                    _handle->h,
+                    _handle->pitch));
 
             if (mustLock)
             {
