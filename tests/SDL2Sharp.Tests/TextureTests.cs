@@ -47,7 +47,7 @@ namespace SDL2Sharp.Tests
             WithRenderer(renderer =>
             {
                 using var texture = renderer.CreateTexture(PixelFormat.IYUV, TextureAccess.Streaming, renderer.OutputSize);
-                using var planarTexture = texture.AsIYUV();
+                using var planarTexture = texture.AsYUV<IYUV>();
                 var y = new Y8(255);
                 var u = new U8(128);
                 var v = new V8(128);
@@ -106,7 +106,7 @@ namespace SDL2Sharp.Tests
             WithRenderer(renderer =>
             {
                 using var texture = renderer.CreateTexture(PixelFormat.YV12, TextureAccess.Streaming, renderer.OutputSize);
-                using var planarTexture = texture.AsYV12();
+                using var planarTexture = texture.AsYUV<YV12>();
                 var y = new Y8(255);
                 var u = new U8(128);
                 var v = new V8(128);

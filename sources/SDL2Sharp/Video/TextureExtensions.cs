@@ -30,9 +30,10 @@ namespace SDL2Sharp.Video
             return new PackedTexture<TPackedPixel>(texture);
         }
 
-        public static YUVTexture<IYUV> AsIYUV(this Texture texture)
+        public static YUVTexture<TYUVFormat> AsYUV<TYUVFormat>(this Texture texture)
+            where TYUVFormat : IYUVFormat
         {
-            return new YUVTexture<IYUV>(texture);
+            return new YUVTexture<TYUVFormat>(texture);
         }
 
         public static NV12Texture AsNV12(this Texture texture)
@@ -43,11 +44,6 @@ namespace SDL2Sharp.Video
         public static NV21Texture AsNV21(this Texture texture)
         {
             return new NV21Texture(texture);
-        }
-
-        public static YUVTexture<YV12> AsYV12(this Texture texture)
-        {
-            return new YUVTexture<YV12>(texture);
         }
     }
 }
