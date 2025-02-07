@@ -47,7 +47,7 @@ interface IRelease : IBuild
             .SetSource("https://pkgs.dev.azure.com/ronaldvanmanen/_packaging/ronaldvanmanen/nuget/v3/index.json")
             .SetApiKey("AzureDevOps")
             .SetNonInteractive(IsServerBuild)
-            .SetProcessArgumentConfigurator(arguments => arguments.Add("-SkipDuplicate"))
+            .SetProcessAdditionalArguments("-SkipDuplicate")
         );
     }
 
@@ -58,7 +58,7 @@ interface IRelease : IBuild
             .SetSource("https://nuget.pkg.github.com/ronaldvanmanen/index.json")
             .SetApiKey(GitHubActions.Token)
             .SetNonInteractive(IsServerBuild)
-            .SetProcessArgumentConfigurator(arguments => arguments.Add("-SkipDuplicate"))
+            .SetProcessAdditionalArguments("-SkipDuplicate")
         );
     }
 }

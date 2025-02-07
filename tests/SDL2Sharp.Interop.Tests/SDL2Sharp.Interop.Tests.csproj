@@ -1,39 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net7.0;net6.0;net481;net48;net472;net471;net47;net462</TargetFrameworks>
+    <TargetFramework>net8.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <SelfContained>false</SelfContained>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="codegen\**\*.cs" />
-  </ItemGroup>
-
-  <Choose>
-    <When Condition="'$(Codegen)' == 'Latest'">
-      <ItemGroup>
-        <None Include="codegen\compatible\*.cs" />
-        <None Include="codegen\default\*.cs" />
-        <Compile Include="codegen\latest\*.cs" />
-      </ItemGroup>
-    </When>
-    <When Condition="'$(Codegen)' == 'Default'">
-      <ItemGroup>
-        <None Include="codegen\compatible\*.cs" />
-        <Compile Include="codegen\default\*.cs" />
-        <None Include="codegen\latest\*.cs" />
-      </ItemGroup>
-    </When>
-    <When Condition="'$(Codegen)' == 'Compatible'">
-      <ItemGroup>
-        <Compile Include="codegen\compatible\*.cs" />
-        <None Include="codegen\default\*.cs" />
-        <None Include="codegen\latest\*.cs" />
-      </ItemGroup>
-    </When>
-  </Choose>
 
   <ItemGroup>
     <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />

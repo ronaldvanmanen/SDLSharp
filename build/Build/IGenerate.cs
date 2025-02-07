@@ -38,13 +38,9 @@ interface IGenerate : IBuild
         .Produces(ArtifactsDirectory / "log" / "*.*")
         .Executes(() =>
         {
-            var codegens = new[] { compatible_codegen, default_codegen, latest_codegen };
-            foreach (var codegen in codegens)
-            {
-                GenerateBindingsForSDL2(codegen);
-                GenerateBindingsForSDL2Image(codegen);
-                GenerateBindingsForSDL2TTF(codegen);
-            }
+            GenerateBindingsForSDL2(latest_codegen);
+            GenerateBindingsForSDL2Image(latest_codegen);
+            GenerateBindingsForSDL2TTF(latest_codegen);
         });
 
     private void GenerateBindingsForSDL2(ClangSharpPInvokeGeneratorConfigOption codegen)
@@ -58,10 +54,10 @@ interface IGenerate : IBuild
                 generate_tests_xunit,
                 multi_file
             )
-            .SetHeaderFile(RootDirectory / "build" / "Build" / "Header.txt")
+            .SetHeaderFiles(RootDirectory / "build" / "Build" / "Header.txt")
             .SetNamespace("SDL2Sharp.Interop")
-            .SetOutput(GetOutput(codegen))
-            .SetTestOutput(GetTestOutput(codegen))
+            .SetOutput(OutputPath)
+            .SetTestOutput(TestOutputPath)
             .SetWithType
             (
                 "SDL_EventType=uint",
@@ -322,7 +318,7 @@ interface IGenerate : IBuild
             .SetLibraryPath("SDL2")
             .SetMethodClassName("SDL")
             .SetPrefixStrip("SDL_")
-            .SetFileDirectory(GetFileDirectory("SDL2"))
+            .SetFileDirectories(GetFileDirectory("SDL2"))
         );
     }
 
@@ -337,10 +333,10 @@ interface IGenerate : IBuild
                 generate_tests_xunit,
                 multi_file
             )
-            .SetHeaderFile(RootDirectory / "build" / "Build" / "Header.txt")
+            .SetHeaderFiles(RootDirectory / "build" / "Build" / "Header.txt")
             .SetNamespace("SDL2Sharp.Interop")
-            .SetOutput(GetOutput(codegen))
-            .SetTestOutput(GetTestOutput(codegen))
+            .SetOutput(OutputPath)
+            .SetTestOutput(TestOutputPath)
             .SetWithType
             (
                 "SDL_EventType=uint",
@@ -358,7 +354,7 @@ interface IGenerate : IBuild
             .SetLibraryPath("SDL2_image")
             .SetMethodClassName("IMG")
             .SetPrefixStrip("IMG_")
-            .SetFileDirectory(GetFileDirectory("SDL2_image"))
+            .SetFileDirectories(GetFileDirectory("SDL2_image"))
             .SetIncludeDirectory(GetIncludeDirectory("SDL2"))
         );
     }
@@ -373,10 +369,10 @@ interface IGenerate : IBuild
                 generate_macro_bindings,
                 generate_tests_xunit, multi_file
             )
-            .SetHeaderFile(RootDirectory / "build" / "Build" / "Header.txt")
+            .SetHeaderFiles(RootDirectory / "build" / "Build" / "Header.txt")
             .SetNamespace("SDL2Sharp.Interop")
-            .SetOutput(GetOutput(codegen))
-            .SetTestOutput(GetTestOutput(codegen))
+            .SetOutput(OutputPath)
+            .SetTestOutput(TestOutputPath)
             .SetWithType
             (
                 "SDL_EventType=uint",
@@ -398,46 +394,14 @@ interface IGenerate : IBuild
             .SetLibraryPath("SDL2_ttf")
             .SetMethodClassName("TTF")
             .SetPrefixStrip("TTF_")
-            .SetFileDirectory(GetFileDirectory("SDL2_ttf"))
+            .SetFileDirectories(GetFileDirectory("SDL2_ttf"))
             .SetIncludeDirectory(GetIncludeDirectory("SDL2"))
         );
     }
 
-    private AbsolutePath GetOutput(ClangSharpPInvokeGeneratorConfigOption codegen)
-    {
-        if (codegen == compatible_codegen)
-        {
-            return RootDirectory / "sources" / "SDL2Sharp.Interop" / "codegen" / "compatible";
-        }
-        if (codegen == default_codegen)
-        {
-            return RootDirectory / "sources" / "SDL2Sharp.Interop" / "codegen" / "default";
-        }
-        if (codegen == latest_codegen)
-        {
-            return RootDirectory / "sources" / "SDL2Sharp.Interop" / "codegen" / "latest";
-        }
+    private AbsolutePath OutputPath => RootDirectory / "sources" / "SDL2Sharp.Interop" / "codegen";
 
-        throw new NotSupportedException("The specified option is not supported.");
-    }
-
-    private AbsolutePath GetTestOutput(ClangSharpPInvokeGeneratorConfigOption codegen)
-    {
-        if (codegen == compatible_codegen)
-        {
-            return RootDirectory / "tests" / "SDL2Sharp.Interop.Tests" / "codegen" / "compatible";
-        }
-        if (codegen == default_codegen)
-        {
-            return RootDirectory / "tests" / "SDL2Sharp.Interop.Tests" / "codegen" / "default";
-        }
-        if (codegen == latest_codegen)
-        {
-            return RootDirectory / "tests" / "SDL2Sharp.Interop.Tests" / "codegen" / "latest";
-        }
-
-        throw new NotSupportedException("The specified option is not supported.");
-    }
+    private AbsolutePath TestOutputPath => RootDirectory / "tests" / "SDL2Sharp.Interop.Tests" / "codegen";
 
     private AbsolutePath GetFileDirectory(string packageId) => GetIncludeDirectory(packageId);
 

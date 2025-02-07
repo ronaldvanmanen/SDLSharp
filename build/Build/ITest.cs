@@ -44,7 +44,7 @@ interface ITest : IBuild
                         .SetNoBuild(true)
                         .SetVerbosity(Verbosity.ToDotNetVerbosity())
                         .SetFramework(targetFramework)
-                        .SetProcessArgumentConfigurator(_ => _.Add("-- RunConfiguration.DisableAppDomain=true"))
+                        .SetProcessAdditionalArguments("-- RunConfiguration.DisableAppDomain=true")
                     );
                 }
             }

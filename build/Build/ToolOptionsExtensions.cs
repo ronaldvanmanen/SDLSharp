@@ -1,4 +1,4 @@
-﻿// SDL2Sharp
+// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,25 +18,17 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using Nuke.Common;
 using Nuke.Common.Tooling;
-using Nuke.Common.Tools.DotNet;
-using Nuke.Common.Tools.GitVersion;
-using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-interface IRestore : IBuild
+public static class ToolOptionsExtensions
 {
-    public Target Restore => _ => _
-        .DependsOn<ISetup>(target => target.Setup)
-        .Produces(ArtifactsDirectory / "log" / "*.*")
-        .Executes(() =>
+    public static T AddProcessAdditionalArguments<T>(this T options, bool condition, params string[] arguments)
+        where T : ToolOptions
+    {
+        if (condition)
         {
-            DotNetRestore(settings =>
-            {
-                return settings.SetProjectFile(Solution)
-                               .SetVerbosity(Verbosity.ToDotNetVerbosity())
-                               .AddProcessAdditionalArguments(IsLocalBuild, "--interactive")
-                               .AddProcessAdditionalArguments(IsLocalBuild, "/property:NuGetInteractive=false");
-            });
-        });
+            options.AddProcessAdditionalArguments(arguments);
+        }
+        return options;
+    }
 }

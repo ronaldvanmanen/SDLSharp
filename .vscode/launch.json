@@ -117,28 +117,12 @@
             ]
         },
         {
-            "id": "ClrFramework",
-            "description": "Choose which .NET target framework should be used.",
-            "default": "net481",
-            "type": "pickString",
-            "options": [
-                "net481",
-                "net48",
-                "net472",
-                "net471",
-                "net47",
-                "net462"
-            ]
-        },
-        {
             "id": "CoreClrFramework",
             "description": "Choose which .NET target framework should be used.",
             "default": "net8.0",
             "type": "pickString",
             "options": [
-                "net8.0",
-                "net7.0",
-                "net6.0",
+                "net8.0"
             ]
         },
         {

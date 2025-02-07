@@ -17,2742 +17,784 @@ using System.Text;
 
 namespace Nuke.Common.Tools.ClangSharpPInvokeGenerator;
 
-/// <summary>
-///   <p>ClangSharp P/Invoke Binding Generator is a tool for generating strongly-typed safe bindings written in C# for .NET and Mono.</p>
-///   <p>For more details, visit the <a href="https://github.com/dotnet/clangsharp/">official website</a>.</p>
-/// </summary>
+/// <summary><p>ClangSharp P/Invoke Binding Generator is a tool for generating strongly-typed safe bindings written in C# for .NET and Mono.</p><p>For more details, visit the <a href="https://github.com/dotnet/clangsharp/">official website</a>.</p></summary>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[NuGetPackageRequirement(ClangSharpPInvokeGeneratorPackageId)]
-public partial class ClangSharpPInvokeGeneratorTasks
-    : IRequireNuGetPackage
+[NuGetTool(Id = PackageId, Executable = PackageExecutable)]
+public partial class ClangSharpPInvokeGeneratorTasks : ToolTasks, IRequireNuGetPackage
 {
-    public const string ClangSharpPInvokeGeneratorPackageId = "ClangSharpPInvokeGenerator";
-    /// <summary>
-    ///   Path to the ClangSharpPInvokeGenerator executable.
-    /// </summary>
-    public static string ClangSharpPInvokeGeneratorPath =>
-        ToolPathResolver.TryGetEnvironmentExecutable("CLANGSHARPPINVOKEGENERATOR_EXE") ??
-        NuGetToolPathResolver.GetPackageExecutable("ClangSharpPInvokeGenerator", "ClangSharpPInvokeGenerator.dll");
-    public static Action<OutputType, string> ClangSharpPInvokeGeneratorLogger { get; set; } = ProcessTasks.DefaultLogger;
-    public static Action<ToolSettings, IProcess> ClangSharpPInvokeGeneratorExitHandler { get; set; } = CustomExitHandler;
-    /// <summary>
-    ///   <p>ClangSharp P/Invoke Binding Generator is a tool for generating strongly-typed safe bindings written in C# for .NET and Mono.</p>
-    ///   <p>For more details, visit the <a href="https://github.com/dotnet/clangsharp/">official website</a>.</p>
-    /// </summary>
-    public static IReadOnlyCollection<Output> ClangSharpPInvokeGenerator(ArgumentStringHandler arguments, string workingDirectory = null, IReadOnlyDictionary<string, string> environmentVariables = null, int? timeout = null, bool? logOutput = null, bool? logInvocation = null, Action<OutputType, string> logger = null, Action<IProcess> exitHandler = null)
-    {
-        using var process = ProcessTasks.StartProcess(ClangSharpPInvokeGeneratorPath, arguments, workingDirectory, environmentVariables, timeout, logOutput, logInvocation, logger ?? ClangSharpPInvokeGeneratorLogger);
-        (exitHandler ?? (p => ClangSharpPInvokeGeneratorExitHandler.Invoke(null, p))).Invoke(process.AssertWaitForExit());
-        return process.Output;
-    }
-    /// <summary>
-    ///   <p>ClangSharp P/Invoke Binding Generator is a tool for generating strongly-typed safe bindings written in C# for .NET and Mono.</p>
-    ///   <p>For more details, visit the <a href="https://github.com/dotnet/clangsharp/">official website</a>.</p>
-    /// </summary>
-    /// <remarks>
-    ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
-    ///   <ul>
-    ///     <li><c>--additional</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Additional"/></li>
-    ///     <li><c>--config</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Config"/></li>
-    ///     <li><c>--define-macro</c> via <see cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/></li>
-    ///     <li><c>--exclude</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Exclude"/></li>
-    ///     <li><c>--file</c> via <see cref="ClangSharpPInvokeGeneratorSettings.File"/></li>
-    ///     <li><c>--file-directory</c> via <see cref="ClangSharpPInvokeGeneratorSettings.FileDirectory"/></li>
-    ///     <li><c>--headerFile</c> via <see cref="ClangSharpPInvokeGeneratorSettings.HeaderFile"/></li>
-    ///     <li><c>--include</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Include"/></li>
-    ///     <li><c>--include-directory</c> via <see cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/></li>
-    ///     <li><c>--language</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Language"/></li>
-    ///     <li><c>--libraryPath</c> via <see cref="ClangSharpPInvokeGeneratorSettings.LibraryPath"/></li>
-    ///     <li><c>--methodClassName</c> via <see cref="ClangSharpPInvokeGeneratorSettings.MethodClassName"/></li>
-    ///     <li><c>--namespace</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Namespace"/></li>
-    ///     <li><c>--nativeTypeNamesToStrip</c> via <see cref="ClangSharpPInvokeGeneratorSettings.NativeTypeNamesToStrip"/></li>
-    ///     <li><c>--output</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Output"/></li>
-    ///     <li><c>--output-mode</c> via <see cref="ClangSharpPInvokeGeneratorSettings.OutputMode"/></li>
-    ///     <li><c>--prefixStrip</c> via <see cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/></li>
-    ///     <li><c>--remap</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Remap"/></li>
-    ///     <li><c>--std</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Std"/></li>
-    ///     <li><c>--test-output</c> via <see cref="ClangSharpPInvokeGeneratorSettings.TestOutput"/></li>
-    ///     <li><c>--traverse</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Traverse"/></li>
-    ///     <li><c>--with-access-specifier</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/></li>
-    ///     <li><c>--with-attribute</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/></li>
-    ///     <li><c>--with-callconv</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/></li>
-    ///     <li><c>--with-class</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithClass"/></li>
-    ///     <li><c>--with-guid</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/></li>
-    ///     <li><c>--with-librarypath</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/></li>
-    ///     <li><c>--with-manual-import</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/></li>
-    ///     <li><c>--with-namespace</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/></li>
-    ///     <li><c>--with-packing</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/></li>
-    ///     <li><c>--with-setlasterror</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/></li>
-    ///     <li><c>--with-suppressgctransition</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/></li>
-    ///     <li><c>--with-transparent-struct</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/></li>
-    ///     <li><c>--with-type</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithType"/></li>
-    ///     <li><c>--with-using</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/></li>
-    ///   </ul>
-    /// </remarks>
-    public static IReadOnlyCollection<Output> ClangSharpPInvokeGenerator(ClangSharpPInvokeGeneratorSettings toolSettings = null)
-    {
-        toolSettings = toolSettings ?? new ClangSharpPInvokeGeneratorSettings();
-        using var process = ProcessTasks.StartProcess(toolSettings);
-        toolSettings.ProcessExitHandler.Invoke(toolSettings, process.AssertWaitForExit());
-        return process.Output;
-    }
-    /// <summary>
-    ///   <p>ClangSharp P/Invoke Binding Generator is a tool for generating strongly-typed safe bindings written in C# for .NET and Mono.</p>
-    ///   <p>For more details, visit the <a href="https://github.com/dotnet/clangsharp/">official website</a>.</p>
-    /// </summary>
-    /// <remarks>
-    ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
-    ///   <ul>
-    ///     <li><c>--additional</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Additional"/></li>
-    ///     <li><c>--config</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Config"/></li>
-    ///     <li><c>--define-macro</c> via <see cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/></li>
-    ///     <li><c>--exclude</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Exclude"/></li>
-    ///     <li><c>--file</c> via <see cref="ClangSharpPInvokeGeneratorSettings.File"/></li>
-    ///     <li><c>--file-directory</c> via <see cref="ClangSharpPInvokeGeneratorSettings.FileDirectory"/></li>
-    ///     <li><c>--headerFile</c> via <see cref="ClangSharpPInvokeGeneratorSettings.HeaderFile"/></li>
-    ///     <li><c>--include</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Include"/></li>
-    ///     <li><c>--include-directory</c> via <see cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/></li>
-    ///     <li><c>--language</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Language"/></li>
-    ///     <li><c>--libraryPath</c> via <see cref="ClangSharpPInvokeGeneratorSettings.LibraryPath"/></li>
-    ///     <li><c>--methodClassName</c> via <see cref="ClangSharpPInvokeGeneratorSettings.MethodClassName"/></li>
-    ///     <li><c>--namespace</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Namespace"/></li>
-    ///     <li><c>--nativeTypeNamesToStrip</c> via <see cref="ClangSharpPInvokeGeneratorSettings.NativeTypeNamesToStrip"/></li>
-    ///     <li><c>--output</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Output"/></li>
-    ///     <li><c>--output-mode</c> via <see cref="ClangSharpPInvokeGeneratorSettings.OutputMode"/></li>
-    ///     <li><c>--prefixStrip</c> via <see cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/></li>
-    ///     <li><c>--remap</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Remap"/></li>
-    ///     <li><c>--std</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Std"/></li>
-    ///     <li><c>--test-output</c> via <see cref="ClangSharpPInvokeGeneratorSettings.TestOutput"/></li>
-    ///     <li><c>--traverse</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Traverse"/></li>
-    ///     <li><c>--with-access-specifier</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/></li>
-    ///     <li><c>--with-attribute</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/></li>
-    ///     <li><c>--with-callconv</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/></li>
-    ///     <li><c>--with-class</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithClass"/></li>
-    ///     <li><c>--with-guid</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/></li>
-    ///     <li><c>--with-librarypath</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/></li>
-    ///     <li><c>--with-manual-import</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/></li>
-    ///     <li><c>--with-namespace</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/></li>
-    ///     <li><c>--with-packing</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/></li>
-    ///     <li><c>--with-setlasterror</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/></li>
-    ///     <li><c>--with-suppressgctransition</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/></li>
-    ///     <li><c>--with-transparent-struct</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/></li>
-    ///     <li><c>--with-type</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithType"/></li>
-    ///     <li><c>--with-using</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/></li>
-    ///   </ul>
-    /// </remarks>
-    public static IReadOnlyCollection<Output> ClangSharpPInvokeGenerator(Configure<ClangSharpPInvokeGeneratorSettings> configurator)
-    {
-        return ClangSharpPInvokeGenerator(configurator(new ClangSharpPInvokeGeneratorSettings()));
-    }
-    /// <summary>
-    ///   <p>ClangSharp P/Invoke Binding Generator is a tool for generating strongly-typed safe bindings written in C# for .NET and Mono.</p>
-    ///   <p>For more details, visit the <a href="https://github.com/dotnet/clangsharp/">official website</a>.</p>
-    /// </summary>
-    /// <remarks>
-    ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
-    ///   <ul>
-    ///     <li><c>--additional</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Additional"/></li>
-    ///     <li><c>--config</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Config"/></li>
-    ///     <li><c>--define-macro</c> via <see cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/></li>
-    ///     <li><c>--exclude</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Exclude"/></li>
-    ///     <li><c>--file</c> via <see cref="ClangSharpPInvokeGeneratorSettings.File"/></li>
-    ///     <li><c>--file-directory</c> via <see cref="ClangSharpPInvokeGeneratorSettings.FileDirectory"/></li>
-    ///     <li><c>--headerFile</c> via <see cref="ClangSharpPInvokeGeneratorSettings.HeaderFile"/></li>
-    ///     <li><c>--include</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Include"/></li>
-    ///     <li><c>--include-directory</c> via <see cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/></li>
-    ///     <li><c>--language</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Language"/></li>
-    ///     <li><c>--libraryPath</c> via <see cref="ClangSharpPInvokeGeneratorSettings.LibraryPath"/></li>
-    ///     <li><c>--methodClassName</c> via <see cref="ClangSharpPInvokeGeneratorSettings.MethodClassName"/></li>
-    ///     <li><c>--namespace</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Namespace"/></li>
-    ///     <li><c>--nativeTypeNamesToStrip</c> via <see cref="ClangSharpPInvokeGeneratorSettings.NativeTypeNamesToStrip"/></li>
-    ///     <li><c>--output</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Output"/></li>
-    ///     <li><c>--output-mode</c> via <see cref="ClangSharpPInvokeGeneratorSettings.OutputMode"/></li>
-    ///     <li><c>--prefixStrip</c> via <see cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/></li>
-    ///     <li><c>--remap</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Remap"/></li>
-    ///     <li><c>--std</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Std"/></li>
-    ///     <li><c>--test-output</c> via <see cref="ClangSharpPInvokeGeneratorSettings.TestOutput"/></li>
-    ///     <li><c>--traverse</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Traverse"/></li>
-    ///     <li><c>--with-access-specifier</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/></li>
-    ///     <li><c>--with-attribute</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/></li>
-    ///     <li><c>--with-callconv</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/></li>
-    ///     <li><c>--with-class</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithClass"/></li>
-    ///     <li><c>--with-guid</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/></li>
-    ///     <li><c>--with-librarypath</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/></li>
-    ///     <li><c>--with-manual-import</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/></li>
-    ///     <li><c>--with-namespace</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/></li>
-    ///     <li><c>--with-packing</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/></li>
-    ///     <li><c>--with-setlasterror</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/></li>
-    ///     <li><c>--with-suppressgctransition</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/></li>
-    ///     <li><c>--with-transparent-struct</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/></li>
-    ///     <li><c>--with-type</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithType"/></li>
-    ///     <li><c>--with-using</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/></li>
-    ///   </ul>
-    /// </remarks>
-    public static IEnumerable<(ClangSharpPInvokeGeneratorSettings Settings, IReadOnlyCollection<Output> Output)> ClangSharpPInvokeGenerator(CombinatorialConfigure<ClangSharpPInvokeGeneratorSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
-    {
-        return configurator.Invoke(ClangSharpPInvokeGenerator, ClangSharpPInvokeGeneratorLogger, degreeOfParallelism, completeOnFailure);
-    }
+    public static string ClangSharpPInvokeGeneratorPath { get => new ClangSharpPInvokeGeneratorTasks().GetToolPathInternal(); set => new ClangSharpPInvokeGeneratorTasks().SetToolPath(value); }
+    public const string PackageId = "ClangSharpPInvokeGenerator";
+    public const string PackageExecutable = "ClangSharpPInvokeGenerator.dll";
+    /// <summary><p>ClangSharp P/Invoke Binding Generator is a tool for generating strongly-typed safe bindings written in C# for .NET and Mono.</p><p>For more details, visit the <a href="https://github.com/dotnet/clangsharp/">official website</a>.</p></summary>
+    public static IReadOnlyCollection<Output> ClangSharpPInvokeGenerator(ArgumentStringHandler arguments, string workingDirectory = null, IReadOnlyDictionary<string, string> environmentVariables = null, int? timeout = null, bool? logOutput = null, bool? logInvocation = null, Action<OutputType, string> logger = null, Func<IProcess, object> exitHandler = null) => new ClangSharpPInvokeGeneratorTasks().Run(arguments, workingDirectory, environmentVariables, timeout, logOutput, logInvocation, logger, exitHandler);
+    /// <summary><p>ClangSharp P/Invoke Binding Generator is a tool for generating strongly-typed safe bindings written in C# for .NET and Mono.</p><p>For more details, visit the <a href="https://github.com/dotnet/clangsharp/">official website</a>.</p></summary>
+    /// <remarks><p>This is a <a href="https://www.nuke.build/docs/common/cli-tools/#fluent-api">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p><ul><li><c>--additional</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Additional"/></li><li><c>--config</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Config"/></li><li><c>--define-macro</c> via <see cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/></li><li><c>--exclude</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Exclude"/></li><li><c>--file</c> via <see cref="ClangSharpPInvokeGeneratorSettings.File"/></li><li><c>--file-directory</c> via <see cref="ClangSharpPInvokeGeneratorSettings.FileDirectories"/></li><li><c>--headerFile</c> via <see cref="ClangSharpPInvokeGeneratorSettings.HeaderFiles"/></li><li><c>--include</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Include"/></li><li><c>--include-directory</c> via <see cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/></li><li><c>--language</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Language"/></li><li><c>--libraryPath</c> via <see cref="ClangSharpPInvokeGeneratorSettings.LibraryPath"/></li><li><c>--methodClassName</c> via <see cref="ClangSharpPInvokeGeneratorSettings.MethodClassName"/></li><li><c>--namespace</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Namespace"/></li><li><c>--nativeTypeNamesToStrip</c> via <see cref="ClangSharpPInvokeGeneratorSettings.NativeTypeNamesToStrip"/></li><li><c>--output</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Output"/></li><li><c>--output-mode</c> via <see cref="ClangSharpPInvokeGeneratorSettings.OutputMode"/></li><li><c>--prefixStrip</c> via <see cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/></li><li><c>--remap</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Remap"/></li><li><c>--std</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Std"/></li><li><c>--test-output</c> via <see cref="ClangSharpPInvokeGeneratorSettings.TestOutput"/></li><li><c>--traverse</c> via <see cref="ClangSharpPInvokeGeneratorSettings.Traverse"/></li><li><c>--with-access-specifier</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/></li><li><c>--with-attribute</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/></li><li><c>--with-callconv</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/></li><li><c>--with-class</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithClass"/></li><li><c>--with-guid</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/></li><li><c>--with-librarypath</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/></li><li><c>--with-manual-import</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/></li><li><c>--with-namespace</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/></li><li><c>--with-packing</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/></li><li><c>--with-setlasterror</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/></li><li><c>--with-suppressgctransition</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/></li><li><c>--with-transparent-struct</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/></li><li><c>--with-type</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithType"/></li><li><c>--with-using</c> via <see cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/></li></ul></remarks>
+    public static IReadOnlyCollection<Output> ClangSharpPInvokeGenerator(ClangSharpPInvokeGeneratorSettings options = null) => new ClangSharpPInvokeGeneratorTasks().Run<ClangSharpPInvokeGeneratorSettings>(options);
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorTasks.ClangSharpPInvokeGenerator(Nuke.Common.Tools.ClangSharpPInvokeGenerator.ClangSharpPInvokeGeneratorSettings)"/>
+    public static IReadOnlyCollection<Output> ClangSharpPInvokeGenerator(Configure<ClangSharpPInvokeGeneratorSettings> configurator) => new ClangSharpPInvokeGeneratorTasks().Run<ClangSharpPInvokeGeneratorSettings>(configurator.Invoke(new ClangSharpPInvokeGeneratorSettings()));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorTasks.ClangSharpPInvokeGenerator(Nuke.Common.Tools.ClangSharpPInvokeGenerator.ClangSharpPInvokeGeneratorSettings)"/>
+    public static IEnumerable<(ClangSharpPInvokeGeneratorSettings Settings, IReadOnlyCollection<Output> Output)> ClangSharpPInvokeGenerator(CombinatorialConfigure<ClangSharpPInvokeGeneratorSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false) => configurator.Invoke(ClangSharpPInvokeGenerator, degreeOfParallelism, completeOnFailure);
 }
 #region ClangSharpPInvokeGeneratorSettings
-/// <summary>
-///   Used within <see cref="ClangSharpPInvokeGeneratorTasks"/>.
-/// </summary>
+/// <inheritdoc cref="ClangSharpPInvokeGeneratorTasks.ClangSharpPInvokeGenerator(Nuke.Common.Tools.ClangSharpPInvokeGenerator.ClangSharpPInvokeGeneratorSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-[Serializable]
-public partial class ClangSharpPInvokeGeneratorSettings : ToolSettings
+[Command(Type = typeof(ClangSharpPInvokeGeneratorTasks), Command = nameof(ClangSharpPInvokeGeneratorTasks.ClangSharpPInvokeGenerator))]
+public partial class ClangSharpPInvokeGeneratorSettings : ToolOptions
 {
-    /// <summary>
-    ///   Path to the ClangSharpPInvokeGenerator executable.
-    /// </summary>
-    public override string ProcessToolPath => base.ProcessToolPath ?? ClangSharpPInvokeGeneratorTasks.ClangSharpPInvokeGeneratorPath;
-    public override Action<OutputType, string> ProcessLogger => base.ProcessLogger ?? ClangSharpPInvokeGeneratorTasks.ClangSharpPInvokeGeneratorLogger;
-    public override Action<ToolSettings, IProcess> ProcessExitHandler => base.ProcessExitHandler ?? ClangSharpPInvokeGeneratorTasks.ClangSharpPInvokeGeneratorExitHandler;
-    /// <summary>
-    ///   An argument to pass to Clang when parsing the input files.
-    /// </summary>
-    public virtual IReadOnlyList<string> Additional => AdditionalInternal.AsReadOnly();
-    internal List<string> AdditionalInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   A configuration option that controls how the bindings are generated.
-    /// </summary>
-    public virtual IReadOnlyList<ClangSharpPInvokeGeneratorConfigOption> Config => ConfigInternal.AsReadOnly();
-    internal List<ClangSharpPInvokeGeneratorConfigOption> ConfigInternal { get; set; } = new List<ClangSharpPInvokeGeneratorConfigOption>();
-    /// <summary>
-    ///   Define <macro> to <value> (or 1 if <value> omitted).
-    /// </summary>
-    public virtual IReadOnlyList<string> DefineMacro => DefineMacroInternal.AsReadOnly();
-    internal List<string> DefineMacroInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   A declaration name to exclude from binding generation.
-    /// </summary>
-    public virtual IReadOnlyList<string> Exclude => ExcludeInternal.AsReadOnly();
-    internal List<string> ExcludeInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   A file to parse and generate bindings for.
-    /// </summary>
-    public virtual IReadOnlyList<string> File => FileInternal.AsReadOnly();
-    internal List<string> FileInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   The base path for files to parse.
-    /// </summary>
-    public virtual IReadOnlyList<string> FileDirectory => FileDirectoryInternal.AsReadOnly();
-    internal List<string> FileDirectoryInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   A file which contains the header to prefix every generated file with.
-    /// </summary>
-    public virtual IReadOnlyList<string> HeaderFile => HeaderFileInternal.AsReadOnly();
-    internal List<string> HeaderFileInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   A declaration name to include in binding generation.
-    /// </summary>
-    public virtual IReadOnlyList<string> Include => IncludeInternal.AsReadOnly();
-    internal List<string> IncludeInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   Add directory to include search path.
-    /// </summary>
-    public virtual IReadOnlyList<string> IncludeDirectory => IncludeDirectoryInternal.AsReadOnly();
-    internal List<string> IncludeDirectoryInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   Treat subsequent input files as having type <language>.
-    /// </summary>
-    public virtual string Language { get; internal set; }
-    /// <summary>
-    ///   The string to use in the <c>DllImport</c> attribute used when generating bindings.
-    /// </summary>
-    public virtual string LibraryPath { get; internal set; }
-    /// <summary>
-    ///   The name of the static class that will contain the generated method bindings.
-    /// </summary>
-    public virtual string MethodClassName { get; internal set; }
-    /// <summary>
-    ///   The namespace in which to place the generated bindings.
-    /// </summary>
-    public virtual string Namespace { get; internal set; }
-    /// <summary>
-    ///   The contents to strip from the generated NativeTypeName attributes.
-    /// </summary>
-    public virtual string NativeTypeNamesToStrip { get; internal set; }
-    /// <summary>
-    ///   The mode describing how the information collected from the headers are presented in the resultant bindings.
-    /// </summary>
-    public virtual ClangSharpPInvokeGeneratorOutputMode OutputMode { get; internal set; }
-    /// <summary>
-    ///   The output location to write the generated bindings to.
-    /// </summary>
-    public virtual string Output { get; internal set; }
-    /// <summary>
-    ///   The prefix to strip from the generated method bindings.
-    /// </summary>
-    public virtual IReadOnlyList<string> PrefixStrip => PrefixStripInternal.AsReadOnly();
-    internal List<string> PrefixStripInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   A declaration name to be remapped to another name during binding generation.
-    /// </summary>
-    public virtual IReadOnlyList<string> Remap => RemapInternal.AsReadOnly();
-    internal List<string> RemapInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   Language standard to compile for.
-    /// </summary>
-    public virtual string Std { get; internal set; }
-    /// <summary>
-    ///   The output location to write the generated tests to.
-    /// </summary>
-    public virtual string TestOutput { get; internal set; }
-    /// <summary>
-    ///   A file name included either directly or indirectly by -f that should be traversed during binding generation.
-    /// </summary>
-    public virtual IReadOnlyList<string> Traverse => TraverseInternal.AsReadOnly();
-    internal List<string> TraverseInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   An access specifier to be used with the given qualified or remapped declaration name during binding generation. Supports wildcards.
-    /// </summary>
-    public virtual IReadOnlyList<string> WithAccessSpecifier => WithAccessSpecifierInternal.AsReadOnly();
-    internal List<string> WithAccessSpecifierInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   An attribute to be added to the given remapped declaration name during binding generation. Supports wildcards.
-    /// </summary>
-    public virtual IReadOnlyList<string> WithAttribute => WithAttributeInternal.AsReadOnly();
-    internal List<string> WithAttributeInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   A calling convention to be used for the given declaration during binding generation. Supports wildcards.
-    /// </summary>
-    public virtual IReadOnlyList<string> WithCallConv => WithCallConvInternal.AsReadOnly();
-    internal List<string> WithCallConvInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   A class to be used for the given remapped constant or function declaration name during binding generation. Supports wildcards.
-    /// </summary>
-    public virtual IReadOnlyList<string> WithClass => WithClassInternal.AsReadOnly();
-    internal List<string> WithClassInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   A GUID to be used for the given declaration during binding generation. Supports wildcards.
-    /// </summary>
-    public virtual IReadOnlyList<string> WithGuid => WithGuidInternal.AsReadOnly();
-    internal List<string> WithGuidInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   A library path to be used for the given declaration during binding generation. Supports wildcards.
-    /// </summary>
-    public virtual IReadOnlyList<string> WithLibraryPath => WithLibraryPathInternal.AsReadOnly();
-    internal List<string> WithLibraryPathInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   A remapped function name to be treated as a manual import during binding generation. Supports wildcards.
-    /// </summary>
-    public virtual IReadOnlyList<string> WithManualImport => WithManualImportInternal.AsReadOnly();
-    internal List<string> WithManualImportInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   A namespace to be used for the given remapped declaration name during binding generation. Supports wildcards.
-    /// </summary>
-    public virtual IReadOnlyList<string> WithNamespace => WithNamespaceInternal.AsReadOnly();
-    internal List<string> WithNamespaceInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.
-    /// </summary>
-    public virtual IReadOnlyList<string> WithPacking => WithPackingInternal.AsReadOnly();
-    internal List<string> WithPackingInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.
-    /// </summary>
-    public virtual IReadOnlyList<string> WithSetLastError => WithSetLastErrorInternal.AsReadOnly();
-    internal List<string> WithSetLastErrorInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.
-    /// </summary>
-    public virtual IReadOnlyList<string> WithSuppressGCTransition => WithSuppressGCTransitionInternal.AsReadOnly();
-    internal List<string> WithSuppressGCTransitionInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   A remapped type name to be treated as a transparent wrapper during binding generation. Supports wildcards.
-    /// </summary>
-    public virtual IReadOnlyList<string> WithTransparentStruct => WithTransparentStructInternal.AsReadOnly();
-    internal List<string> WithTransparentStructInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   A type to be used for the given enum declaration during binding generation. Supports wildcards.
-    /// </summary>
-    public virtual IReadOnlyList<string> WithType => WithTypeInternal.AsReadOnly();
-    internal List<string> WithTypeInternal { get; set; } = new List<string>();
-    /// <summary>
-    ///   A using directive to be included for the given remapped declaration name during binding generation. Supports wildcards.
-    /// </summary>
-    public virtual IReadOnlyList<string> WithUsing => WithUsingInternal.AsReadOnly();
-    internal List<string> WithUsingInternal { get; set; } = new List<string>();
-    protected override Arguments ConfigureProcessArguments(Arguments arguments)
-    {
-        arguments
-          .Add("--additional {value}", Additional)
-          .Add("--config {value}", Config)
-          .Add("--define-macro {value}", DefineMacro)
-          .Add("--exclude {value}", Exclude)
-          .Add("--file {value}", File)
-          .Add("--file-directory {value}", FileDirectory)
-          .Add("--headerFile {value}", HeaderFile)
-          .Add("--include {value}", Include)
-          .Add("--include-directory {value}", IncludeDirectory)
-          .Add("--language {value}", Language)
-          .Add("--libraryPath {value}", LibraryPath)
-          .Add("--methodClassName {value}", MethodClassName)
-          .Add("--namespace {value}", Namespace)
-          .Add("--nativeTypeNamesToStrip {value}", NativeTypeNamesToStrip)
-          .Add("--output-mode {value}", OutputMode)
-          .Add("--output {value}", Output)
-          .Add("--prefixStrip {value}", PrefixStrip)
-          .Add("--remap {value}", Remap)
-          .Add("--std {value}", Std)
-          .Add("--test-output {value}", TestOutput)
-          .Add("--traverse {value}", Traverse)
-          .Add("--with-access-specifier {value}", WithAccessSpecifier)
-          .Add("--with-attribute {value}", WithAttribute)
-          .Add("--with-callconv {value}", WithCallConv)
-          .Add("--with-class {value}", WithClass)
-          .Add("--with-guid {value}", WithGuid)
-          .Add("--with-librarypath {value}", WithLibraryPath)
-          .Add("--with-manual-import {value}", WithManualImport)
-          .Add("--with-namespace {value}", WithNamespace)
-          .Add("--with-packing {value}", WithPacking)
-          .Add("--with-setlasterror {value}", WithSetLastError)
-          .Add("--with-suppressgctransition {value}", WithSuppressGCTransition)
-          .Add("--with-transparent-struct {value}", WithTransparentStruct)
-          .Add("--with-type {value}", WithType)
-          .Add("--with-using {value}", WithUsing);
-        return base.ConfigureProcessArguments(arguments);
-    }
+    /// <summary>An argument to pass to Clang when parsing the input files.</summary>
+    [Argument(Format = "--additional {value}")] public IReadOnlyList<string> Additional => Get<List<string>>(() => Additional);
+    /// <summary>A configuration option that controls how the bindings are generated.</summary>
+    [Argument(Format = "--config {value}")] public IReadOnlyList<ClangSharpPInvokeGeneratorConfigOption> Config => Get<List<ClangSharpPInvokeGeneratorConfigOption>>(() => Config);
+    /// <summary>Define <macro> to <value> (or 1 if <value> omitted).</summary>
+    [Argument(Format = "--define-macro {value}")] public IReadOnlyList<string> DefineMacro => Get<List<string>>(() => DefineMacro);
+    /// <summary>A declaration name to exclude from binding generation.</summary>
+    [Argument(Format = "--exclude {value}")] public IReadOnlyList<string> Exclude => Get<List<string>>(() => Exclude);
+    /// <summary>A file to parse and generate bindings for.</summary>
+    [Argument(Format = "--file {value}")] public IReadOnlyList<string> File => Get<List<string>>(() => File);
+    /// <summary>The base path for files to parse.</summary>
+    [Argument(Format = "--file-directory {value}")] public IReadOnlyList<string> FileDirectories => Get<List<string>>(() => FileDirectories);
+    /// <summary>A file which contains the header to prefix every generated file with.</summary>
+    [Argument(Format = "--headerFile {value}")] public IReadOnlyList<string> HeaderFiles => Get<List<string>>(() => HeaderFiles);
+    /// <summary>A declaration name to include in binding generation.</summary>
+    [Argument(Format = "--include {value}")] public IReadOnlyList<string> Include => Get<List<string>>(() => Include);
+    /// <summary>Add directory to include search path.</summary>
+    [Argument(Format = "--include-directory {value}")] public IReadOnlyList<string> IncludeDirectory => Get<List<string>>(() => IncludeDirectory);
+    /// <summary>Treat subsequent input files as having type <language>.</summary>
+    [Argument(Format = "--language {value}")] public string Language => Get<string>(() => Language);
+    /// <summary>The string to use in the <c>DllImport</c> attribute used when generating bindings.</summary>
+    [Argument(Format = "--libraryPath {value}")] public string LibraryPath => Get<string>(() => LibraryPath);
+    /// <summary>The name of the static class that will contain the generated method bindings.</summary>
+    [Argument(Format = "--methodClassName {value}")] public string MethodClassName => Get<string>(() => MethodClassName);
+    /// <summary>The namespace in which to place the generated bindings.</summary>
+    [Argument(Format = "--namespace {value}")] public string Namespace => Get<string>(() => Namespace);
+    /// <summary>The contents to strip from the generated NativeTypeName attributes.</summary>
+    [Argument(Format = "--nativeTypeNamesToStrip {value}")] public string NativeTypeNamesToStrip => Get<string>(() => NativeTypeNamesToStrip);
+    /// <summary>The mode describing how the information collected from the headers are presented in the resultant bindings.</summary>
+    [Argument(Format = "--output-mode {value}")] public ClangSharpPInvokeGeneratorOutputMode OutputMode => Get<ClangSharpPInvokeGeneratorOutputMode>(() => OutputMode);
+    /// <summary>The output location to write the generated bindings to.</summary>
+    [Argument(Format = "--output {value}")] public string Output => Get<string>(() => Output);
+    /// <summary>The prefix to strip from the generated method bindings.</summary>
+    [Argument(Format = "--prefixStrip {value}")] public IReadOnlyList<string> PrefixStrip => Get<List<string>>(() => PrefixStrip);
+    /// <summary>A declaration name to be remapped to another name during binding generation.</summary>
+    [Argument(Format = "--remap {value}")] public IReadOnlyList<string> Remap => Get<List<string>>(() => Remap);
+    /// <summary>Language standard to compile for.</summary>
+    [Argument(Format = "--std {value}")] public string Std => Get<string>(() => Std);
+    /// <summary>The output location to write the generated tests to.</summary>
+    [Argument(Format = "--test-output {value}")] public string TestOutput => Get<string>(() => TestOutput);
+    /// <summary>A file name included either directly or indirectly by -f that should be traversed during binding generation.</summary>
+    [Argument(Format = "--traverse {value}")] public IReadOnlyList<string> Traverse => Get<List<string>>(() => Traverse);
+    /// <summary>An access specifier to be used with the given qualified or remapped declaration name during binding generation. Supports wildcards.</summary>
+    [Argument(Format = "--with-access-specifier {value}")] public IReadOnlyList<string> WithAccessSpecifier => Get<List<string>>(() => WithAccessSpecifier);
+    /// <summary>An attribute to be added to the given remapped declaration name during binding generation. Supports wildcards.</summary>
+    [Argument(Format = "--with-attribute {value}")] public IReadOnlyList<string> WithAttribute => Get<List<string>>(() => WithAttribute);
+    /// <summary>A calling convention to be used for the given declaration during binding generation. Supports wildcards.</summary>
+    [Argument(Format = "--with-callconv {value}")] public IReadOnlyList<string> WithCallConv => Get<List<string>>(() => WithCallConv);
+    /// <summary>A class to be used for the given remapped constant or function declaration name during binding generation. Supports wildcards.</summary>
+    [Argument(Format = "--with-class {value}")] public IReadOnlyList<string> WithClass => Get<List<string>>(() => WithClass);
+    /// <summary>A GUID to be used for the given declaration during binding generation. Supports wildcards.</summary>
+    [Argument(Format = "--with-guid {value}")] public IReadOnlyList<string> WithGuid => Get<List<string>>(() => WithGuid);
+    /// <summary>A library path to be used for the given declaration during binding generation. Supports wildcards.</summary>
+    [Argument(Format = "--with-librarypath {value}")] public IReadOnlyList<string> WithLibraryPath => Get<List<string>>(() => WithLibraryPath);
+    /// <summary>A remapped function name to be treated as a manual import during binding generation. Supports wildcards.</summary>
+    [Argument(Format = "--with-manual-import {value}")] public IReadOnlyList<string> WithManualImport => Get<List<string>>(() => WithManualImport);
+    /// <summary>A namespace to be used for the given remapped declaration name during binding generation. Supports wildcards.</summary>
+    [Argument(Format = "--with-namespace {value}")] public IReadOnlyList<string> WithNamespace => Get<List<string>>(() => WithNamespace);
+    /// <summary>Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.</summary>
+    [Argument(Format = "--with-packing {value}")] public IReadOnlyList<string> WithPacking => Get<List<string>>(() => WithPacking);
+    /// <summary>Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</summary>
+    [Argument(Format = "--with-setlasterror {value}")] public IReadOnlyList<string> WithSetLastError => Get<List<string>>(() => WithSetLastError);
+    /// <summary>Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</summary>
+    [Argument(Format = "--with-suppressgctransition {value}")] public IReadOnlyList<string> WithSuppressGCTransition => Get<List<string>>(() => WithSuppressGCTransition);
+    /// <summary>A remapped type name to be treated as a transparent wrapper during binding generation. Supports wildcards.</summary>
+    [Argument(Format = "--with-transparent-struct {value}")] public IReadOnlyList<string> WithTransparentStruct => Get<List<string>>(() => WithTransparentStruct);
+    /// <summary>A type to be used for the given enum declaration during binding generation. Supports wildcards.</summary>
+    [Argument(Format = "--with-type {value}")] public IReadOnlyList<string> WithType => Get<List<string>>(() => WithType);
+    /// <summary>A using directive to be included for the given remapped declaration name during binding generation. Supports wildcards.</summary>
+    [Argument(Format = "--with-using {value}")] public IReadOnlyList<string> WithUsing => Get<List<string>>(() => WithUsing);
 }
 #endregion
 #region ClangSharpPInvokeGeneratorSettingsExtensions
-/// <summary>
-///   Used within <see cref="ClangSharpPInvokeGeneratorTasks"/>.
-/// </summary>
+/// <inheritdoc cref="ClangSharpPInvokeGeneratorTasks.ClangSharpPInvokeGenerator(Nuke.Common.Tools.ClangSharpPInvokeGenerator.ClangSharpPInvokeGeneratorSettings)"/>
 [PublicAPI]
 [ExcludeFromCodeCoverage]
 public static partial class ClangSharpPInvokeGeneratorSettingsExtensions
 {
     #region Additional
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Additional"/> to a new list</em></p>
-    ///   <p>An argument to pass to Clang when parsing the input files.</p>
-    /// </summary>
-    [Pure]
-    public static T SetAdditional<T>(this T toolSettings, params string[] additional) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.AdditionalInternal = additional.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Additional"/> to a new list</em></p>
-    ///   <p>An argument to pass to Clang when parsing the input files.</p>
-    /// </summary>
-    [Pure]
-    public static T SetAdditional<T>(this T toolSettings, IEnumerable<string> additional) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.AdditionalInternal = additional.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.Additional"/></em></p>
-    ///   <p>An argument to pass to Clang when parsing the input files.</p>
-    /// </summary>
-    [Pure]
-    public static T AddAdditional<T>(this T toolSettings, params string[] additional) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.AdditionalInternal.AddRange(additional);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.Additional"/></em></p>
-    ///   <p>An argument to pass to Clang when parsing the input files.</p>
-    /// </summary>
-    [Pure]
-    public static T AddAdditional<T>(this T toolSettings, IEnumerable<string> additional) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.AdditionalInternal.AddRange(additional);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.Additional"/></em></p>
-    ///   <p>An argument to pass to Clang when parsing the input files.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearAdditional<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.AdditionalInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.Additional"/></em></p>
-    ///   <p>An argument to pass to Clang when parsing the input files.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveAdditional<T>(this T toolSettings, params string[] additional) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(additional);
-        toolSettings.AdditionalInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.Additional"/></em></p>
-    ///   <p>An argument to pass to Clang when parsing the input files.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveAdditional<T>(this T toolSettings, IEnumerable<string> additional) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(additional);
-        toolSettings.AdditionalInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Additional"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Additional))]
+    public static T SetAdditional<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Additional, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Additional"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Additional))]
+    public static T SetAdditional<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Additional, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Additional"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Additional))]
+    public static T AddAdditional<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.Additional, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Additional"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Additional))]
+    public static T AddAdditional<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.Additional, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Additional"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Additional))]
+    public static T RemoveAdditional<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.Additional, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Additional"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Additional))]
+    public static T RemoveAdditional<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.Additional, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Additional"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Additional))]
+    public static T ClearAdditional<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.Additional));
     #endregion
     #region Config
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Config"/> to a new list</em></p>
-    ///   <p>A configuration option that controls how the bindings are generated.</p>
-    /// </summary>
-    [Pure]
-    public static T SetConfig<T>(this T toolSettings, params ClangSharpPInvokeGeneratorConfigOption[] config) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.ConfigInternal = config.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Config"/> to a new list</em></p>
-    ///   <p>A configuration option that controls how the bindings are generated.</p>
-    /// </summary>
-    [Pure]
-    public static T SetConfig<T>(this T toolSettings, IEnumerable<ClangSharpPInvokeGeneratorConfigOption> config) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.ConfigInternal = config.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.Config"/></em></p>
-    ///   <p>A configuration option that controls how the bindings are generated.</p>
-    /// </summary>
-    [Pure]
-    public static T AddConfig<T>(this T toolSettings, params ClangSharpPInvokeGeneratorConfigOption[] config) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.ConfigInternal.AddRange(config);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.Config"/></em></p>
-    ///   <p>A configuration option that controls how the bindings are generated.</p>
-    /// </summary>
-    [Pure]
-    public static T AddConfig<T>(this T toolSettings, IEnumerable<ClangSharpPInvokeGeneratorConfigOption> config) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.ConfigInternal.AddRange(config);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.Config"/></em></p>
-    ///   <p>A configuration option that controls how the bindings are generated.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearConfig<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.ConfigInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.Config"/></em></p>
-    ///   <p>A configuration option that controls how the bindings are generated.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveConfig<T>(this T toolSettings, params ClangSharpPInvokeGeneratorConfigOption[] config) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<ClangSharpPInvokeGeneratorConfigOption>(config);
-        toolSettings.ConfigInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.Config"/></em></p>
-    ///   <p>A configuration option that controls how the bindings are generated.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveConfig<T>(this T toolSettings, IEnumerable<ClangSharpPInvokeGeneratorConfigOption> config) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<ClangSharpPInvokeGeneratorConfigOption>(config);
-        toolSettings.ConfigInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Config"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Config))]
+    public static T SetConfig<T>(this T o, params ClangSharpPInvokeGeneratorConfigOption[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Config, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Config"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Config))]
+    public static T SetConfig<T>(this T o, IEnumerable<ClangSharpPInvokeGeneratorConfigOption> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Config, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Config"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Config))]
+    public static T AddConfig<T>(this T o, params ClangSharpPInvokeGeneratorConfigOption[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.Config, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Config"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Config))]
+    public static T AddConfig<T>(this T o, IEnumerable<ClangSharpPInvokeGeneratorConfigOption> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.Config, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Config"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Config))]
+    public static T RemoveConfig<T>(this T o, params ClangSharpPInvokeGeneratorConfigOption[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.Config, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Config"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Config))]
+    public static T RemoveConfig<T>(this T o, IEnumerable<ClangSharpPInvokeGeneratorConfigOption> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.Config, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Config"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Config))]
+    public static T ClearConfig<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.Config));
     #endregion
     #region DefineMacro
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/> to a new list</em></p>
-    ///   <p>Define <macro> to <value> (or 1 if <value> omitted).</p>
-    /// </summary>
-    [Pure]
-    public static T SetDefineMacro<T>(this T toolSettings, params string[] defineMacro) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.DefineMacroInternal = defineMacro.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/> to a new list</em></p>
-    ///   <p>Define <macro> to <value> (or 1 if <value> omitted).</p>
-    /// </summary>
-    [Pure]
-    public static T SetDefineMacro<T>(this T toolSettings, IEnumerable<string> defineMacro) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.DefineMacroInternal = defineMacro.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/></em></p>
-    ///   <p>Define <macro> to <value> (or 1 if <value> omitted).</p>
-    /// </summary>
-    [Pure]
-    public static T AddDefineMacro<T>(this T toolSettings, params string[] defineMacro) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.DefineMacroInternal.AddRange(defineMacro);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/></em></p>
-    ///   <p>Define <macro> to <value> (or 1 if <value> omitted).</p>
-    /// </summary>
-    [Pure]
-    public static T AddDefineMacro<T>(this T toolSettings, IEnumerable<string> defineMacro) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.DefineMacroInternal.AddRange(defineMacro);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/></em></p>
-    ///   <p>Define <macro> to <value> (or 1 if <value> omitted).</p>
-    /// </summary>
-    [Pure]
-    public static T ClearDefineMacro<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.DefineMacroInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/></em></p>
-    ///   <p>Define <macro> to <value> (or 1 if <value> omitted).</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveDefineMacro<T>(this T toolSettings, params string[] defineMacro) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(defineMacro);
-        toolSettings.DefineMacroInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/></em></p>
-    ///   <p>Define <macro> to <value> (or 1 if <value> omitted).</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveDefineMacro<T>(this T toolSettings, IEnumerable<string> defineMacro) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(defineMacro);
-        toolSettings.DefineMacroInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.DefineMacro))]
+    public static T SetDefineMacro<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.DefineMacro, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.DefineMacro))]
+    public static T SetDefineMacro<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.DefineMacro, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.DefineMacro))]
+    public static T AddDefineMacro<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.DefineMacro, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.DefineMacro))]
+    public static T AddDefineMacro<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.DefineMacro, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.DefineMacro))]
+    public static T RemoveDefineMacro<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.DefineMacro, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.DefineMacro))]
+    public static T RemoveDefineMacro<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.DefineMacro, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.DefineMacro"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.DefineMacro))]
+    public static T ClearDefineMacro<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.DefineMacro));
     #endregion
     #region Exclude
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Exclude"/> to a new list</em></p>
-    ///   <p>A declaration name to exclude from binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T SetExclude<T>(this T toolSettings, params string[] exclude) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.ExcludeInternal = exclude.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Exclude"/> to a new list</em></p>
-    ///   <p>A declaration name to exclude from binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T SetExclude<T>(this T toolSettings, IEnumerable<string> exclude) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.ExcludeInternal = exclude.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.Exclude"/></em></p>
-    ///   <p>A declaration name to exclude from binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T AddExclude<T>(this T toolSettings, params string[] exclude) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.ExcludeInternal.AddRange(exclude);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.Exclude"/></em></p>
-    ///   <p>A declaration name to exclude from binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T AddExclude<T>(this T toolSettings, IEnumerable<string> exclude) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.ExcludeInternal.AddRange(exclude);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.Exclude"/></em></p>
-    ///   <p>A declaration name to exclude from binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearExclude<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.ExcludeInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.Exclude"/></em></p>
-    ///   <p>A declaration name to exclude from binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveExclude<T>(this T toolSettings, params string[] exclude) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(exclude);
-        toolSettings.ExcludeInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.Exclude"/></em></p>
-    ///   <p>A declaration name to exclude from binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveExclude<T>(this T toolSettings, IEnumerable<string> exclude) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(exclude);
-        toolSettings.ExcludeInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Exclude"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Exclude))]
+    public static T SetExclude<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Exclude, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Exclude"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Exclude))]
+    public static T SetExclude<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Exclude, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Exclude"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Exclude))]
+    public static T AddExclude<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.Exclude, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Exclude"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Exclude))]
+    public static T AddExclude<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.Exclude, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Exclude"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Exclude))]
+    public static T RemoveExclude<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.Exclude, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Exclude"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Exclude))]
+    public static T RemoveExclude<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.Exclude, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Exclude"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Exclude))]
+    public static T ClearExclude<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.Exclude));
     #endregion
     #region File
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.File"/> to a new list</em></p>
-    ///   <p>A file to parse and generate bindings for.</p>
-    /// </summary>
-    [Pure]
-    public static T SetFile<T>(this T toolSettings, params string[] file) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.FileInternal = file.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.File"/> to a new list</em></p>
-    ///   <p>A file to parse and generate bindings for.</p>
-    /// </summary>
-    [Pure]
-    public static T SetFile<T>(this T toolSettings, IEnumerable<string> file) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.FileInternal = file.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.File"/></em></p>
-    ///   <p>A file to parse and generate bindings for.</p>
-    /// </summary>
-    [Pure]
-    public static T AddFile<T>(this T toolSettings, params string[] file) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.FileInternal.AddRange(file);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.File"/></em></p>
-    ///   <p>A file to parse and generate bindings for.</p>
-    /// </summary>
-    [Pure]
-    public static T AddFile<T>(this T toolSettings, IEnumerable<string> file) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.FileInternal.AddRange(file);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.File"/></em></p>
-    ///   <p>A file to parse and generate bindings for.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearFile<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.FileInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.File"/></em></p>
-    ///   <p>A file to parse and generate bindings for.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveFile<T>(this T toolSettings, params string[] file) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(file);
-        toolSettings.FileInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.File"/></em></p>
-    ///   <p>A file to parse and generate bindings for.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveFile<T>(this T toolSettings, IEnumerable<string> file) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(file);
-        toolSettings.FileInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.File"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.File))]
+    public static T SetFile<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.File, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.File"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.File))]
+    public static T SetFile<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.File, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.File"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.File))]
+    public static T AddFile<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.File, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.File"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.File))]
+    public static T AddFile<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.File, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.File"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.File))]
+    public static T RemoveFile<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.File, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.File"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.File))]
+    public static T RemoveFile<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.File, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.File"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.File))]
+    public static T ClearFile<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.File));
     #endregion
-    #region FileDirectory
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.FileDirectory"/> to a new list</em></p>
-    ///   <p>The base path for files to parse.</p>
-    /// </summary>
-    [Pure]
-    public static T SetFileDirectory<T>(this T toolSettings, params string[] fileDirectory) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.FileDirectoryInternal = fileDirectory.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.FileDirectory"/> to a new list</em></p>
-    ///   <p>The base path for files to parse.</p>
-    /// </summary>
-    [Pure]
-    public static T SetFileDirectory<T>(this T toolSettings, IEnumerable<string> fileDirectory) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.FileDirectoryInternal = fileDirectory.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.FileDirectory"/></em></p>
-    ///   <p>The base path for files to parse.</p>
-    /// </summary>
-    [Pure]
-    public static T AddFileDirectory<T>(this T toolSettings, params string[] fileDirectory) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.FileDirectoryInternal.AddRange(fileDirectory);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.FileDirectory"/></em></p>
-    ///   <p>The base path for files to parse.</p>
-    /// </summary>
-    [Pure]
-    public static T AddFileDirectory<T>(this T toolSettings, IEnumerable<string> fileDirectory) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.FileDirectoryInternal.AddRange(fileDirectory);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.FileDirectory"/></em></p>
-    ///   <p>The base path for files to parse.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearFileDirectory<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.FileDirectoryInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.FileDirectory"/></em></p>
-    ///   <p>The base path for files to parse.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveFileDirectory<T>(this T toolSettings, params string[] fileDirectory) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(fileDirectory);
-        toolSettings.FileDirectoryInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.FileDirectory"/></em></p>
-    ///   <p>The base path for files to parse.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveFileDirectory<T>(this T toolSettings, IEnumerable<string> fileDirectory) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(fileDirectory);
-        toolSettings.FileDirectoryInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    #region FileDirectories
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.FileDirectories"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.FileDirectories))]
+    public static T SetFileDirectories<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.FileDirectories, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.FileDirectories"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.FileDirectories))]
+    public static T SetFileDirectories<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.FileDirectories, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.FileDirectories"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.FileDirectories))]
+    public static T AddFileDirectories<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.FileDirectories, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.FileDirectories"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.FileDirectories))]
+    public static T AddFileDirectories<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.FileDirectories, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.FileDirectories"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.FileDirectories))]
+    public static T RemoveFileDirectories<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.FileDirectories, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.FileDirectories"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.FileDirectories))]
+    public static T RemoveFileDirectories<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.FileDirectories, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.FileDirectories"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.FileDirectories))]
+    public static T ClearFileDirectories<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.FileDirectories));
     #endregion
-    #region HeaderFile
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.HeaderFile"/> to a new list</em></p>
-    ///   <p>A file which contains the header to prefix every generated file with.</p>
-    /// </summary>
-    [Pure]
-    public static T SetHeaderFile<T>(this T toolSettings, params string[] headerFile) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.HeaderFileInternal = headerFile.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.HeaderFile"/> to a new list</em></p>
-    ///   <p>A file which contains the header to prefix every generated file with.</p>
-    /// </summary>
-    [Pure]
-    public static T SetHeaderFile<T>(this T toolSettings, IEnumerable<string> headerFile) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.HeaderFileInternal = headerFile.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.HeaderFile"/></em></p>
-    ///   <p>A file which contains the header to prefix every generated file with.</p>
-    /// </summary>
-    [Pure]
-    public static T AddHeaderFile<T>(this T toolSettings, params string[] headerFile) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.HeaderFileInternal.AddRange(headerFile);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.HeaderFile"/></em></p>
-    ///   <p>A file which contains the header to prefix every generated file with.</p>
-    /// </summary>
-    [Pure]
-    public static T AddHeaderFile<T>(this T toolSettings, IEnumerable<string> headerFile) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.HeaderFileInternal.AddRange(headerFile);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.HeaderFile"/></em></p>
-    ///   <p>A file which contains the header to prefix every generated file with.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearHeaderFile<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.HeaderFileInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.HeaderFile"/></em></p>
-    ///   <p>A file which contains the header to prefix every generated file with.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveHeaderFile<T>(this T toolSettings, params string[] headerFile) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(headerFile);
-        toolSettings.HeaderFileInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.HeaderFile"/></em></p>
-    ///   <p>A file which contains the header to prefix every generated file with.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveHeaderFile<T>(this T toolSettings, IEnumerable<string> headerFile) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(headerFile);
-        toolSettings.HeaderFileInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    #region HeaderFiles
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.HeaderFiles"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.HeaderFiles))]
+    public static T SetHeaderFiles<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.HeaderFiles, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.HeaderFiles"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.HeaderFiles))]
+    public static T SetHeaderFiles<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.HeaderFiles, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.HeaderFiles"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.HeaderFiles))]
+    public static T AddHeaderFiles<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.HeaderFiles, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.HeaderFiles"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.HeaderFiles))]
+    public static T AddHeaderFiles<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.HeaderFiles, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.HeaderFiles"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.HeaderFiles))]
+    public static T RemoveHeaderFiles<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.HeaderFiles, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.HeaderFiles"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.HeaderFiles))]
+    public static T RemoveHeaderFiles<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.HeaderFiles, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.HeaderFiles"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.HeaderFiles))]
+    public static T ClearHeaderFiles<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.HeaderFiles));
     #endregion
     #region Include
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Include"/> to a new list</em></p>
-    ///   <p>A declaration name to include in binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T SetInclude<T>(this T toolSettings, params string[] include) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.IncludeInternal = include.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Include"/> to a new list</em></p>
-    ///   <p>A declaration name to include in binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T SetInclude<T>(this T toolSettings, IEnumerable<string> include) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.IncludeInternal = include.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.Include"/></em></p>
-    ///   <p>A declaration name to include in binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T AddInclude<T>(this T toolSettings, params string[] include) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.IncludeInternal.AddRange(include);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.Include"/></em></p>
-    ///   <p>A declaration name to include in binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T AddInclude<T>(this T toolSettings, IEnumerable<string> include) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.IncludeInternal.AddRange(include);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.Include"/></em></p>
-    ///   <p>A declaration name to include in binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearInclude<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.IncludeInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.Include"/></em></p>
-    ///   <p>A declaration name to include in binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveInclude<T>(this T toolSettings, params string[] include) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(include);
-        toolSettings.IncludeInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.Include"/></em></p>
-    ///   <p>A declaration name to include in binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveInclude<T>(this T toolSettings, IEnumerable<string> include) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(include);
-        toolSettings.IncludeInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Include"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Include))]
+    public static T SetInclude<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Include, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Include"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Include))]
+    public static T SetInclude<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Include, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Include"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Include))]
+    public static T AddInclude<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.Include, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Include"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Include))]
+    public static T AddInclude<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.Include, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Include"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Include))]
+    public static T RemoveInclude<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.Include, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Include"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Include))]
+    public static T RemoveInclude<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.Include, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Include"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Include))]
+    public static T ClearInclude<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.Include));
     #endregion
     #region IncludeDirectory
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/> to a new list</em></p>
-    ///   <p>Add directory to include search path.</p>
-    /// </summary>
-    [Pure]
-    public static T SetIncludeDirectory<T>(this T toolSettings, params string[] includeDirectory) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.IncludeDirectoryInternal = includeDirectory.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/> to a new list</em></p>
-    ///   <p>Add directory to include search path.</p>
-    /// </summary>
-    [Pure]
-    public static T SetIncludeDirectory<T>(this T toolSettings, IEnumerable<string> includeDirectory) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.IncludeDirectoryInternal = includeDirectory.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/></em></p>
-    ///   <p>Add directory to include search path.</p>
-    /// </summary>
-    [Pure]
-    public static T AddIncludeDirectory<T>(this T toolSettings, params string[] includeDirectory) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.IncludeDirectoryInternal.AddRange(includeDirectory);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/></em></p>
-    ///   <p>Add directory to include search path.</p>
-    /// </summary>
-    [Pure]
-    public static T AddIncludeDirectory<T>(this T toolSettings, IEnumerable<string> includeDirectory) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.IncludeDirectoryInternal.AddRange(includeDirectory);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/></em></p>
-    ///   <p>Add directory to include search path.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearIncludeDirectory<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.IncludeDirectoryInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/></em></p>
-    ///   <p>Add directory to include search path.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveIncludeDirectory<T>(this T toolSettings, params string[] includeDirectory) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(includeDirectory);
-        toolSettings.IncludeDirectoryInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/></em></p>
-    ///   <p>Add directory to include search path.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveIncludeDirectory<T>(this T toolSettings, IEnumerable<string> includeDirectory) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(includeDirectory);
-        toolSettings.IncludeDirectoryInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.IncludeDirectory))]
+    public static T SetIncludeDirectory<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.IncludeDirectory, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.IncludeDirectory))]
+    public static T SetIncludeDirectory<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.IncludeDirectory, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.IncludeDirectory))]
+    public static T AddIncludeDirectory<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.IncludeDirectory, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.IncludeDirectory))]
+    public static T AddIncludeDirectory<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.IncludeDirectory, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.IncludeDirectory))]
+    public static T RemoveIncludeDirectory<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.IncludeDirectory, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.IncludeDirectory))]
+    public static T RemoveIncludeDirectory<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.IncludeDirectory, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.IncludeDirectory"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.IncludeDirectory))]
+    public static T ClearIncludeDirectory<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.IncludeDirectory));
     #endregion
     #region Language
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Language"/></em></p>
-    ///   <p>Treat subsequent input files as having type <language>.</p>
-    /// </summary>
-    [Pure]
-    public static T SetLanguage<T>(this T toolSettings, string language) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.Language = language;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="ClangSharpPInvokeGeneratorSettings.Language"/></em></p>
-    ///   <p>Treat subsequent input files as having type <language>.</p>
-    /// </summary>
-    [Pure]
-    public static T ResetLanguage<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.Language = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Language"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Language))]
+    public static T SetLanguage<T>(this T o, string v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Language, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Language"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Language))]
+    public static T ResetLanguage<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Remove(() => o.Language));
     #endregion
     #region LibraryPath
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.LibraryPath"/></em></p>
-    ///   <p>The string to use in the <c>DllImport</c> attribute used when generating bindings.</p>
-    /// </summary>
-    [Pure]
-    public static T SetLibraryPath<T>(this T toolSettings, string libraryPath) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.LibraryPath = libraryPath;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="ClangSharpPInvokeGeneratorSettings.LibraryPath"/></em></p>
-    ///   <p>The string to use in the <c>DllImport</c> attribute used when generating bindings.</p>
-    /// </summary>
-    [Pure]
-    public static T ResetLibraryPath<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.LibraryPath = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.LibraryPath"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.LibraryPath))]
+    public static T SetLibraryPath<T>(this T o, string v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.LibraryPath, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.LibraryPath"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.LibraryPath))]
+    public static T ResetLibraryPath<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Remove(() => o.LibraryPath));
     #endregion
     #region MethodClassName
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.MethodClassName"/></em></p>
-    ///   <p>The name of the static class that will contain the generated method bindings.</p>
-    /// </summary>
-    [Pure]
-    public static T SetMethodClassName<T>(this T toolSettings, string methodClassName) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.MethodClassName = methodClassName;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="ClangSharpPInvokeGeneratorSettings.MethodClassName"/></em></p>
-    ///   <p>The name of the static class that will contain the generated method bindings.</p>
-    /// </summary>
-    [Pure]
-    public static T ResetMethodClassName<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.MethodClassName = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.MethodClassName"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.MethodClassName))]
+    public static T SetMethodClassName<T>(this T o, string v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.MethodClassName, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.MethodClassName"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.MethodClassName))]
+    public static T ResetMethodClassName<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Remove(() => o.MethodClassName));
     #endregion
     #region Namespace
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Namespace"/></em></p>
-    ///   <p>The namespace in which to place the generated bindings.</p>
-    /// </summary>
-    [Pure]
-    public static T SetNamespace<T>(this T toolSettings, string @namespace) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.Namespace = @namespace;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="ClangSharpPInvokeGeneratorSettings.Namespace"/></em></p>
-    ///   <p>The namespace in which to place the generated bindings.</p>
-    /// </summary>
-    [Pure]
-    public static T ResetNamespace<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.Namespace = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Namespace"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Namespace))]
+    public static T SetNamespace<T>(this T o, string v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Namespace, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Namespace"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Namespace))]
+    public static T ResetNamespace<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Remove(() => o.Namespace));
     #endregion
     #region NativeTypeNamesToStrip
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.NativeTypeNamesToStrip"/></em></p>
-    ///   <p>The contents to strip from the generated NativeTypeName attributes.</p>
-    /// </summary>
-    [Pure]
-    public static T SetNativeTypeNamesToStrip<T>(this T toolSettings, string nativeTypeNamesToStrip) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.NativeTypeNamesToStrip = nativeTypeNamesToStrip;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="ClangSharpPInvokeGeneratorSettings.NativeTypeNamesToStrip"/></em></p>
-    ///   <p>The contents to strip from the generated NativeTypeName attributes.</p>
-    /// </summary>
-    [Pure]
-    public static T ResetNativeTypeNamesToStrip<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.NativeTypeNamesToStrip = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.NativeTypeNamesToStrip"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.NativeTypeNamesToStrip))]
+    public static T SetNativeTypeNamesToStrip<T>(this T o, string v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.NativeTypeNamesToStrip, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.NativeTypeNamesToStrip"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.NativeTypeNamesToStrip))]
+    public static T ResetNativeTypeNamesToStrip<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Remove(() => o.NativeTypeNamesToStrip));
     #endregion
     #region OutputMode
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.OutputMode"/></em></p>
-    ///   <p>The mode describing how the information collected from the headers are presented in the resultant bindings.</p>
-    /// </summary>
-    [Pure]
-    public static T SetOutputMode<T>(this T toolSettings, ClangSharpPInvokeGeneratorOutputMode outputMode) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.OutputMode = outputMode;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="ClangSharpPInvokeGeneratorSettings.OutputMode"/></em></p>
-    ///   <p>The mode describing how the information collected from the headers are presented in the resultant bindings.</p>
-    /// </summary>
-    [Pure]
-    public static T ResetOutputMode<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.OutputMode = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.OutputMode"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.OutputMode))]
+    public static T SetOutputMode<T>(this T o, ClangSharpPInvokeGeneratorOutputMode v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.OutputMode, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.OutputMode"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.OutputMode))]
+    public static T ResetOutputMode<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Remove(() => o.OutputMode));
     #endregion
     #region Output
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Output"/></em></p>
-    ///   <p>The output location to write the generated bindings to.</p>
-    /// </summary>
-    [Pure]
-    public static T SetOutput<T>(this T toolSettings, string output) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.Output = output;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="ClangSharpPInvokeGeneratorSettings.Output"/></em></p>
-    ///   <p>The output location to write the generated bindings to.</p>
-    /// </summary>
-    [Pure]
-    public static T ResetOutput<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.Output = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Output"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Output))]
+    public static T SetOutput<T>(this T o, string v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Output, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Output"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Output))]
+    public static T ResetOutput<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Remove(() => o.Output));
     #endregion
     #region PrefixStrip
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/> to a new list</em></p>
-    ///   <p>The prefix to strip from the generated method bindings.</p>
-    /// </summary>
-    [Pure]
-    public static T SetPrefixStrip<T>(this T toolSettings, params string[] prefixStrip) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.PrefixStripInternal = prefixStrip.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/> to a new list</em></p>
-    ///   <p>The prefix to strip from the generated method bindings.</p>
-    /// </summary>
-    [Pure]
-    public static T SetPrefixStrip<T>(this T toolSettings, IEnumerable<string> prefixStrip) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.PrefixStripInternal = prefixStrip.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/></em></p>
-    ///   <p>The prefix to strip from the generated method bindings.</p>
-    /// </summary>
-    [Pure]
-    public static T AddPrefixStrip<T>(this T toolSettings, params string[] prefixStrip) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.PrefixStripInternal.AddRange(prefixStrip);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/></em></p>
-    ///   <p>The prefix to strip from the generated method bindings.</p>
-    /// </summary>
-    [Pure]
-    public static T AddPrefixStrip<T>(this T toolSettings, IEnumerable<string> prefixStrip) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.PrefixStripInternal.AddRange(prefixStrip);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/></em></p>
-    ///   <p>The prefix to strip from the generated method bindings.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearPrefixStrip<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.PrefixStripInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/></em></p>
-    ///   <p>The prefix to strip from the generated method bindings.</p>
-    /// </summary>
-    [Pure]
-    public static T RemovePrefixStrip<T>(this T toolSettings, params string[] prefixStrip) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(prefixStrip);
-        toolSettings.PrefixStripInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/></em></p>
-    ///   <p>The prefix to strip from the generated method bindings.</p>
-    /// </summary>
-    [Pure]
-    public static T RemovePrefixStrip<T>(this T toolSettings, IEnumerable<string> prefixStrip) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(prefixStrip);
-        toolSettings.PrefixStripInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.PrefixStrip))]
+    public static T SetPrefixStrip<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.PrefixStrip, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.PrefixStrip))]
+    public static T SetPrefixStrip<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.PrefixStrip, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.PrefixStrip))]
+    public static T AddPrefixStrip<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.PrefixStrip, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.PrefixStrip))]
+    public static T AddPrefixStrip<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.PrefixStrip, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.PrefixStrip))]
+    public static T RemovePrefixStrip<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.PrefixStrip, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.PrefixStrip))]
+    public static T RemovePrefixStrip<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.PrefixStrip, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.PrefixStrip"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.PrefixStrip))]
+    public static T ClearPrefixStrip<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.PrefixStrip));
     #endregion
     #region Remap
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Remap"/> to a new list</em></p>
-    ///   <p>A declaration name to be remapped to another name during binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T SetRemap<T>(this T toolSettings, params string[] remap) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.RemapInternal = remap.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Remap"/> to a new list</em></p>
-    ///   <p>A declaration name to be remapped to another name during binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T SetRemap<T>(this T toolSettings, IEnumerable<string> remap) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.RemapInternal = remap.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.Remap"/></em></p>
-    ///   <p>A declaration name to be remapped to another name during binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T AddRemap<T>(this T toolSettings, params string[] remap) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.RemapInternal.AddRange(remap);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.Remap"/></em></p>
-    ///   <p>A declaration name to be remapped to another name during binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T AddRemap<T>(this T toolSettings, IEnumerable<string> remap) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.RemapInternal.AddRange(remap);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.Remap"/></em></p>
-    ///   <p>A declaration name to be remapped to another name during binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearRemap<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.RemapInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.Remap"/></em></p>
-    ///   <p>A declaration name to be remapped to another name during binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveRemap<T>(this T toolSettings, params string[] remap) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(remap);
-        toolSettings.RemapInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.Remap"/></em></p>
-    ///   <p>A declaration name to be remapped to another name during binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveRemap<T>(this T toolSettings, IEnumerable<string> remap) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(remap);
-        toolSettings.RemapInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Remap"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Remap))]
+    public static T SetRemap<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Remap, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Remap"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Remap))]
+    public static T SetRemap<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Remap, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Remap"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Remap))]
+    public static T AddRemap<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.Remap, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Remap"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Remap))]
+    public static T AddRemap<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.Remap, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Remap"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Remap))]
+    public static T RemoveRemap<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.Remap, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Remap"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Remap))]
+    public static T RemoveRemap<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.Remap, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Remap"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Remap))]
+    public static T ClearRemap<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.Remap));
     #endregion
     #region Std
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Std"/></em></p>
-    ///   <p>Language standard to compile for.</p>
-    /// </summary>
-    [Pure]
-    public static T SetStd<T>(this T toolSettings, string std) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.Std = std;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="ClangSharpPInvokeGeneratorSettings.Std"/></em></p>
-    ///   <p>Language standard to compile for.</p>
-    /// </summary>
-    [Pure]
-    public static T ResetStd<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.Std = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Std"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Std))]
+    public static T SetStd<T>(this T o, string v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Std, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Std"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Std))]
+    public static T ResetStd<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Remove(() => o.Std));
     #endregion
     #region TestOutput
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.TestOutput"/></em></p>
-    ///   <p>The output location to write the generated tests to.</p>
-    /// </summary>
-    [Pure]
-    public static T SetTestOutput<T>(this T toolSettings, string testOutput) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.TestOutput = testOutput;
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Resets <see cref="ClangSharpPInvokeGeneratorSettings.TestOutput"/></em></p>
-    ///   <p>The output location to write the generated tests to.</p>
-    /// </summary>
-    [Pure]
-    public static T ResetTestOutput<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.TestOutput = null;
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.TestOutput"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.TestOutput))]
+    public static T SetTestOutput<T>(this T o, string v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.TestOutput, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.TestOutput"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.TestOutput))]
+    public static T ResetTestOutput<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Remove(() => o.TestOutput));
     #endregion
     #region Traverse
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Traverse"/> to a new list</em></p>
-    ///   <p>A file name included either directly or indirectly by -f that should be traversed during binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T SetTraverse<T>(this T toolSettings, params string[] traverse) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.TraverseInternal = traverse.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.Traverse"/> to a new list</em></p>
-    ///   <p>A file name included either directly or indirectly by -f that should be traversed during binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T SetTraverse<T>(this T toolSettings, IEnumerable<string> traverse) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.TraverseInternal = traverse.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.Traverse"/></em></p>
-    ///   <p>A file name included either directly or indirectly by -f that should be traversed during binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T AddTraverse<T>(this T toolSettings, params string[] traverse) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.TraverseInternal.AddRange(traverse);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.Traverse"/></em></p>
-    ///   <p>A file name included either directly or indirectly by -f that should be traversed during binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T AddTraverse<T>(this T toolSettings, IEnumerable<string> traverse) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.TraverseInternal.AddRange(traverse);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.Traverse"/></em></p>
-    ///   <p>A file name included either directly or indirectly by -f that should be traversed during binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearTraverse<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.TraverseInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.Traverse"/></em></p>
-    ///   <p>A file name included either directly or indirectly by -f that should be traversed during binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveTraverse<T>(this T toolSettings, params string[] traverse) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(traverse);
-        toolSettings.TraverseInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.Traverse"/></em></p>
-    ///   <p>A file name included either directly or indirectly by -f that should be traversed during binding generation.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveTraverse<T>(this T toolSettings, IEnumerable<string> traverse) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(traverse);
-        toolSettings.TraverseInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Traverse"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Traverse))]
+    public static T SetTraverse<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Traverse, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Traverse"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Traverse))]
+    public static T SetTraverse<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.Traverse, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Traverse"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Traverse))]
+    public static T AddTraverse<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.Traverse, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Traverse"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Traverse))]
+    public static T AddTraverse<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.Traverse, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Traverse"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Traverse))]
+    public static T RemoveTraverse<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.Traverse, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Traverse"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Traverse))]
+    public static T RemoveTraverse<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.Traverse, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.Traverse"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.Traverse))]
+    public static T ClearTraverse<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.Traverse));
     #endregion
     #region WithAccessSpecifier
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/> to a new list</em></p>
-    ///   <p>An access specifier to be used with the given qualified or remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithAccessSpecifier<T>(this T toolSettings, params string[] withAccessSpecifier) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithAccessSpecifierInternal = withAccessSpecifier.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/> to a new list</em></p>
-    ///   <p>An access specifier to be used with the given qualified or remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithAccessSpecifier<T>(this T toolSettings, IEnumerable<string> withAccessSpecifier) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithAccessSpecifierInternal = withAccessSpecifier.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/></em></p>
-    ///   <p>An access specifier to be used with the given qualified or remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithAccessSpecifier<T>(this T toolSettings, params string[] withAccessSpecifier) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithAccessSpecifierInternal.AddRange(withAccessSpecifier);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/></em></p>
-    ///   <p>An access specifier to be used with the given qualified or remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithAccessSpecifier<T>(this T toolSettings, IEnumerable<string> withAccessSpecifier) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithAccessSpecifierInternal.AddRange(withAccessSpecifier);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/></em></p>
-    ///   <p>An access specifier to be used with the given qualified or remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearWithAccessSpecifier<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithAccessSpecifierInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/></em></p>
-    ///   <p>An access specifier to be used with the given qualified or remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithAccessSpecifier<T>(this T toolSettings, params string[] withAccessSpecifier) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withAccessSpecifier);
-        toolSettings.WithAccessSpecifierInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/></em></p>
-    ///   <p>An access specifier to be used with the given qualified or remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithAccessSpecifier<T>(this T toolSettings, IEnumerable<string> withAccessSpecifier) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withAccessSpecifier);
-        toolSettings.WithAccessSpecifierInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier))]
+    public static T SetWithAccessSpecifier<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithAccessSpecifier, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier))]
+    public static T SetWithAccessSpecifier<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithAccessSpecifier, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier))]
+    public static T AddWithAccessSpecifier<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithAccessSpecifier, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier))]
+    public static T AddWithAccessSpecifier<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithAccessSpecifier, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier))]
+    public static T RemoveWithAccessSpecifier<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithAccessSpecifier, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier))]
+    public static T RemoveWithAccessSpecifier<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithAccessSpecifier, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithAccessSpecifier))]
+    public static T ClearWithAccessSpecifier<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.WithAccessSpecifier));
     #endregion
     #region WithAttribute
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/> to a new list</em></p>
-    ///   <p>An attribute to be added to the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithAttribute<T>(this T toolSettings, params string[] withAttribute) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithAttributeInternal = withAttribute.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/> to a new list</em></p>
-    ///   <p>An attribute to be added to the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithAttribute<T>(this T toolSettings, IEnumerable<string> withAttribute) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithAttributeInternal = withAttribute.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/></em></p>
-    ///   <p>An attribute to be added to the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithAttribute<T>(this T toolSettings, params string[] withAttribute) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithAttributeInternal.AddRange(withAttribute);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/></em></p>
-    ///   <p>An attribute to be added to the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithAttribute<T>(this T toolSettings, IEnumerable<string> withAttribute) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithAttributeInternal.AddRange(withAttribute);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/></em></p>
-    ///   <p>An attribute to be added to the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearWithAttribute<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithAttributeInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/></em></p>
-    ///   <p>An attribute to be added to the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithAttribute<T>(this T toolSettings, params string[] withAttribute) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withAttribute);
-        toolSettings.WithAttributeInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/></em></p>
-    ///   <p>An attribute to be added to the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithAttribute<T>(this T toolSettings, IEnumerable<string> withAttribute) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withAttribute);
-        toolSettings.WithAttributeInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithAttribute))]
+    public static T SetWithAttribute<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithAttribute, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithAttribute))]
+    public static T SetWithAttribute<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithAttribute, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithAttribute))]
+    public static T AddWithAttribute<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithAttribute, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithAttribute))]
+    public static T AddWithAttribute<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithAttribute, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithAttribute))]
+    public static T RemoveWithAttribute<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithAttribute, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithAttribute))]
+    public static T RemoveWithAttribute<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithAttribute, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithAttribute"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithAttribute))]
+    public static T ClearWithAttribute<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.WithAttribute));
     #endregion
     #region WithCallConv
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/> to a new list</em></p>
-    ///   <p>A calling convention to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithCallConv<T>(this T toolSettings, params string[] withCallConv) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithCallConvInternal = withCallConv.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/> to a new list</em></p>
-    ///   <p>A calling convention to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithCallConv<T>(this T toolSettings, IEnumerable<string> withCallConv) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithCallConvInternal = withCallConv.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/></em></p>
-    ///   <p>A calling convention to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithCallConv<T>(this T toolSettings, params string[] withCallConv) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithCallConvInternal.AddRange(withCallConv);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/></em></p>
-    ///   <p>A calling convention to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithCallConv<T>(this T toolSettings, IEnumerable<string> withCallConv) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithCallConvInternal.AddRange(withCallConv);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/></em></p>
-    ///   <p>A calling convention to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearWithCallConv<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithCallConvInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/></em></p>
-    ///   <p>A calling convention to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithCallConv<T>(this T toolSettings, params string[] withCallConv) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withCallConv);
-        toolSettings.WithCallConvInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/></em></p>
-    ///   <p>A calling convention to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithCallConv<T>(this T toolSettings, IEnumerable<string> withCallConv) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withCallConv);
-        toolSettings.WithCallConvInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithCallConv))]
+    public static T SetWithCallConv<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithCallConv, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithCallConv))]
+    public static T SetWithCallConv<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithCallConv, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithCallConv))]
+    public static T AddWithCallConv<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithCallConv, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithCallConv))]
+    public static T AddWithCallConv<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithCallConv, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithCallConv))]
+    public static T RemoveWithCallConv<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithCallConv, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithCallConv))]
+    public static T RemoveWithCallConv<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithCallConv, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithCallConv"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithCallConv))]
+    public static T ClearWithCallConv<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.WithCallConv));
     #endregion
     #region WithClass
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithClass"/> to a new list</em></p>
-    ///   <p>A class to be used for the given remapped constant or function declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithClass<T>(this T toolSettings, params string[] withClass) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithClassInternal = withClass.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithClass"/> to a new list</em></p>
-    ///   <p>A class to be used for the given remapped constant or function declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithClass<T>(this T toolSettings, IEnumerable<string> withClass) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithClassInternal = withClass.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithClass"/></em></p>
-    ///   <p>A class to be used for the given remapped constant or function declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithClass<T>(this T toolSettings, params string[] withClass) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithClassInternal.AddRange(withClass);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithClass"/></em></p>
-    ///   <p>A class to be used for the given remapped constant or function declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithClass<T>(this T toolSettings, IEnumerable<string> withClass) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithClassInternal.AddRange(withClass);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithClass"/></em></p>
-    ///   <p>A class to be used for the given remapped constant or function declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearWithClass<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithClassInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithClass"/></em></p>
-    ///   <p>A class to be used for the given remapped constant or function declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithClass<T>(this T toolSettings, params string[] withClass) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withClass);
-        toolSettings.WithClassInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithClass"/></em></p>
-    ///   <p>A class to be used for the given remapped constant or function declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithClass<T>(this T toolSettings, IEnumerable<string> withClass) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withClass);
-        toolSettings.WithClassInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithClass"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithClass))]
+    public static T SetWithClass<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithClass, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithClass"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithClass))]
+    public static T SetWithClass<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithClass, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithClass"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithClass))]
+    public static T AddWithClass<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithClass, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithClass"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithClass))]
+    public static T AddWithClass<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithClass, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithClass"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithClass))]
+    public static T RemoveWithClass<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithClass, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithClass"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithClass))]
+    public static T RemoveWithClass<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithClass, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithClass"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithClass))]
+    public static T ClearWithClass<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.WithClass));
     #endregion
     #region WithGuid
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/> to a new list</em></p>
-    ///   <p>A GUID to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithGuid<T>(this T toolSettings, params string[] withGuid) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithGuidInternal = withGuid.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/> to a new list</em></p>
-    ///   <p>A GUID to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithGuid<T>(this T toolSettings, IEnumerable<string> withGuid) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithGuidInternal = withGuid.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/></em></p>
-    ///   <p>A GUID to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithGuid<T>(this T toolSettings, params string[] withGuid) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithGuidInternal.AddRange(withGuid);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/></em></p>
-    ///   <p>A GUID to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithGuid<T>(this T toolSettings, IEnumerable<string> withGuid) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithGuidInternal.AddRange(withGuid);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/></em></p>
-    ///   <p>A GUID to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearWithGuid<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithGuidInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/></em></p>
-    ///   <p>A GUID to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithGuid<T>(this T toolSettings, params string[] withGuid) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withGuid);
-        toolSettings.WithGuidInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/></em></p>
-    ///   <p>A GUID to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithGuid<T>(this T toolSettings, IEnumerable<string> withGuid) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withGuid);
-        toolSettings.WithGuidInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithGuid))]
+    public static T SetWithGuid<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithGuid, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithGuid))]
+    public static T SetWithGuid<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithGuid, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithGuid))]
+    public static T AddWithGuid<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithGuid, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithGuid))]
+    public static T AddWithGuid<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithGuid, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithGuid))]
+    public static T RemoveWithGuid<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithGuid, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithGuid))]
+    public static T RemoveWithGuid<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithGuid, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithGuid"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithGuid))]
+    public static T ClearWithGuid<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.WithGuid));
     #endregion
     #region WithLibraryPath
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/> to a new list</em></p>
-    ///   <p>A library path to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithLibraryPath<T>(this T toolSettings, params string[] withLibraryPath) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithLibraryPathInternal = withLibraryPath.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/> to a new list</em></p>
-    ///   <p>A library path to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithLibraryPath<T>(this T toolSettings, IEnumerable<string> withLibraryPath) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithLibraryPathInternal = withLibraryPath.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/></em></p>
-    ///   <p>A library path to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithLibraryPath<T>(this T toolSettings, params string[] withLibraryPath) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithLibraryPathInternal.AddRange(withLibraryPath);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/></em></p>
-    ///   <p>A library path to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithLibraryPath<T>(this T toolSettings, IEnumerable<string> withLibraryPath) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithLibraryPathInternal.AddRange(withLibraryPath);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/></em></p>
-    ///   <p>A library path to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearWithLibraryPath<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithLibraryPathInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/></em></p>
-    ///   <p>A library path to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithLibraryPath<T>(this T toolSettings, params string[] withLibraryPath) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withLibraryPath);
-        toolSettings.WithLibraryPathInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/></em></p>
-    ///   <p>A library path to be used for the given declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithLibraryPath<T>(this T toolSettings, IEnumerable<string> withLibraryPath) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withLibraryPath);
-        toolSettings.WithLibraryPathInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithLibraryPath))]
+    public static T SetWithLibraryPath<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithLibraryPath, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithLibraryPath))]
+    public static T SetWithLibraryPath<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithLibraryPath, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithLibraryPath))]
+    public static T AddWithLibraryPath<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithLibraryPath, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithLibraryPath))]
+    public static T AddWithLibraryPath<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithLibraryPath, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithLibraryPath))]
+    public static T RemoveWithLibraryPath<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithLibraryPath, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithLibraryPath))]
+    public static T RemoveWithLibraryPath<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithLibraryPath, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithLibraryPath"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithLibraryPath))]
+    public static T ClearWithLibraryPath<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.WithLibraryPath));
     #endregion
     #region WithManualImport
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/> to a new list</em></p>
-    ///   <p>A remapped function name to be treated as a manual import during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithManualImport<T>(this T toolSettings, params string[] withManualImport) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithManualImportInternal = withManualImport.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/> to a new list</em></p>
-    ///   <p>A remapped function name to be treated as a manual import during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithManualImport<T>(this T toolSettings, IEnumerable<string> withManualImport) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithManualImportInternal = withManualImport.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/></em></p>
-    ///   <p>A remapped function name to be treated as a manual import during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithManualImport<T>(this T toolSettings, params string[] withManualImport) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithManualImportInternal.AddRange(withManualImport);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/></em></p>
-    ///   <p>A remapped function name to be treated as a manual import during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithManualImport<T>(this T toolSettings, IEnumerable<string> withManualImport) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithManualImportInternal.AddRange(withManualImport);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/></em></p>
-    ///   <p>A remapped function name to be treated as a manual import during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearWithManualImport<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithManualImportInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/></em></p>
-    ///   <p>A remapped function name to be treated as a manual import during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithManualImport<T>(this T toolSettings, params string[] withManualImport) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withManualImport);
-        toolSettings.WithManualImportInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/></em></p>
-    ///   <p>A remapped function name to be treated as a manual import during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithManualImport<T>(this T toolSettings, IEnumerable<string> withManualImport) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withManualImport);
-        toolSettings.WithManualImportInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithManualImport))]
+    public static T SetWithManualImport<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithManualImport, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithManualImport))]
+    public static T SetWithManualImport<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithManualImport, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithManualImport))]
+    public static T AddWithManualImport<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithManualImport, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithManualImport))]
+    public static T AddWithManualImport<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithManualImport, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithManualImport))]
+    public static T RemoveWithManualImport<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithManualImport, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithManualImport))]
+    public static T RemoveWithManualImport<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithManualImport, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithManualImport"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithManualImport))]
+    public static T ClearWithManualImport<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.WithManualImport));
     #endregion
     #region WithNamespace
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/> to a new list</em></p>
-    ///   <p>A namespace to be used for the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithNamespace<T>(this T toolSettings, params string[] withNamespace) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithNamespaceInternal = withNamespace.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/> to a new list</em></p>
-    ///   <p>A namespace to be used for the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithNamespace<T>(this T toolSettings, IEnumerable<string> withNamespace) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithNamespaceInternal = withNamespace.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/></em></p>
-    ///   <p>A namespace to be used for the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithNamespace<T>(this T toolSettings, params string[] withNamespace) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithNamespaceInternal.AddRange(withNamespace);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/></em></p>
-    ///   <p>A namespace to be used for the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithNamespace<T>(this T toolSettings, IEnumerable<string> withNamespace) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithNamespaceInternal.AddRange(withNamespace);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/></em></p>
-    ///   <p>A namespace to be used for the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearWithNamespace<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithNamespaceInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/></em></p>
-    ///   <p>A namespace to be used for the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithNamespace<T>(this T toolSettings, params string[] withNamespace) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withNamespace);
-        toolSettings.WithNamespaceInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/></em></p>
-    ///   <p>A namespace to be used for the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithNamespace<T>(this T toolSettings, IEnumerable<string> withNamespace) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withNamespace);
-        toolSettings.WithNamespaceInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithNamespace))]
+    public static T SetWithNamespace<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithNamespace, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithNamespace))]
+    public static T SetWithNamespace<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithNamespace, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithNamespace))]
+    public static T AddWithNamespace<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithNamespace, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithNamespace))]
+    public static T AddWithNamespace<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithNamespace, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithNamespace))]
+    public static T RemoveWithNamespace<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithNamespace, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithNamespace))]
+    public static T RemoveWithNamespace<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithNamespace, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithNamespace"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithNamespace))]
+    public static T ClearWithNamespace<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.WithNamespace));
     #endregion
     #region WithPacking
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/> to a new list</em></p>
-    ///   <p>Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithPacking<T>(this T toolSettings, params string[] withPacking) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithPackingInternal = withPacking.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/> to a new list</em></p>
-    ///   <p>Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithPacking<T>(this T toolSettings, IEnumerable<string> withPacking) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithPackingInternal = withPacking.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/></em></p>
-    ///   <p>Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithPacking<T>(this T toolSettings, params string[] withPacking) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithPackingInternal.AddRange(withPacking);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/></em></p>
-    ///   <p>Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithPacking<T>(this T toolSettings, IEnumerable<string> withPacking) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithPackingInternal.AddRange(withPacking);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/></em></p>
-    ///   <p>Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearWithPacking<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithPackingInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/></em></p>
-    ///   <p>Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithPacking<T>(this T toolSettings, params string[] withPacking) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withPacking);
-        toolSettings.WithPackingInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/></em></p>
-    ///   <p>Overrides the <c>StructLayoutAttribute.Pack</c> property for the given type. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithPacking<T>(this T toolSettings, IEnumerable<string> withPacking) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withPacking);
-        toolSettings.WithPackingInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithPacking))]
+    public static T SetWithPacking<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithPacking, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithPacking))]
+    public static T SetWithPacking<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithPacking, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithPacking))]
+    public static T AddWithPacking<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithPacking, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithPacking))]
+    public static T AddWithPacking<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithPacking, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithPacking))]
+    public static T RemoveWithPacking<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithPacking, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithPacking))]
+    public static T RemoveWithPacking<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithPacking, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithPacking"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithPacking))]
+    public static T ClearWithPacking<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.WithPacking));
     #endregion
     #region WithSetLastError
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/> to a new list</em></p>
-    ///   <p>Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithSetLastError<T>(this T toolSettings, params string[] withSetLastError) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithSetLastErrorInternal = withSetLastError.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/> to a new list</em></p>
-    ///   <p>Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithSetLastError<T>(this T toolSettings, IEnumerable<string> withSetLastError) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithSetLastErrorInternal = withSetLastError.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/></em></p>
-    ///   <p>Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithSetLastError<T>(this T toolSettings, params string[] withSetLastError) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithSetLastErrorInternal.AddRange(withSetLastError);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/></em></p>
-    ///   <p>Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithSetLastError<T>(this T toolSettings, IEnumerable<string> withSetLastError) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithSetLastErrorInternal.AddRange(withSetLastError);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/></em></p>
-    ///   <p>Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearWithSetLastError<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithSetLastErrorInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/></em></p>
-    ///   <p>Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithSetLastError<T>(this T toolSettings, params string[] withSetLastError) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withSetLastError);
-        toolSettings.WithSetLastErrorInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/></em></p>
-    ///   <p>Add the <c>SetLastError=true</c> modifier to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithSetLastError<T>(this T toolSettings, IEnumerable<string> withSetLastError) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withSetLastError);
-        toolSettings.WithSetLastErrorInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithSetLastError))]
+    public static T SetWithSetLastError<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithSetLastError, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithSetLastError))]
+    public static T SetWithSetLastError<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithSetLastError, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithSetLastError))]
+    public static T AddWithSetLastError<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithSetLastError, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithSetLastError))]
+    public static T AddWithSetLastError<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithSetLastError, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithSetLastError))]
+    public static T RemoveWithSetLastError<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithSetLastError, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithSetLastError))]
+    public static T RemoveWithSetLastError<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithSetLastError, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithSetLastError"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithSetLastError))]
+    public static T ClearWithSetLastError<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.WithSetLastError));
     #endregion
     #region WithSuppressGCTransition
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/> to a new list</em></p>
-    ///   <p>Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithSuppressGCTransition<T>(this T toolSettings, params string[] withSuppressGCTransition) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithSuppressGCTransitionInternal = withSuppressGCTransition.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/> to a new list</em></p>
-    ///   <p>Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithSuppressGCTransition<T>(this T toolSettings, IEnumerable<string> withSuppressGCTransition) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithSuppressGCTransitionInternal = withSuppressGCTransition.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/></em></p>
-    ///   <p>Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithSuppressGCTransition<T>(this T toolSettings, params string[] withSuppressGCTransition) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithSuppressGCTransitionInternal.AddRange(withSuppressGCTransition);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/></em></p>
-    ///   <p>Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithSuppressGCTransition<T>(this T toolSettings, IEnumerable<string> withSuppressGCTransition) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithSuppressGCTransitionInternal.AddRange(withSuppressGCTransition);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/></em></p>
-    ///   <p>Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearWithSuppressGCTransition<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithSuppressGCTransitionInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/></em></p>
-    ///   <p>Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithSuppressGCTransition<T>(this T toolSettings, params string[] withSuppressGCTransition) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withSuppressGCTransition);
-        toolSettings.WithSuppressGCTransitionInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/></em></p>
-    ///   <p>Add the <c>SuppressGCTransition</c> calling convention to a given <c>DllImport</c> or <c>UnmanagedFunctionPointer</c>. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithSuppressGCTransition<T>(this T toolSettings, IEnumerable<string> withSuppressGCTransition) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withSuppressGCTransition);
-        toolSettings.WithSuppressGCTransitionInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition))]
+    public static T SetWithSuppressGCTransition<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithSuppressGCTransition, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition))]
+    public static T SetWithSuppressGCTransition<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithSuppressGCTransition, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition))]
+    public static T AddWithSuppressGCTransition<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithSuppressGCTransition, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition))]
+    public static T AddWithSuppressGCTransition<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithSuppressGCTransition, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition))]
+    public static T RemoveWithSuppressGCTransition<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithSuppressGCTransition, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition))]
+    public static T RemoveWithSuppressGCTransition<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithSuppressGCTransition, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithSuppressGCTransition))]
+    public static T ClearWithSuppressGCTransition<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.WithSuppressGCTransition));
     #endregion
     #region WithTransparentStruct
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/> to a new list</em></p>
-    ///   <p>A remapped type name to be treated as a transparent wrapper during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithTransparentStruct<T>(this T toolSettings, params string[] withTransparentStruct) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithTransparentStructInternal = withTransparentStruct.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/> to a new list</em></p>
-    ///   <p>A remapped type name to be treated as a transparent wrapper during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithTransparentStruct<T>(this T toolSettings, IEnumerable<string> withTransparentStruct) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithTransparentStructInternal = withTransparentStruct.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/></em></p>
-    ///   <p>A remapped type name to be treated as a transparent wrapper during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithTransparentStruct<T>(this T toolSettings, params string[] withTransparentStruct) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithTransparentStructInternal.AddRange(withTransparentStruct);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/></em></p>
-    ///   <p>A remapped type name to be treated as a transparent wrapper during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithTransparentStruct<T>(this T toolSettings, IEnumerable<string> withTransparentStruct) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithTransparentStructInternal.AddRange(withTransparentStruct);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/></em></p>
-    ///   <p>A remapped type name to be treated as a transparent wrapper during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearWithTransparentStruct<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithTransparentStructInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/></em></p>
-    ///   <p>A remapped type name to be treated as a transparent wrapper during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithTransparentStruct<T>(this T toolSettings, params string[] withTransparentStruct) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withTransparentStruct);
-        toolSettings.WithTransparentStructInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/></em></p>
-    ///   <p>A remapped type name to be treated as a transparent wrapper during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithTransparentStruct<T>(this T toolSettings, IEnumerable<string> withTransparentStruct) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withTransparentStruct);
-        toolSettings.WithTransparentStructInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithTransparentStruct))]
+    public static T SetWithTransparentStruct<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithTransparentStruct, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithTransparentStruct))]
+    public static T SetWithTransparentStruct<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithTransparentStruct, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithTransparentStruct))]
+    public static T AddWithTransparentStruct<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithTransparentStruct, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithTransparentStruct))]
+    public static T AddWithTransparentStruct<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithTransparentStruct, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithTransparentStruct))]
+    public static T RemoveWithTransparentStruct<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithTransparentStruct, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithTransparentStruct))]
+    public static T RemoveWithTransparentStruct<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithTransparentStruct, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithTransparentStruct"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithTransparentStruct))]
+    public static T ClearWithTransparentStruct<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.WithTransparentStruct));
     #endregion
     #region WithType
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithType"/> to a new list</em></p>
-    ///   <p>A type to be used for the given enum declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithType<T>(this T toolSettings, params string[] withType) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithTypeInternal = withType.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithType"/> to a new list</em></p>
-    ///   <p>A type to be used for the given enum declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithType<T>(this T toolSettings, IEnumerable<string> withType) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithTypeInternal = withType.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithType"/></em></p>
-    ///   <p>A type to be used for the given enum declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithType<T>(this T toolSettings, params string[] withType) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithTypeInternal.AddRange(withType);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithType"/></em></p>
-    ///   <p>A type to be used for the given enum declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithType<T>(this T toolSettings, IEnumerable<string> withType) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithTypeInternal.AddRange(withType);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithType"/></em></p>
-    ///   <p>A type to be used for the given enum declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearWithType<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithTypeInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithType"/></em></p>
-    ///   <p>A type to be used for the given enum declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithType<T>(this T toolSettings, params string[] withType) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withType);
-        toolSettings.WithTypeInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithType"/></em></p>
-    ///   <p>A type to be used for the given enum declaration during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithType<T>(this T toolSettings, IEnumerable<string> withType) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withType);
-        toolSettings.WithTypeInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithType"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithType))]
+    public static T SetWithType<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithType, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithType"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithType))]
+    public static T SetWithType<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithType, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithType"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithType))]
+    public static T AddWithType<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithType, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithType"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithType))]
+    public static T AddWithType<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithType, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithType"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithType))]
+    public static T RemoveWithType<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithType, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithType"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithType))]
+    public static T RemoveWithType<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithType, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithType"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithType))]
+    public static T ClearWithType<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.WithType));
     #endregion
     #region WithUsing
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/> to a new list</em></p>
-    ///   <p>A using directive to be included for the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithUsing<T>(this T toolSettings, params string[] withUsing) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithUsingInternal = withUsing.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Sets <see cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/> to a new list</em></p>
-    ///   <p>A using directive to be included for the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T SetWithUsing<T>(this T toolSettings, IEnumerable<string> withUsing) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithUsingInternal = withUsing.ToList();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/></em></p>
-    ///   <p>A using directive to be included for the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithUsing<T>(this T toolSettings, params string[] withUsing) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithUsingInternal.AddRange(withUsing);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Adds values to <see cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/></em></p>
-    ///   <p>A using directive to be included for the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T AddWithUsing<T>(this T toolSettings, IEnumerable<string> withUsing) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithUsingInternal.AddRange(withUsing);
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Clears <see cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/></em></p>
-    ///   <p>A using directive to be included for the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T ClearWithUsing<T>(this T toolSettings) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        toolSettings.WithUsingInternal.Clear();
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/></em></p>
-    ///   <p>A using directive to be included for the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithUsing<T>(this T toolSettings, params string[] withUsing) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withUsing);
-        toolSettings.WithUsingInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
-    /// <summary>
-    ///   <p><em>Removes values from <see cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/></em></p>
-    ///   <p>A using directive to be included for the given remapped declaration name during binding generation. Supports wildcards.</p>
-    /// </summary>
-    [Pure]
-    public static T RemoveWithUsing<T>(this T toolSettings, IEnumerable<string> withUsing) where T : ClangSharpPInvokeGeneratorSettings
-    {
-        toolSettings = toolSettings.NewInstance();
-        var hashSet = new HashSet<string>(withUsing);
-        toolSettings.WithUsingInternal.RemoveAll(x => hashSet.Contains(x));
-        return toolSettings;
-    }
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithUsing))]
+    public static T SetWithUsing<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithUsing, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithUsing))]
+    public static T SetWithUsing<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.Set(() => o.WithUsing, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithUsing))]
+    public static T AddWithUsing<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithUsing, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithUsing))]
+    public static T AddWithUsing<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.AddCollection(() => o.WithUsing, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithUsing))]
+    public static T RemoveWithUsing<T>(this T o, params string[] v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithUsing, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithUsing))]
+    public static T RemoveWithUsing<T>(this T o, IEnumerable<string> v) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.RemoveCollection(() => o.WithUsing, v));
+    /// <inheritdoc cref="ClangSharpPInvokeGeneratorSettings.WithUsing"/>
+    [Pure] [Builder(Type = typeof(ClangSharpPInvokeGeneratorSettings), Property = nameof(ClangSharpPInvokeGeneratorSettings.WithUsing))]
+    public static T ClearWithUsing<T>(this T o) where T : ClangSharpPInvokeGeneratorSettings => o.Modify(b => b.ClearCollection(() => o.WithUsing));
     #endregion
 }
 #endregion
 #region ClangSharpPInvokeGeneratorConfigOption
-/// <summary>
-///   Used within <see cref="ClangSharpPInvokeGeneratorTasks"/>.
-/// </summary>
+/// <summary>Used within <see cref="ClangSharpPInvokeGeneratorTasks"/>.</summary>
 [PublicAPI]
 [Serializable]
 [ExcludeFromCodeCoverage]
@@ -2806,9 +848,7 @@ public partial class ClangSharpPInvokeGeneratorConfigOption : Enumeration
 }
 #endregion
 #region ClangSharpPInvokeGeneratorOutputMode
-/// <summary>
-///   Used within <see cref="ClangSharpPInvokeGeneratorTasks"/>.
-/// </summary>
+/// <summary>Used within <see cref="ClangSharpPInvokeGeneratorTasks"/>.</summary>
 [PublicAPI]
 [Serializable]
 [ExcludeFromCodeCoverage]

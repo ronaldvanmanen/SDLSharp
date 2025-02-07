@@ -18,7 +18,7 @@ $TempDirectory = "$PSScriptRoot\\.nuke\temp"
 
 $DotNetGlobalFile = "$PSScriptRoot\\global.json"
 $DotNetInstallUrl = "https://dot.net/v1/dotnet-install.ps1"
-$DotNetChannel = "LTS"
+$DotNetChannel = "STS"
 
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
 $env:DOTNET_NOLOGO = 1
@@ -64,11 +64,6 @@ else {
 }
 
 Write-Output "Microsoft (R) .NET SDK version $(& $env:DOTNET_EXE --version)"
-
-# Install the Azure Artifacts Credential Provider for non-server builds
-if ($null -eq $env:GITHUB_ACTIONS -and $null -eq $env:TF_BUILD) {
-    Invoke-Expression "& { $(Invoke-RestMethod https://aka.ms/install-artifacts-credprovider.ps1) } -AddNetfx"
-}
 
 if (Test-Path env:NUKE_ENTERPRISE_TOKEN) {
     & $env:DOTNET_EXE nuget remove source "nuke-enterprise" > $null
