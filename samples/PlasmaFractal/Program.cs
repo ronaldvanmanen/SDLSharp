@@ -26,7 +26,6 @@ using SDL2Sharp.Fonts;
 using SDL2Sharp.Video;
 using SDL2Sharp.Video.PixelFormats;
 using static System.Math;
-using static SDL2Sharp.Math;
 
 internal static class Program
 {
@@ -283,5 +282,17 @@ internal static class Program
         var value = Clamp(average + random, 0, 255);
 
         map[centerX, centerY] = (byte)value;
+    }
+
+    private static int NextPowerOfTwo(int value)
+    {
+        --value;
+        value |= value >> 1;
+        value |= value >> 2;
+        value |= value >> 4;
+        value |= value >> 8;
+        value |= value >> 16;
+        ++value;
+        return value;
     }
 }
