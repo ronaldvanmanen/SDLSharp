@@ -30,7 +30,7 @@ namespace SDL2Sharp.Video
 
         public int RefreshRate { get; }
 
-        public DisplayMode(PixelFormat format, int width, int height, int refreshRate)
+        internal DisplayMode(PixelFormat format, int width, int height, int refreshRate)
         {
             Format = format;
             Width = width;

@@ -113,10 +113,9 @@ namespace SDL2Sharp.Video
             }
         }
 
-        public Display(int displayIndex)
+        internal Display(int displayIndex)
         {
             _displayIndex = displayIndex;
         }
-
     }
 }
