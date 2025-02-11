@@ -20,7 +20,7 @@
 
 using System;
 using System.Collections.Generic;
-using SDL2Sharp.Video;
+using SDL2Sharp;
 using static System.Math;
 
 internal sealed class ParticleEmitter

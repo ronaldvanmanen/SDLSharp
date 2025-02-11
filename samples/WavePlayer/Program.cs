@@ -21,36 +21,33 @@
 using System;
 using System.Diagnostics;
 using SDL2Sharp;
-using SDL2Sharp.Audio;
-using SDL2Sharp.Input;
-using SDL2Sharp.Fonts;
-using SDL2Sharp.Video;
 using static System.Math;
+using static SDL2Sharp.StaticMethods;
 
 internal static class Program
 {
     public static void Main()
     {
         using var mainSystem = new MainSystem();
-        using var videoSubsystem = new VideoSubsystem();
-        using var audioSubsystem = new AudioSubsystem();
-        using var eventSubsystem = new EventSubsystem();
-        using var fontSubsystem = new FontSubsystem();
+        using var videoSystem = mainSystem.CreateVideoSystem();
+        using var audioSystem = mainSystem.CreateAudioSystem();
+        using var eventSystem = mainSystem.CreateEventSystem();
+        using var fontSystem = mainSystem.CreateFontSystem();
 
-        using var window = videoSubsystem.CreateWindow("Wave Player", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
+        using var window = videoSystem.CreateWindow("Wave Player", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
         using var renderer = window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
-        using var lazyFont = fontSubsystem.OpenFont("lazy.ttf", 28);
-        using var audioFile = audioSubsystem.OpenWaveFile(Environment.GetCommandLineArgs()[1]);
+        using var lazyFont = fontSystem.OpenFont("lazy.ttf", 28);
+        using var waveFile = audioSystem.OpenWaveFile(Environment.GetCommandLineArgs()[1]);
 
         var audioPlaybackPosition = 0;
-        var audioChannelCount = (int)audioFile.Channels;
-        var audioSampleSize = audioFile.Format.BitSize() / 8;
+        var audioChannelCount = (int)waveFile.Channels;
+        var audioSampleSize = waveFile.Format.BitSize() / 8;
 
-        using var audioDevice = audioSubsystem.OpenDevice(
-            audioFile.Frequency,
-            audioFile.Format,
-            audioFile.Channels,
-            audioFile.Samples,
+        using var audioDevice = audioSystem.OpenDevice(
+            waveFile.Frequency,
+            waveFile.Format,
+            waveFile.Channels,
+            waveFile.Samples,
             OnAudioDeviceCallback,
             AudioDeviceAllowedChanges.None);
 
@@ -65,7 +62,7 @@ internal static class Program
 
         while (true)
         {
-            var @event = eventSubsystem.PollEvent();
+            var @event = eventSystem.PollEvent();
             if (@event is not null)
             {
                 switch (@event)
@@ -116,9 +113,9 @@ internal static class Program
                     {
                         var y = renderCenterLine;
 
-                        if (audioSampleOffset < audioFile.Buffer.Length)
+                        if (audioSampleOffset < waveFile.Buffer.Length)
                         {
-                            var normalizedSample = audioFile.Buffer.ToNormalizedSingle(audioSampleOffset, audioFile.Format);
+                            var normalizedSample = waveFile.Buffer.ToNormalizedSingle(audioSampleOffset, waveFile.Format);
                             y = (int)(renderCenterLine + normalizedSample * renderHalfGraphHeight);
                         }
 
@@ -159,14 +156,14 @@ internal static class Program
 
         void OnAudioDeviceCallback(Span<byte> stream)
         {
-            stream.Fill(audioFile.Silence);
-            var sliceLength = (int)Min(audioFile.Length - audioPlaybackPosition, stream.Length);
+            stream.Fill(waveFile.Silence);
+            var sliceLength = (int)Min(waveFile.Length - audioPlaybackPosition, stream.Length);
             if (sliceLength <= 0)
             {
                 return;
             }
-            var slice = audioFile.Buffer.Slice(audioPlaybackPosition, sliceLength);
-            stream.MixAudioFormat(slice, audioFile.Format, AudioSubsystem.MixMaxVolume);
+            var slice = waveFile.Buffer.Slice(audioPlaybackPosition, sliceLength);
+            MixAudioFormat(stream, slice, waveFile.Format, AudioSystem.MixMaxVolume);
             audioPlaybackPosition += sliceLength;
         }
     }

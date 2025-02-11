@@ -22,24 +22,20 @@ using System;
 using System.Diagnostics;
 using System.Numerics;
 using SDL2Sharp;
-using SDL2Sharp.Input;
-using SDL2Sharp.Fonts;
-using SDL2Sharp.Video;
-using SDL2Sharp.Video.PixelFormats;
 
 internal static class Program
 {
     public static void Main()
     {
         using var mainSystem = new MainSystem();
-        using var videoSubystem = new VideoSubsystem();
-        using var eventSubsystem = new EventSubsystem();
-        using var fontSubsystem = new FontSubsystem();
+        using var videoSystem = mainSystem.CreateVideoSystem();
+        using var eventSystem = mainSystem.CreateEventSystem();
+        using var fontSystem = mainSystem.CreateFontSystem();
 
-        using var window = videoSubystem.CreateWindow("Ray Tracer", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
+        using var window = videoSystem.CreateWindow("Ray Tracer", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
         using var renderer = window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
         using var screenTexture = renderer.CreatePackedTexture<ARGB8888>(TextureAccess.Streaming, renderer.OutputSize);
-        using var lazyFont = fontSubsystem.OpenFont("lazy.ttf", 28);
+        using var lazyFont = fontSystem.OpenFont("lazy.ttf", 28);
 
         var world = new World
         {
@@ -135,7 +131,7 @@ internal static class Program
 
         while (true)
         {
-            var @event = eventSubsystem.PollEvent();
+            var @event = eventSystem.PollEvent();
             if (@event is not null)
             {
                 switch (@event)
