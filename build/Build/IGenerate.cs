@@ -27,7 +27,6 @@ using static System.Runtime.InteropServices.RuntimeInformation;
 using static Nuke.Common.Tools.ClangSharpPInvokeGenerator.ClangSharpPInvokeGeneratorTasks;
 using static Nuke.Common.Tools.ClangSharpPInvokeGenerator.ClangSharpPInvokeGeneratorConfigOption;
 using Nuke.Common.IO;
-using System;
 
 interface IGenerate : IBuild
 {

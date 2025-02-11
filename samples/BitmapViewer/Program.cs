@@ -21,23 +21,19 @@
 using System;
 using System.Diagnostics;
 using SDL2Sharp;
-using SDL2Sharp.Input;
-using SDL2Sharp.Fonts;
-using SDL2Sharp.Video;
 
 internal static class Program
 {
     public static void Main()
     {
-        using var mainSystem = new MainSystem();
-        using var videoSubsystem = new VideoSubsystem();
-        using var eventSubsystem = new EventSubsystem();
-        using var fontSubsystem = new FontSubsystem();
+#pragma warning disable IDE1006 // Naming Styles
+        using var SDL = new SDL();
+#pragma warning restore IDE1006 // Naming Styles
 
-        using var window = videoSubsystem.CreateWindow("Bitmap Viewer", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
+        using var window = SDL.Video.CreateWindow("Bitmap Viewer", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
         using var renderer = window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
         using var bitmapTexture = renderer.CreateTextureFromBitmap(Environment.GetCommandLineArgs()[1]);
-        using var lazyFont = fontSubsystem.OpenFont("lazy.ttf", 28);
+        using var lazyFont = SDL.Fonts.OpenFont("lazy.ttf", 28);
 
         var lastFrameTime = TimeSpan.Zero;
         var accumulatedFrameTime = TimeSpan.Zero;
@@ -48,7 +44,7 @@ internal static class Program
 
         while (true)
         {
-            var @event = eventSubsystem.PollEvent();
+            var @event = SDL.Events.PollEvent();
             if (@event is not null)
             {
                 switch (@event)

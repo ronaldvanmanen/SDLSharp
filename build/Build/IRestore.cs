@@ -19,7 +19,6 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using Nuke.Common;
-using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
