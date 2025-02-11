@@ -21,8 +21,7 @@
 using System;
 using System.Numerics;
 using System.Threading.Tasks;
-using SDL2Sharp.Video;
-using SDL2Sharp.Video.PixelFormats;
+using SDL2Sharp;
 
 internal sealed class Camera
 {

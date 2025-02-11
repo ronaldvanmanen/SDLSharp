@@ -19,8 +19,8 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System;
-using SDL2Sharp.Video;
 using static System.Math;
+using SDL2Sharp;
 
 internal sealed class Particle
 {

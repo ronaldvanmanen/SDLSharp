@@ -19,7 +19,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 using System.Numerics;
-using SDL2Sharp.Video.PixelFormats;
+using SDL2Sharp;
 
 internal sealed class Plane : IObject
 {

@@ -22,24 +22,19 @@ using System;
 using System.Diagnostics;
 using System.Numerics;
 using SDL2Sharp;
-using SDL2Sharp.Input;
-using SDL2Sharp.Fonts;
-using SDL2Sharp.Video;
-using SDL2Sharp.Video.PixelFormats;
 
 internal static class Program
 {
     public static void Main()
     {
-        using var mainSystem = new MainSystem();
-        using var videoSubystem = new VideoSubsystem();
-        using var eventSubsystem = new EventSubsystem();
-        using var fontSubsystem = new FontSubsystem();
+#pragma warning disable IDE1006 // Naming Styles
+        using var SDL = new SDL();
+#pragma warning restore IDE1006 // Naming Styles
 
-        using var window = videoSubystem.CreateWindow("Ray Tracer", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
+        using var window = SDL.Video.CreateWindow("Ray Tracer", 640, 480, WindowFlags.Shown | WindowFlags.Resizable);
         using var renderer = window.CreateRenderer(RendererFlags.Accelerated | RendererFlags.PresentVSync);
         using var screenTexture = renderer.CreatePackedTexture<ARGB8888>(TextureAccess.Streaming, renderer.OutputSize);
-        using var lazyFont = fontSubsystem.OpenFont("lazy.ttf", 28);
+        using var lazyFont = SDL.Fonts.OpenFont("lazy.ttf", 28);
 
         var world = new World
         {
@@ -135,7 +130,7 @@ internal static class Program
 
         while (true)
         {
-            var @event = eventSubsystem.PollEvent();
+            var @event = SDL.Events.PollEvent();
             if (@event is not null)
             {
                 switch (@event)
@@ -160,7 +155,7 @@ internal static class Program
                 var elapsedFrameTime = currentFrameTime - lastFrameTime;
                 accumulatedFrameTime += elapsedFrameTime;
 
-                var keyboardState = Keyboard.State;
+                var keyboardState = SDL.KeyboardState;
                 if (keyboardState.IsPressed(Scancode.Up) || keyboardState.IsPressed(Scancode.Keypad8))
                 {
                     camera.Pitch(1f * MathF.PI / 180f);

@@ -332,3 +332,5 @@ dotnet_diagnostic.CA1401.severity = silent
 dotnet_diagnostic.SYSLIB1054.severity = silent
 csharp_style_prefer_top_level_statements = true:silent
 csharp_style_prefer_primary_constructors = true:suggestion
+
+dotnet_diagnostic.IDE0130.severity = silent
