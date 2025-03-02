@@ -23,28 +23,87 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class NV21Texture : IDisposable
+    public sealed unsafe class NV21Texture : DisposableObject
     {
         public delegate void LockCallback(NV21Image pixels);
 
-        private Texture _texture;
+        private readonly Texture _texture;
 
-        public PixelFormat Format => _texture.Format;
+        public PixelFormat Format
+        {
+            get
+            {
+                ThrowIfDisposed();
 
-        public TextureAccess Access => _texture.Access;
+                return _texture.Format;
+            }
+        }
 
-        public int Width => _texture.Width;
+        public TextureAccess Access
+        {
+            get
+            {
+                ThrowIfDisposed();
 
-        public int Height => _texture.Height;
+                return _texture.Access;
+            }
+        }
+
+        public int Width
+        {
+            get
+            {
+                ThrowIfDisposed();
+
+                return _texture.Width;
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                ThrowIfDisposed();
+
+                return _texture.Height;
+            }
+        }
+
+        public Size Size
+        {
+            get
+            {
+                ThrowIfDisposed();
+
+                return _texture.Size;
+            }
+        }
 
         public BlendMode BlendMode
         {
-            get => _texture.BlendMode;
+            get
+            {
+                ThrowIfDisposed();
 
-            set => _texture.BlendMode = value;
+                return _texture.BlendMode;
+            }
+            set
+            {
+                ThrowIfDisposed();
+
+                _texture.BlendMode = value;
+            }
         }
 
-        public bool IsValid => _texture.IsValid;
+        public bool IsValid
+        {
+            get
+            {
+                ThrowIfDisposed();
+
+                return _texture.IsValid;
+            }
+        }
 
         internal NV21Texture(Texture texture)
         {
@@ -58,11 +117,12 @@ namespace SDL2Sharp
             _texture = texture;
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            if (_texture is null) return;
-            _texture.Dispose();
-            _texture = null!;
+            if (disposing)
+            {
+                _texture?.Dispose();
+            }
         }
 
         public void WithLock(LockCallback callback)
@@ -79,7 +139,7 @@ namespace SDL2Sharp
         {
             ArgumentNullException.ThrowIfNull(callback);
 
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
             void* pixels;
@@ -95,6 +155,8 @@ namespace SDL2Sharp
 
         public void Update(NV21Image image)
         {
+            ThrowIfDisposed();
+
             Error.ThrowLastErrorIfNegative(
                 Interop.SDL.UpdateNVTexture(_texture.Handle, null,
                     (byte*)image.Y, image.Y.Pitch,
@@ -106,17 +168,14 @@ namespace SDL2Sharp
         {
             ArgumentNullException.ThrowIfNull(image);
 
+            ThrowIfDisposed();
+
             Error.ThrowLastErrorIfNegative(
                 Interop.SDL.UpdateNVTexture(_texture.Handle, null,
                     (byte*)image.Y, image.Y.Pitch,
                     (byte*)image.UV, image.UV.Pitch
                 )
             );
-        }
-
-        private void ThrowWhenDisposed()
-        {
-            ObjectDisposedException.ThrowIf(_texture is null, this);
         }
 
         public static implicit operator Texture(NV21Texture texture)

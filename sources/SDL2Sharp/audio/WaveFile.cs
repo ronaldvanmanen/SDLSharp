@@ -23,7 +23,7 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class WaveFile : IDisposable
+    public sealed unsafe class WaveFile : FinalizableObject
     {
         private SDL_AudioSpec _waveSpec;
 
@@ -65,18 +65,9 @@ namespace SDL2Sharp
             }
         }
 
-        ~WaveFile()
-        {
-            Dispose(false);
-        }
+        ~WaveFile() => Dispose(false);
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool _)
+        protected override void Dispose(bool _)
         {
             if (_waveBuffer != null)
             {

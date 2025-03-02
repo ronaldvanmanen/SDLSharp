@@ -23,7 +23,7 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class Surface : IDisposable
+    public sealed unsafe class Surface : FinalizableObject
     {
         private SDL_Surface* _handle;
 
@@ -85,28 +85,14 @@ namespace SDL2Sharp
         : this(Error.ThrowLastErrorIfNull(Interop.SDL.CreateRGBSurfaceFrom(pixels, width, height, 0, pitch, redMask, greenMask, blueMask, alphaMask)))
         { }
 
-        ~Surface()
+        protected override void Dispose(bool disposing)
         {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool _)
-        {
-            if (_handle is null)
+            if (!_freeHandle || _handle is null)
             {
                 return;
             }
 
-            if (_freeHandle)
-            {
-                Interop.SDL.FreeSurface(_handle);
-            }
+            Interop.SDL.FreeSurface(_handle);
 
             _handle = null;
         }

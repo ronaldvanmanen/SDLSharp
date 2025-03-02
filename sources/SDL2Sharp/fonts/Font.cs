@@ -23,7 +23,7 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class Font : IDisposable
+    public sealed unsafe class Font : FinalizableObject
     {
         private _TTF_Font* _handle;
 
@@ -37,18 +37,7 @@ namespace SDL2Sharp
             _handle = handle;
         }
 
-        ~Font()
-        {
-            Dispose(true);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool _)
+        protected override void Dispose(bool disposing)
         {
             if (_handle is null) return;
             TTF.CloseFont(_handle);
@@ -57,7 +46,7 @@ namespace SDL2Sharp
 
         public Surface RenderSolid(string text, Color color)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             using var marshaledText = new MarshaledString(text);
             var surfaceHandle = TTF.RenderText_Solid(_handle, marshaledText, color);
@@ -66,16 +55,11 @@ namespace SDL2Sharp
 
         public Surface<ARGB8888> RenderBlended(string text, Color color)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             using var marshaledText = new MarshaledString(text);
             var surfaceHandle = TTF.RenderText_Blended(_handle, marshaledText, color);
             return new Surface<ARGB8888>(surfaceHandle);
-        }
-
-        private void ThrowWhenDisposed()
-        {
-            ObjectDisposedException.ThrowIf(_handle is null, this);
         }
     }
 }

@@ -23,10 +23,10 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed class Surface<TPackedPixel> : IDisposable
+    public sealed class Surface<TPackedPixel> : DisposableObject
         where TPackedPixel : struct, IPackedPixel<TPackedPixel>
     {
-        private Surface _surface;
+        private readonly Surface _surface;
 
         public PixelFormatDescriptor Format => _surface.Format;
 
@@ -55,27 +55,17 @@ namespace SDL2Sharp
             _surface = surface ?? throw new ArgumentNullException(nameof(surface));
         }
 
-        ~Surface()
+        protected override void Dispose(bool disposing)
         {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool _)
-        {
-            if (_surface is null) return;
-            _surface.Dispose();
-            _surface = null!;
+            if (disposing)
+            {
+                _surface?.Dispose();
+            }
         }
 
         public void Blit(Surface<TPackedPixel> surface)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             ArgumentNullException.ThrowIfNull(surface);
 
@@ -85,7 +75,7 @@ namespace SDL2Sharp
         public Surface<TTargetPackedPixel> Convert<TTargetPackedPixel>()
             where TTargetPackedPixel : struct, IPackedPixel<TTargetPackedPixel>
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             var targetPixelFormat = TTargetPackedPixel.Format;
             var targetSurface = _surface.ConvertTo(targetPixelFormat);
@@ -94,19 +84,16 @@ namespace SDL2Sharp
 
         public void FillRect(uint color)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             _surface.FillRect(color);
         }
 
         public void WithLock(SurfaceLockCallback<TPackedPixel> callback)
         {
-            _surface.WithLock(callback);
-        }
+            ThrowIfDisposed();
 
-        private void ThrowWhenDisposed()
-        {
-            ObjectDisposedException.ThrowIf(_surface is null, this);
+            _surface.WithLock(callback);
         }
 
         public static implicit operator Surface(Surface<TPackedPixel> surface)

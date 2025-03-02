@@ -26,7 +26,7 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    internal sealed unsafe class EventsSubsystem : IEventsSubsystem, IDisposable
+    internal sealed unsafe class EventsSubsystem : FinalizableObject, IEventsSubsystem
     {
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int EventWatchCallbackDelegate(void* userdata, SDL_Event* @event);
@@ -48,7 +48,7 @@ namespace SDL2Sharp
             Interop.SDL.AddEventWatch(&OnEventWatchCallback, watchUserDataPointer);
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
             var watchUserDataPointer = (void*)(IntPtr)_watchCallbackUserData;
             Interop.SDL.DelEventWatch(&OnEventWatchCallback, watchUserDataPointer);

@@ -1,4 +1,4 @@
-﻿// SDL2Sharp
+// SDL2Sharp
 //
 // Copyright (C) 2021-2024 Ronald van Manen <rvanmanen@gmail.com>
 //
@@ -18,34 +18,10 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using SDL2Sharp.Interop;
-
 namespace SDL2Sharp
 {
-    internal sealed class FontSubsystem : FinalizableObject, IFontSubsystem
+    public abstract class FinalizableObject : DisposableObject
     {
-        private bool _fullyInitialized;
-
-        public FontSubsystem()
-        {
-            Error.ThrowLastErrorIfNegative(
-                TTF.Init()
-            );
-            _fullyInitialized = true;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (!_fullyInitialized) return;
-            TTF.Quit();
-            _fullyInitialized = false;
-        }
-
-        public Font OpenFont(string path, int pointSize)
-        {
-            ThrowIfDisposed();
-
-            return new Font(path, pointSize);
-        }
+        ~FinalizableObject() => Dispose(false);
     }
 }

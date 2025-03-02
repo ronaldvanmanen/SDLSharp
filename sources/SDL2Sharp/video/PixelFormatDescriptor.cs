@@ -23,7 +23,7 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class PixelFormatDescriptor : IDisposable
+    public sealed unsafe class PixelFormatDescriptor : FinalizableObject
     {
         private SDL_PixelFormat* _handle;
 
@@ -72,18 +72,7 @@ namespace SDL2Sharp
         : this(Error.ThrowLastErrorIfNull(Interop.SDL.AllocFormat((uint)pixelFormat)), true)
         { }
 
-        ~PixelFormatDescriptor()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-            Dispose(true);
-        }
-
-        private void Dispose(bool _)
+        protected override void Dispose(bool disposing)
         {
             if (!_ownsHandle || _handle == null) return;
             Interop.SDL.FreeFormat(_handle);

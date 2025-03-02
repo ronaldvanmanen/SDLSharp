@@ -26,7 +26,7 @@ using System.Runtime.CompilerServices;
 namespace SDL2Sharp
 {
 
-    public sealed unsafe class Window : IDisposable
+    public sealed unsafe class Window : FinalizableObject
     {
         private SDL_Window* _handle;
 
@@ -34,7 +34,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 return Interop.SDL.GetWindowID(_handle);
             }
@@ -44,13 +44,13 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 return new string(Interop.SDL.GetWindowTitle(_handle));
             }
             set
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 using var marshaledValue = new MarshaledString(value);
                 Interop.SDL.SetWindowTitle(_handle, marshaledValue);
@@ -61,7 +61,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 int x, y;
                 Interop.SDL.GetWindowPosition(_handle, &x, &y);
@@ -69,7 +69,7 @@ namespace SDL2Sharp
             }
             set
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 Interop.SDL.SetWindowPosition(_handle, value.X, value.Y);
             }
@@ -79,7 +79,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 int width;
                 Interop.SDL.GetWindowSize(_handle, &width, null);
@@ -91,7 +91,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 int height;
                 Interop.SDL.GetWindowSize(_handle, null, &height);
@@ -103,7 +103,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 int width, height;
                 Interop.SDL.GetWindowSize(_handle, &width, &height);
@@ -111,7 +111,7 @@ namespace SDL2Sharp
             }
             set
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 Interop.SDL.SetWindowSize(_handle, value.Width, value.Height);
             }
@@ -121,7 +121,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 int width, height;
                 Interop.SDL.GetWindowMinimumSize(_handle, &width, &height);
@@ -129,7 +129,7 @@ namespace SDL2Sharp
             }
             set
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 Interop.SDL.SetWindowMinimumSize(_handle, value.Width, value.Height);
             }
@@ -139,7 +139,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 int width, height;
                 Interop.SDL.GetWindowMaximumSize(_handle, &width, &height);
@@ -147,7 +147,7 @@ namespace SDL2Sharp
             }
             set
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 Interop.SDL.SetWindowMaximumSize(_handle, value.Width, value.Height);
             }
@@ -157,7 +157,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 int borderTop, borderLeft, borderBottom, borderRight;
                 Error.ThrowLastErrorIfNegative(
@@ -175,7 +175,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 var pixelFormat = Interop.SDL.GetWindowPixelFormat(_handle);
                 Error.ThrowLastErrorIfZero(pixelFormat);
@@ -187,7 +187,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 var surfaceHandle = Interop.SDL.GetWindowSurface(_handle);
                 Error.ThrowLastErrorIfNull(surfaceHandle);
@@ -199,13 +199,13 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 return HasWindowFlag(SDL_WindowFlags.SDL_WINDOW_BORDERLESS);
             }
             set
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 Interop.SDL.SetWindowBordered(_handle, value ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
             }
@@ -215,13 +215,13 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 return HasWindowFlag(SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
             }
             set
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 Interop.SDL.SetWindowResizable(_handle, value ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
             }
@@ -231,13 +231,13 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 return HasWindowFlag(SDL_WindowFlags.SDL_WINDOW_FULLSCREEN);
             }
             set
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 var flags = value ? SDL_WindowFlags.SDL_WINDOW_FULLSCREEN : 0;
                 Error.ThrowLastErrorIfNegative(
@@ -250,13 +250,13 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 return HasWindowFlag(SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP);
             }
             set
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 var flags = value ? SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
                 Error.ThrowLastErrorIfNegative(
@@ -269,7 +269,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 return HasWindowFlag(SDL_WindowFlags.SDL_WINDOW_SHOWN);
             }
@@ -294,6 +294,7 @@ namespace SDL2Sharp
         private Window(string title, int x, int y, int width, int height, uint flags)
         {
             using var marshaledTitle = new MarshaledString(title);
+
             _handle = Error.ThrowLastErrorIfNull(
                 Interop.SDL.CreateWindow(marshaledTitle, x, y, width, height, flags)
             );
@@ -306,18 +307,7 @@ namespace SDL2Sharp
             }
         }
 
-        ~Window()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool _)
+        protected override void Dispose(bool _)
         {
             if (_handle is null) return;
             Interop.SDL.DestroyWindow(_handle);
@@ -326,42 +316,42 @@ namespace SDL2Sharp
 
         public void Show()
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             Interop.SDL.ShowWindow(_handle);
         }
 
         public void Hide()
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             Interop.SDL.HideWindow(_handle);
         }
 
         public void Raise()
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             Interop.SDL.RaiseWindow(_handle);
         }
 
         public void Maximize()
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             Interop.SDL.MaximizeWindow(_handle);
         }
 
         public void Minimize()
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             Interop.SDL.MinimizeWindow(_handle);
         }
 
         public void Restore()
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             Interop.SDL.RestoreWindow(_handle);
         }
@@ -393,7 +383,7 @@ namespace SDL2Sharp
 
         public bool TryCreateRenderer(RendererFlags flags, out Renderer renderer, out Error error)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             var handle = Interop.SDL.CreateRenderer(_handle, -1, (uint)flags);
             if (handle is null)
@@ -412,7 +402,7 @@ namespace SDL2Sharp
 
         public void UpdateSurface()
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             Error.ThrowLastErrorIfNegative(
                 Interop.SDL.UpdateWindowSurface(_handle)
@@ -424,11 +414,6 @@ namespace SDL2Sharp
             var flags = (SDL_WindowFlags)Interop.SDL.GetWindowFlags(_handle);
             var hasFlag = flags.HasFlag(flag);
             return hasFlag;
-        }
-
-        private void ThrowWhenDisposed()
-        {
-            ObjectDisposedException.ThrowIf(_handle is null, this);
         }
 
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]

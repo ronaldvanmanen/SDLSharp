@@ -22,44 +22,60 @@ using System;
 
 namespace SDL2Sharp
 {
-    internal sealed class AudioSubsystem : IAudioSubsystem, IDisposable
+    internal sealed class AudioSubsystem : FinalizableObject, IAudioSubsystem
     {
         private const uint InitSubsystemFlags = Interop.SDL.SDL_INIT_AUDIO;
+
+        private bool _fullyInitialized;
 
         public AudioSubsystem()
         {
             Error.ThrowLastErrorIfNegative(
                 Interop.SDL.InitSubSystem(InitSubsystemFlags)
             );
+
+            _fullyInitialized = true;
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
+            if (!_fullyInitialized) return;
             Interop.SDL.QuitSubSystem(InitSubsystemFlags);
+            _fullyInitialized = false;
         }
 
         public AudioDevice CreateDevice()
         {
+            ThrowIfDisposed();
+
             return new AudioDevice();
         }
 
         public AudioDevice OpenDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples)
         {
+            ThrowIfDisposed();
+
             return new AudioDevice(frequency, format, channels, samples);
         }
 
         public AudioDevice OpenDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback)
         {
+            ThrowIfDisposed();
+
             return new AudioDevice(frequency, format, channels, samples, callback);
         }
 
         public AudioDevice OpenDevice(int frequency, AudioFormat format, AudioChannelLayout channels, ushort samples, AudioDeviceCallback callback, AudioDeviceAllowedChanges allowedChanges)
         {
+            ThrowIfDisposed();
+
             return new AudioDevice(frequency, format, channels, samples, callback, allowedChanges);
         }
 
         public WaveFile OpenWaveFile(string filename)
         {
+            ThrowIfDisposed();
+
             return new WaveFile(filename);
         }
     }

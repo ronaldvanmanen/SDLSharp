@@ -23,14 +23,18 @@ using System.Collections.Generic;
 
 namespace SDL2Sharp
 {
-    internal sealed class VideoSubsystem : IVideoSubsystem, IDisposable
+    internal sealed class VideoSubsystem : FinalizableObject, IVideoSubsystem
     {
         private const uint InitSubsystemFlags = Interop.SDL.SDL_INIT_VIDEO;
+
+        private bool _fullyInitialized;
 
         public IReadOnlyList<Display> Displays
         {
             get
             {
+                ThrowIfDisposed();
+
                 var displayCount = Interop.SDL.GetNumVideoDisplays();
                 var displays = new List<Display>(displayCount);
                 for (var displayIndex = 0; displayIndex < displayCount; displayIndex++)
@@ -46,30 +50,41 @@ namespace SDL2Sharp
             Error.ThrowLastErrorIfNegative(
                 Interop.SDL.InitSubSystem(InitSubsystemFlags)
             );
+            _fullyInitialized = true;
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
+            if (!_fullyInitialized) return;
             Interop.SDL.QuitSubSystem(InitSubsystemFlags);
+            _fullyInitialized = false;
         }
 
         public Window CreateWindow(string title, int width, int height)
         {
+            ThrowIfDisposed();
+
             return new Window(title, width, height);
         }
 
         public Window CreateWindow(string title, int width, int height, WindowFlags flags)
         {
+            ThrowIfDisposed();
+
             return new Window(title, width, height, flags);
         }
 
         public Window CreateWindow(string title, int x, int y, int width, int height)
         {
+            ThrowIfDisposed();
+
             return new Window(title, x, y, width, height);
         }
 
         public Window CreateWindow(string title, int x, int y, int width, int height, WindowFlags flags)
         {
+            ThrowIfDisposed();
+
             return new Window(title, x, y, width, height, flags);
         }
     }

@@ -18,11 +18,11 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-using System;
+using static SDL2Sharp.Utilities;
 
 namespace SDL2Sharp
 {
-    public sealed class SDL : IDisposable
+    public sealed partial class SDL : FinalizableObject
     {
         private VideoSubsystem? _videoSubsystem;
 
@@ -32,17 +32,45 @@ namespace SDL2Sharp
 
         private FontSubsystem? _fontSubsystem;
 
-        private bool _disposed = false;
+        public IVideoSubsystem Video
+        {
+            get
+            {
+                ThrowIfDisposed();
 
-        public IVideoSubsystem Video => _videoSubsystem ??= new VideoSubsystem();
+                return _videoSubsystem ??= new VideoSubsystem();
+            }
+        }
 
-        public IAudioSubsystem Audio => _audioSubsystem ??= new AudioSubsystem();
+        public IAudioSubsystem Audio
+        {
+            get
+            {
+                ThrowIfDisposed();
 
-        public IEventsSubsystem Events => _eventsSubsystem ??= new EventsSubsystem();
+                return _audioSubsystem ??= new AudioSubsystem();
+            }
+        }
 
-        public IFontSubsystem Fonts => _fontSubsystem ??= new FontSubsystem();
+        public IEventsSubsystem Events
+        {
+            get
+            {
+                ThrowIfDisposed();
 
-        public bool IsDisposed => _disposed;
+                return _eventsSubsystem ??= new EventsSubsystem();
+            }
+        }
+
+        public IFontSubsystem Fonts
+        {
+            get
+            {
+                ThrowIfDisposed();
+
+                return _fontSubsystem ??= new FontSubsystem();
+            }
+        }
 
         public SDL()
         {
@@ -51,24 +79,8 @@ namespace SDL2Sharp
             );
         }
 
-        ~SDL()
+        protected override void Dispose(bool disposing)
         {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (_disposed)
-            {
-                return;
-            }
-
             if (disposing)
             {
                 SafeDispose(ref _videoSubsystem);
@@ -78,15 +90,6 @@ namespace SDL2Sharp
             }
 
             Interop.SDL.Quit();
-
-            _disposed = true;
-        }
-
-        private static void SafeDispose<TDisposable>(ref TDisposable? disposable) where TDisposable : IDisposable
-        {
-            var temp = disposable;
-            disposable = default;
-            temp?.Dispose();
         }
     }
 }

@@ -25,7 +25,7 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class Renderer : IDisposable
+    public sealed unsafe class Renderer : FinalizableObject
     {
         private SDL_Renderer* _handle;
 
@@ -35,7 +35,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 var rendererInfo = new SDL_RendererInfo();
                 Error.ThrowLastErrorIfNegative(
@@ -49,7 +49,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 int width, height;
                 Error.ThrowLastErrorIfNegative(
@@ -63,7 +63,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 int width;
                 Error.ThrowLastErrorIfNegative(
@@ -77,7 +77,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 int height;
                 Error.ThrowLastErrorIfNegative(
@@ -91,7 +91,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 byte r, g, b, a;
                 Error.ThrowLastErrorIfNegative(
@@ -101,7 +101,7 @@ namespace SDL2Sharp
             }
             set
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 Error.ThrowLastErrorIfNegative(
                     Interop.SDL.SetRenderDrawColor(_handle, value.R, value.G, value.B, value.A)
@@ -113,7 +113,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 SDL_BlendMode blendMode;
                 Error.ThrowLastErrorIfNegative(
@@ -123,7 +123,7 @@ namespace SDL2Sharp
             }
             set
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 Error.ThrowLastErrorIfNegative(
                     Interop.SDL.SetRenderDrawBlendMode(_handle, (SDL_BlendMode)value)
@@ -135,7 +135,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 int width, height;
                 Interop.SDL.RenderGetLogicalSize(_handle, &width, &height);
@@ -143,7 +143,7 @@ namespace SDL2Sharp
             }
             set
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 Error.ThrowLastErrorIfNegative(
                     Interop.SDL.RenderSetLogicalSize(_handle, value.Width, value.Height)
@@ -156,7 +156,7 @@ namespace SDL2Sharp
             get
             {
 
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 float scaleX, scaleY;
                 Interop.SDL.RenderGetScale(_handle, &scaleX, &scaleY);
@@ -164,7 +164,7 @@ namespace SDL2Sharp
             }
             set
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 Error.ThrowLastErrorIfNegative(
                     Interop.SDL.RenderSetScale(_handle, value.X, value.Y)
@@ -176,7 +176,7 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 var rect = new SDL_Rect();
                 Interop.SDL.RenderGetViewport(_handle, &rect);
@@ -184,7 +184,7 @@ namespace SDL2Sharp
             }
             set
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 var rect = new SDL_Rect { x = value.X, y = value.Y, w = value.Width, h = value.Height };
                 Error.ThrowLastErrorIfNegative(
@@ -197,13 +197,13 @@ namespace SDL2Sharp
         {
             get
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 return _renderTarget;
             }
             set
             {
-                ThrowWhenDisposed();
+                ThrowIfDisposed();
 
                 if (value is null)
                 {
@@ -229,18 +229,7 @@ namespace SDL2Sharp
             _handle = renderer;
         }
 
-        ~Renderer()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool _)
+        protected override void Dispose(bool disposing)
         {
             if (_handle is null) return;
             Interop.SDL.DestroyRenderer(_handle);
@@ -254,7 +243,7 @@ namespace SDL2Sharp
 
         public Texture CreateTexture(PixelFormat pixelFormat, TextureAccess access, int width, int height)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             var texture = Interop.SDL.CreateTexture(_handle, (uint)pixelFormat, (int)access, width, height);
             Error.ThrowLastErrorIfNull(texture);
@@ -263,7 +252,7 @@ namespace SDL2Sharp
 
         public Texture CreateTextureFromSurface(Surface surface)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             var texture = Interop.SDL.CreateTextureFromSurface(_handle, surface.Handle);
             Error.ThrowLastErrorIfNull(texture);
@@ -272,7 +261,7 @@ namespace SDL2Sharp
 
         public void Clear()
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             Error.ThrowLastErrorIfNegative(
                 Interop.SDL.RenderClear(_handle)
@@ -281,7 +270,7 @@ namespace SDL2Sharp
 
         public void Copy(Texture texture)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             Error.ThrowLastErrorIfNegative(
                 Interop.SDL.RenderCopy(_handle, texture.Handle, null, null)
@@ -290,7 +279,7 @@ namespace SDL2Sharp
 
         public void Copy(Texture texture, Rectangle destination)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             var dest = new SDL_Rect
             {
@@ -307,7 +296,7 @@ namespace SDL2Sharp
 
         public void Copy(Texture texture, Rectangle source, Rectangle destination)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             var src = new SDL_Rect
             {
@@ -332,7 +321,7 @@ namespace SDL2Sharp
 
         public void DrawLine(int x1, int y1, int x2, int y2)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             Error.ThrowLastErrorIfNegative(
                 Interop.SDL.RenderDrawLine(_handle, x1, y1, x2, y2)
@@ -341,7 +330,7 @@ namespace SDL2Sharp
 
         public void DrawLines(Point[] points)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             fixed (Point* point = &points[0])
             {
@@ -353,7 +342,7 @@ namespace SDL2Sharp
 
         public void DrawLine(float x1, float y1, float x2, float y2)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             Error.ThrowLastErrorIfNegative(
                 Interop.SDL.RenderDrawLineF(_handle, x1, y1, x2, y2)
@@ -362,7 +351,7 @@ namespace SDL2Sharp
 
         public void DrawPoint(int x, int y)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             Error.ThrowLastErrorIfNegative(
                 Interop.SDL.RenderDrawPoint(_handle, x, y)
@@ -371,7 +360,7 @@ namespace SDL2Sharp
 
         public void DrawPoint(float x, float y)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             Error.ThrowLastErrorIfNegative(
                 Interop.SDL.RenderDrawPointF(_handle, x, y)
@@ -380,7 +369,7 @@ namespace SDL2Sharp
 
         public void DrawPoints(Point[] points)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             fixed (Point* point = &points[0])
             {
@@ -392,7 +381,7 @@ namespace SDL2Sharp
 
         public void FillRect(int x, int y, int width, int height)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
             Error.ThrowLastErrorIfNegative(
@@ -407,7 +396,7 @@ namespace SDL2Sharp
 
         public void Present()
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             Interop.SDL.RenderPresent(_handle);
         }
@@ -415,7 +404,7 @@ namespace SDL2Sharp
         public PackedMemoryImage<TPackedPixel> ReadPixels<TPackedPixel>()
             where TPackedPixel : struct, IPackedPixel<TPackedPixel>
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             return ReadPixels<TPackedPixel>(
                 new Rectangle(0, 0, OutputWidth, OutputHeight)
@@ -425,7 +414,7 @@ namespace SDL2Sharp
         public PackedMemoryImage<TPackedPixel> ReadPixels<TPackedPixel>(Rectangle rectangle)
             where TPackedPixel : struct, IPackedPixel<TPackedPixel>
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             var rect = new SDL_Rect { x = rectangle.X, y = rectangle.Y, w = rectangle.Width, h = rectangle.Height };
             var format = (uint)TPackedPixel.Format;
@@ -440,11 +429,6 @@ namespace SDL2Sharp
                     pitch)
             );
             return image;
-        }
-
-        private void ThrowWhenDisposed()
-        {
-            ObjectDisposedException.ThrowIf(_handle is null, this);
         }
     }
 }

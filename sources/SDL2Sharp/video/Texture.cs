@@ -23,7 +23,7 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe class Texture : IDisposable
+    public sealed unsafe class Texture : FinalizableObject
     {
         public delegate void LockToSurfaceCallback(Surface pixels);
 
@@ -35,6 +35,8 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowIfDisposed();
+
                 uint format;
                 Error.ThrowLastErrorIfNegative(Interop.SDL.QueryTexture(_handle, &format, null, null, null));
                 return (PixelFormat)format;
@@ -45,6 +47,8 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowIfDisposed();
+
                 int access;
                 Error.ThrowLastErrorIfNegative(Interop.SDL.QueryTexture(_handle, null, &access, null, null));
                 return (TextureAccess)access;
@@ -55,6 +59,8 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowIfDisposed();
+
                 int width;
                 Error.ThrowLastErrorIfNegative(Interop.SDL.QueryTexture(_handle, null, null, &width, null));
                 return width;
@@ -65,6 +71,8 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowIfDisposed();
+
                 int height;
                 Error.ThrowLastErrorIfNegative(Interop.SDL.QueryTexture(_handle, null, null, null, &height));
                 return height;
@@ -75,6 +83,8 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowIfDisposed();
+
                 int width, height;
                 Error.ThrowLastErrorIfNegative(Interop.SDL.QueryTexture(_handle, null, null, &width, &height));
                 return new Size(width, height);
@@ -85,6 +95,8 @@ namespace SDL2Sharp
         {
             get
             {
+                ThrowIfDisposed();
+
                 SDL_BlendMode blendMode;
                 Error.ThrowLastErrorIfNegative(
                     Interop.SDL.GetTextureBlendMode(_handle, &blendMode)
@@ -93,33 +105,32 @@ namespace SDL2Sharp
             }
             set
             {
+                ThrowIfDisposed();
+
                 Error.ThrowLastErrorIfNegative(
                     Interop.SDL.SetTextureBlendMode(_handle, (SDL_BlendMode)value)
                 );
             }
         }
 
-        public bool IsValid => 0 == Interop.SDL.QueryTexture(_handle, null, null, null, null);
-
-        internal Texture(SDL_Texture* texture)
+        public bool IsValid
         {
-            ArgumentNullException.ThrowIfNull(texture);
+            get
+            {
+                ThrowIfDisposed();
 
-            _handle = texture;
+                return 0 == Interop.SDL.QueryTexture(_handle, null, null, null, null);
+            }
         }
 
-        ~Texture()
+        internal Texture(SDL_Texture* handle)
         {
-            ReleaseHandle();
+            ArgumentNullException.ThrowIfNull(handle);
+
+            _handle = handle;
         }
 
-        public void Dispose()
-        {
-            ReleaseHandle();
-            GC.SuppressFinalize(this);
-        }
-
-        private void ReleaseHandle()
+        protected override void Dispose(bool disposing)
         {
             if (_handle is null) return;
             Interop.SDL.DestroyTexture(_handle);
@@ -138,7 +149,7 @@ namespace SDL2Sharp
 
         public void WithLock(int x, int y, int width, int height, LockToSurfaceCallback callback)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
             SDL_Surface* surfaceHandle;
@@ -148,11 +159,6 @@ namespace SDL2Sharp
             var surface = new Surface(surfaceHandle, false);
             callback.Invoke(surface);
             Interop.SDL.UnlockTexture(_handle);
-        }
-
-        private void ThrowWhenDisposed()
-        {
-            ObjectDisposedException.ThrowIf(_handle is null, this);
         }
     }
 }

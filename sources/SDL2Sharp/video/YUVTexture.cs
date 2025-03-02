@@ -23,28 +23,87 @@ using SDL2Sharp.Interop;
 
 namespace SDL2Sharp
 {
-    public sealed unsafe partial class YUVTexture<TYUVFormat> : IDisposable where TYUVFormat : IYUVFormat
+    public sealed unsafe partial class YUVTexture<TYUVFormat> : DisposableObject where TYUVFormat : IYUVFormat
     {
         public delegate void LockCallback(YUVImage<TYUVFormat> pixels);
 
-        private Texture _texture;
+        private readonly Texture _texture;
 
-        public PixelFormat Format => _texture.Format;
+        public PixelFormat Format
+        {
+            get
+            {
+                ThrowIfDisposed();
 
-        public TextureAccess Access => _texture.Access;
+                return _texture.Format;
+            }
+        }
 
-        public int Width => _texture.Width;
+        public TextureAccess Access
+        {
+            get
+            {
+                ThrowIfDisposed();
 
-        public int Height => _texture.Height;
+                return _texture.Access;
+            }
+        }
+
+        public int Width
+        {
+            get
+            {
+                ThrowIfDisposed();
+
+                return _texture.Width;
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                ThrowIfDisposed();
+
+                return _texture.Height;
+            }
+        }
+
+        public Size Size
+        {
+            get
+            {
+                ThrowIfDisposed();
+
+                return _texture.Size;
+            }
+        }
 
         public BlendMode BlendMode
         {
-            get => _texture.BlendMode;
+            get
+            {
+                ThrowIfDisposed();
 
-            set => _texture.BlendMode = value;
+                return _texture.BlendMode;
+            }
+            set
+            {
+                ThrowIfDisposed();
+
+                _texture.BlendMode = value;
+            }
         }
 
-        public bool IsValid => _texture.IsValid;
+        public bool IsValid
+        {
+            get
+            {
+                ThrowIfDisposed();
+
+                return _texture.IsValid;
+            }
+        }
 
         internal YUVTexture(Texture texture)
         {
@@ -58,11 +117,12 @@ namespace SDL2Sharp
             _texture = texture;
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            if (_texture is null) return;
-            _texture.Dispose();
-            _texture = null!;
+            if (disposing)
+            {
+                _texture?.Dispose();
+            }
         }
 
         public void WithLock(LockCallback callback)
@@ -77,7 +137,7 @@ namespace SDL2Sharp
 
         public void WithLock(int x, int y, int width, int height, LockCallback callback)
         {
-            ThrowWhenDisposed();
+            ThrowIfDisposed();
 
             var rect = new SDL_Rect { x = x, y = y, w = width, h = height };
             void* pixels;
@@ -93,6 +153,8 @@ namespace SDL2Sharp
 
         public void Update(YUVImage<TYUVFormat> image)
         {
+            ThrowIfDisposed();
+
             Error.ThrowLastErrorIfNegative(
                 Interop.SDL.UpdateYUVTexture(_texture.Handle, null,
                     (byte*)image.Y, image.Y.Pitch,
@@ -104,6 +166,8 @@ namespace SDL2Sharp
 
         public void Update(YUVMemoryImage image)
         {
+            ThrowIfDisposed();
+
             Error.ThrowLastErrorIfNegative(
                 Interop.SDL.UpdateYUVTexture(_texture.Handle, null,
                     (byte*)image.Y, image.Y.Pitch,
@@ -111,11 +175,6 @@ namespace SDL2Sharp
                     (byte*)image.V, image.V.Pitch
                 )
             );
-        }
-
-        private void ThrowWhenDisposed()
-        {
-            ObjectDisposedException.ThrowIf(_texture is null, this);
         }
 
         public static implicit operator Texture(YUVTexture<TYUVFormat> texture)
